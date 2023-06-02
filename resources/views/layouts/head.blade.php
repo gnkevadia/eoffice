@@ -6,7 +6,7 @@
 <meta name="format-detection" content="telephone=no">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="google-site-verification" content="C1qYS6Yq5x6qbitfJeuHiWLkv1vKCGWDr576MSifHOk" />
-<title>FuelTrend</title>
+<title>eOffice</title>
 <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/img/favicon.png') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/animate.css') }}">

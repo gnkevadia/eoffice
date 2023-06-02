@@ -83,7 +83,7 @@
                                     title="Postal Code" class="form-control" placeholder="Postal Code"
                                     value="{{ old('postal_code') }}">
                             </div>
-                            {{-- <div class="form-group">
+                            <div class="form-group">
                                 <label>Country<span class="required"><code>*</code></span></label>
                                 <div>
                                     <select id="country" class='form-control'><option value="">-- Country --</option></select>
@@ -114,13 +114,13 @@
                                             @endif
                                     </select>
                                 </div>
-                            </div> --}}
-                            <div class="form-group">
+                            </div> 
+                            <!-- <div class="form-group">
                                 <label>Country<span class="required"><code>*</code></span></label>
                                 <select id="country" class='form-control' name="country">
                                     <option value="">Country</option>
                                 </select>
-                            </div> <!-- end country row -->
+                            </div> 
                             <div class="form-group">
                                 <label>State<span class="required"><code>*</code></span></label>
                                 <select id="region" class='form-control' name="state">
@@ -132,7 +132,7 @@
                                 <select id="city" class='form-control' name="city">
                                     <option value="">City</option>
                                 </select>
-                            </div>
+                            </div> -->
                             <div class="form-group">
                                 <label>Role<span class="required"><code>*</code></span></label>
                                 <div>
@@ -238,67 +238,67 @@
                 });
             });
             // Country selected --> update region list .
-            $("#country").change(function() {
-                selectedCountry = this.options[this.selectedIndex].text;
-                countryCode = $("#country").val();
-                // Populate country select box from battuta API
-                url =
-                    "https://battuta.medunes.net/api/region/" +
-                    countryCode +
-                    "/all/?key=" +
-                    BATTUTA_KEY +
-                    "&callback=?";
-                $.getJSON(url, function(data) {
-                    $("#region option").remove();
-                    $('#region').append('<option value="">Please select your State</option>');
-                    $.each(data, function(index, value) {
-                        // APPEND OR INSERT DATA TO SELECT ELEMENT.
-                        $("#region").append(
-                            '<option value="' + value.region + '">' + value.region +
-                            "</option>"
-                        );
-                    });
-                });
-            });
-            // Region selected --> updated city list
-            $("#region").on("change", function() {
-                selectedRegion = this.options[this.selectedIndex].text;
-                // Populate country select box from battuta API
-                countryCode = $("#country").val();
-                region = $("#region").val();
-                url =
-                    "https://battuta.medunes.net/api/city/" +
-                    countryCode +
-                    "/search/?region=" +
-                    region +
-                    "&key=" +
-                    BATTUTA_KEY +
-                    "&callback=?";
-                $.getJSON(url, function(data) {
-                    console.log(data);
-                    $("#city option").remove();
-                    $('#city').append('<option value="">Please select your city</option>');
-                    $.each(data, function(index, value) {
-                        // APPEND OR INSERT DATA TO SELECT ELEMENT.
-                        $("#city").append(
-                            '<option value="' + value.city + '">' + value.city +
-                            "</option>"
-                        );
-                    });
-                });
-            });
-            // city selected --> update location string
-            $("#city").on("change", function() {
-                selectedCity = this.options[this.selectedIndex].text;
-                $("#location").html(
-                    "Locatation: Country: " +
-                    selectedCountry +
-                    ", Region: " +
-                    selectedRegion +
-                    ", City: " +
-                    selectedCity
-                );
-            });
+            // $("#country").change(function() {
+            //     selectedCountry = this.options[this.selectedIndex].text;
+            //     countryCode = $("#country").val();
+            //     // Populate country select box from battuta API
+            //     url =
+            //         "https://battuta.medunes.net/api/region/" +
+            //         countryCode +
+            //         "/all/?key=" +
+            //         BATTUTA_KEY +
+            //         "&callback=?";
+            //     $.getJSON(url, function(data) {
+            //         $("#region option").remove();
+            //         $('#region').append('<option value="">Please select your State</option>');
+            //         $.each(data, function(index, value) {
+            //             // APPEND OR INSERT DATA TO SELECT ELEMENT.
+            //             $("#region").append(
+            //                 '<option value="' + value.region + '">' + value.region +
+            //                 "</option>"
+            //             );
+            //         });
+            //     });
+            // });
+            // // Region selected --> updated city list
+            // $("#region").on("change", function() {
+            //     selectedRegion = this.options[this.selectedIndex].text;
+            //     // Populate country select box from battuta API
+            //     countryCode = $("#country").val();
+            //     region = $("#region").val();
+            //     url =
+            //         "https://battuta.medunes.net/api/city/" +
+            //         countryCode +
+            //         "/search/?region=" +
+            //         region +
+            //         "&key=" +
+            //         BATTUTA_KEY +
+            //         "&callback=?";
+            //     $.getJSON(url, function(data) {
+            //         console.log(data);
+            //         $("#city option").remove();
+            //         $('#city').append('<option value="">Please select your city</option>');
+            //         $.each(data, function(index, value) {
+            //             // APPEND OR INSERT DATA TO SELECT ELEMENT.
+            //             $("#city").append(
+            //                 '<option value="' + value.city + '">' + value.city +
+            //                 "</option>"
+            //             );
+            //         });
+            //     });
+            // });
+            // // city selected --> update location string
+            // $("#city").on("change", function() {
+            //     selectedCity = this.options[this.selectedIndex].text;
+            //     $("#location").html(
+            //         "Locatation: Country: " +
+            //         selectedCountry +
+            //         ", Region: " +
+            //         selectedRegion +
+            //         ", City: " +
+            //         selectedCity
+            //     );
+            // });
         });
     </script>
 @stop

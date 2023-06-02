@@ -1,57 +1,32 @@
 <?php
-/**
- * Page Master Page
- * Manage CRUD for the Page
- *
- * @author ATL
- * @since Jan 2020
- */
+
 namespace App\Http\Controllers\Admin;
 
 
-use App\Exports\MainExport;
 use App\Http\Controllers\Controller;
 use App\Models\Pages;
 use App\Models\PageTypes;
 use App\Models\Region;
 use App\Models\Types;
-use App\Models\Category;
 use App\Library\Common;
-use Excel;
 use Illuminate\Http\Request;
-use Session;
-use Validator;
-use Lang;
+use Illuminate\Support\Facades\DB;
+use  Illuminate\Support\Facades\Lang;
 
 class PagesController extends Controller
 {
+    protected $objModel;
     public function __construct()
     {   
         $this->objModel = new Pages;
         Common::defineDynamicConstant('pages');
     }
-    /**
-     * Default Method for the controller
-     * List of the pages
-     *
-     * @param string $request
-     *
-     * @author ATL
-     * @since Jan 2020
-     */
+   
     public function index(Request $request)
     {
         return Common::commanListPage($this->objModel, 'page_id', '', '', '', $request->is_globle, '', '');
     }
-    /**
-     * Create Page using this method
-     * Add Page
-     *
-     * @param string $request
-     *
-     * @author ATL
-     * @since Jan 2020
-     */
+  
     public function add(Request $request)
     {
         $dbPageType = new PageTypes;
@@ -82,15 +57,7 @@ class PagesController extends Controller
         }
         return view(RENDER_URL.'.add', compact('allPageType','allType','allCategory','allRegionType'));
     }
-    /**
-     * Edit Page using this method
-     * Update Page
-     *
-     * @param string $request
-     *
-     * @author ATL
-     * @since Jan 2020
-     */
+    
     public function edit(Request $request, $id = null)
     {
         $allCategory = Common::fetchCategoryTree();
@@ -127,32 +94,13 @@ class PagesController extends Controller
             return redirect(URL)->with(FLASH_MESSAGE_ERROR, Lang::get(COMMON_MSG_INVALID_ARGUE));
         }
     }
-	/**
-     * Delete Page using this method
-     * Remove page by checking dependancy
-     *
-     * @param string $request
-     *
-     * @author ATL
-     * @since Jan 2020
-     */
+	
     public function delete(Request $request)
     {
 		$arrTableFields = array();
         return Common::commanDeletePage($this->objModel, $request, $arrTableFields);
     }
    
-    /**
-	 * Slug for Pages using this method
-	 * Unique Slug page with all data
-	 *
-	 * @param string $title
-     * @param string $table_name
-     * @param string $field_name
-	 *
-	 * @author ATL
-	 * @since Jan 2019
-	*/
     public function slug($title,$table_name,$field_name,$primary_field_name="",$primary_field_value=""){
         $slug = preg_replace("/-$/","",preg_replace('/[^a-z0-9]+/i', "-", strtolower($title)));
         if(isset($primary_field_name) && !empty($primary_field_name)){
@@ -163,12 +111,7 @@ class PagesController extends Controller
         return ($results->NumHits > 0) ? ($slug . '-' . $results->NumHits) : $slug;
     }
 
-    /**
-	 * Update page slug
-	 * @param string $request
-	 *
-	 * @author ATL
-	*/
+   
     public function updateSlug(Request $request){
         $dbPages = new Pages;
         $data = $request->input();

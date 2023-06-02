@@ -13,7 +13,8 @@ use App\User;
 use App\Models\TempProfile;
 use Illuminate\Support\Facades\Storage;
 use Auth;
-use DB;
+// use DB;
+use Illuminate\Support\Facades\DB;
 use Excel;
 use AWS;
 // use Session;
@@ -28,6 +29,8 @@ use ReceiptValidator\iTunes\Validator as iTunesValidator;
 use Intervention\Image\ImageManagerStatic as Image;
 use App\Models\City;
 use App\Models\Package;
+use Illuminate\Http\Request;
+
 
 class Common extends Eloquent
 {
@@ -335,7 +338,6 @@ class Common extends Eloquent
     {
         $roleId = \Request::session()->get('role');
         $data = $model->getAll($orderby, $where, $dynamicWhere, $start, $limit);
-
         $totalFiltered = $model->getAll($orderby, $where, $dynamicWhere);   
         if ($is_globle) {
             $resp['data'] = $data;
@@ -366,8 +368,9 @@ class Common extends Eloquent
             }else{
                 $request->merge(["created_by"=>Session::get('id'),'created_at' => date("Y-m-d H:i:s"), 'updated_by' => Session::get('id')]);
             }
-            
             if (isset($arrFile['except']) && !empty($arrFile['except'])){
+            // echo '<pre>'; print_r($request->all()); echo '</pre>'; die();
+                // echo '<pre>'; print_r($request->except(array_merge(array('_token', $arrFile['except'],str_replace('_exist','',$arrFile['except'])),$arrExpect))); echo '</pre>'; die();
                 $objModel->insert($request->except(array_merge(array('_token', $arrFile['except'],str_replace('_exist','',$arrFile['except'])),$arrExpect)));
             }else{
                 $objModel->insert($request->except(array_merge(['_token'],$arrExpect)));
@@ -462,13 +465,7 @@ class Common extends Eloquent
             return redirect(URL)->with(FLASH_MESSAGE_ERROR, Lang::get(COMMON_MSG_INVALID_ARGUE));
         }
     }
-
-    /**
-    * Query build in filter
-    *
-    * @author ATL
-    * @since March 2019
-    */
+   
     public static function buildQuery($searchData, $formData, $map = false)
     {
         $keywords = '';

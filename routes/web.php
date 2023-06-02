@@ -3,6 +3,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\RightsController;
+use App\Http\Controllers\Admin\ModuleController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\PagesController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -96,58 +101,52 @@ Route::group(['prefix' => 'admin', 'namespace' => '\App\Http\Controllers'], func
     Route::match(['get','post'], '/inventory/import', 'Admin\InventoryController@import');
 
     /** User Management Routes (Admin) */
-    Route::match(['get','post'], '/user', 'Admin\UserController@index');
+    Route::match(['get','post'], '/user', [UserController::class, 'index']);
     Route::match(array('GET','POST'),'/myprofile/{id}',[UserController::class, 'myprofile']); //my
-    // Route::match(['get','post'], '/myprofile/{id}', 'Admin\UserController@myprofile');
-    Route::match(['get','post'], '/user/add', 'Admin\UserController@add');
-    Route::match(['get','post'], '/user/edit/{id}', 'Admin\UserController@edit');
-    Route::match(['post'], '/user/delete', 'Admin\UserController@delete');
+    Route::match(['get','post'], '/user/add',[UserController::class, 'add']);//my
+    Route::match(['get','post'], '/user/edit/{id}',[UserController::class, 'edit']);//my
+    Route::match(['post'], '/user/delete', [UserController::class, 'delete']);//my
     Route::match(['post'], '/user/toggle', 'Admin\UserController@toggleStatus');
     Route::match(['get', 'post'], '/user/view/{id}', 'Admin\UserController@view');
     Route::get('/user/state', 'Admin\UserController@getStates');
     Route::get('/user/cities', 'Admin\UserController@getCities');
     Route::match(['get','post'],'/user/get-rights', 'Admin\UserController@getRights');
-    // Route::match(['get','post'], '/myprofile/changepassword/{id}', 'Admin\UserController@changepassword');
     Route::match(array('GET','POST'),'/myprofile/changepassword/{id}',[UserController::class, 'changepassword']);//my
 
     Route::match(['get','post'], '/user/check-user-availability', 'Admin\UserController@checkAvailability');
     Route::match(['get','post'], '/user/delete-file', 'Admin\UserController@deleteFile');
     
     /** Module Management Routes (Admin) */
-    Route::match(['get','post'], '/module', 'Admin\ModuleController@index');
-    Route::match(['get','post'], '/module/add', 'Admin\ModuleController@add');
-    Route::match(['get','post'], '/module/edit/{id}', 'Admin\ModuleController@edit');
-    Route::match(['post'], '/module/delete', 'Admin\ModuleController@delete');
+    
+    Route::match(['get','post'], '/module',[ModuleController::class, 'index']);//my
+    Route::match(['get','post'], '/module/add',[ModuleController::class, 'add']);
+    Route::match(['get','post'], '/module/edit/{id}', [ModuleController::class, 'edit']);
+    Route::match(['post'], '/module/delete', [ModuleController::class, 'delete']);
     Route::match(['post'], '/module/toggle', 'Admin\ModuleController@toggleStatus');
 
     /** Right Management Routes (Admin) */
-    Route::match(['get', 'post'], '/rights', 'Admin\RightsController@index');
-    Route::match(['get', 'post'], '/rights/add', 'Admin\RightsController@add');
-    Route::match(['get', 'post'], '/rights/edit/{id}', 'Admin\RightsController@edit');
-    Route::match(['post'], '/rights/delete', 'Admin\RightsController@delete');
+   
+    Route::match(['get', 'post'], '/rights', [RightsController::class, 'index']); //my
+    Route::match(['get', 'post'], '/rights/add',[RightsController::class, 'add']);//my
+    Route::match(['get', 'post'], '/rights/edit/{id}',[RightsController::class, 'edit']);
+    Route::match(['post'], '/rights/delete', [RightsController::class, 'delete']);//my
     Route::match(['post'], '/rights/toggle', 'Admin\RightsController@toggleStatus');
 
     /** Role Management Routes (Admin) */
-    Route::match(['get', 'post'], '/role', 'Admin\RoleController@index');
-    Route::match(['get', 'post'], '/role/add', 'Admin\RoleController@add');
-    Route::match(['get', 'post'], '/role/edit/{id}', 'Admin\RoleController@edit');
-    Route::match(['post'], '/role/delete', 'Admin\RoleController@delete');
+    
+    Route::match(['get', 'post'], '/role', [RoleController::class, 'index']);//my
+    Route::match(['get', 'post'], '/role/add',[RoleController::class, 'add']);//my
+    Route::match(['get', 'post'], '/role/edit/{id}',[RoleController::class, 'edit']);//my
+    Route::match(['post'], '/role/delete',[RoleController::class, 'delete']);//my
     Route::match(['post'], '/role/toggle', 'Admin\RoleController@toggleStatus');
-    Route::match(['get', 'post'], '/role/view/{id}', 'Admin\RoleController@view');
+    Route::match(['get', 'post'], '/role/view/{id}',[RoleController::class, 'view']);//my
 
     /** Menu Management Routes (Admin) */
-    // Route::match(['get', 'post'], '/menu', 'Admin\MenuController@index');
-    // Route::match(['get', 'post'], '/menu/add', 'Admin\MenuController@add');
-    // Route::match(['get', 'post'], '/menu/edit/{id}', 'Admin\MenuController@edit');
-    // Route::match(['post'], '/menu/delete', 'Admin\MenuController@delete');
-    // Route::match(['post'], '/menu/toggle', 'Admin\MenuController@toggleStatus');
-    // Route::match(['post'], '/menu/optionSelect', 'Admin\MenuController@optionSelect');
 
     Route::match(['get', 'post'], '/menu',[MenuController::class, 'index']);//my
     Route::match(['get', 'post'], '/menu/add', [MenuController::class, 'add']);//my
     Route::match(['get', 'post'], '/menu/edit/{id}', [MenuController::class, 'edit']);//my
-    // Route::match(['get', 'post'], '/menu/edit/{id}', 'Admin\MenuController@edit');
-    Route::match(['post'], '/menu/delete', 'Admin\MenuController@delete');
+    Route::post('/menu/delete',[MenuController::class,'delete']); //my
     Route::match(['post'], '/menu/toggle', 'Admin\MenuController@toggleStatus');
     Route::post('/menu/optionSelect',[MenuController::class,'optionSelect']); //my
 
@@ -279,10 +278,10 @@ Route::group(['prefix' => 'admin', 'namespace' => '\App\Http\Controllers'], func
      Route::match(['post'], '/pagetype/toggle', 'Admin\PageTypesController@toggleStatus');
 
     /** Pages Routes (Admin) */
-    Route::match(['get','post'], '/pages', 'Admin\PagesController@index');
-    Route::match(['get','post'], '/pages/add', 'Admin\PagesController@add');
-    Route::match(['get','post'], '/pages/edit/{id}', 'Admin\PagesController@edit');
-    Route::match(['post'], '/pages/delete', 'Admin\PagesController@delete');
+    Route::match(['get','post'], '/pages', [PagesController::class, 'index']);//my
+    Route::match(['get','post'], '/pages/add', [PagesController::class, 'add']);//my
+    Route::match(['get','post'], '/pages/edit/{id}',[PagesController::class, 'edit']);//my
+    Route::match(['post'], '/pages/delete', [PagesController::class, 'delete']);//my
     Route::match(['post'], '/pages/toggle', 'Admin\PagesController@toggleStatus');
     Route::match(['post'],'/pages/update-slug', 'Admin\PagesController@updateSlug');
 

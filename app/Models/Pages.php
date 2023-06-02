@@ -1,24 +1,12 @@
 <?php
-/**
- * Pages Model
- * Manage CRUD for the Pages
- *
- * @author ATL
- * @since Jan 2020
-*/
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class Pages extends Model
 {
-    /**
-    * Returns all records
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
     public function getAll($orderby=null, $where=array(), $dynamicWhere='', $start='', $limit='')
     {
         if (empty($dynamicWhere)) {
@@ -59,34 +47,17 @@ class Pages extends Model
                     // ->get();
     }
 
-    /**
-    * Returns specific record
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
+    
     public function getOne($id)
     {
         return pages::where(['page_id' => $id])->first();
     }
 
-    /**
-    * Delete specific record
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
     public function deleteOne($id, $arrUpdate)
     {
         return pages::where('page_id', $id)->update($arrUpdate);
     }
 
-    /**
-    * Update specific record
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
     public function updateOne($id, $arrUpdate)
     {
         return pages::where('page_id', $id)->update($arrUpdate);

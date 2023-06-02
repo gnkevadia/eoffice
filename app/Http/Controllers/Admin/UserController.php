@@ -28,48 +28,34 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Session;
 // use Validator;
 use Illuminate\Support\Facades\Validator;
-use Hash;
+// use Hash;
+use Illuminate\Support\Facades\Hash;
 use Auth;
 use App\Rules\Numberoffiles;
 
 class UserController extends Controller
 {
+    protected $objModel;
     public function __construct()
     {
         $this->objModel = new Users;
         Common::defineDynamicConstant('user');
     }
-    /**
-     * Default Method for the controller
-     * List of the Module
-     *
-     * @param string $request
-     *
-     * @author ATL
-     * @since Jan 2020
-     */
+   
     public function index(Request $request)
     {
         return Common::commanListPage($this->objModel, '', '', '', '', $request->is_globle, '', '');
     }
-    /**
-     * Create User using this method
-     * Add user
-     *
-     * @param string $request
-     *
-     * @author ATL
-     * @since Jan 2020
-     */
+    
     public function add(Request $request)
     {   
-        $dbrole = new Role;
+        $dbrole = new Role();
         $arrRole = $dbrole->getAll();
-        $dbcountry = new Country;
+        $dbcountry = new Country();
         $arrCountry = $dbcountry->getAll();
-        $dbState = new States;
+        $dbState = new States();
         $arrState = $dbState->getAll();
-        $dbcity = new City;
+        $dbcity = new City();
         $arrCity = $dbcity->getAll();
         $messages = [
                 'name.required' => 'Please specify Name',
@@ -90,24 +76,16 @@ class UserController extends Controller
         }
         return view(RENDER_URL.'.add', compact('arrRole', 'arrCountry','arrState','arrCity'));
     }
-    /**
-     * Edit User using this method
-     * Update user
-     *
-     * @param string $request
-     *
-     * @author ATL
-     * @since Jan 2020
-     */
+    
     public function edit(Request $request, $id = null)
     {
-        $dbrole = new Role;
+        $dbrole = new Role();
         $arrRole = $dbrole->getAll();
-        $dbcountry = new Country;
+        $dbcountry = new Country();
         $arrCountry = $dbcountry->get('nicename');
-        $dbState = new States;
+        $dbState = new States();
         $arrState = $dbState->get('states_name');
-        $dbcity = new City;
+        $dbcity = new City();
         $arrCity = $dbcity->getAll();
         $data = $this->objModel->getOne($id);
         if (isset($data) && !empty($data)) {
@@ -130,18 +108,10 @@ class UserController extends Controller
             return redirect(URL)->with(FLASH_MESSAGE_ERROR, Lang::get(COMMON_MSG_INVALID_ARGUE));
         }
     }
-	/**
-     * View User using this method
-     * View user and override user specific role
-     *
-     * @param string $request
-     *
-     * @author ATL
-     * @since Jan 2020
-     */
+	
     public function view(Request $request, $id = null)
     {
-        $dbUsers = new User;
+        $dbUsers = new Users();
         $userDetails = $dbUsers->getOne($id);
         $dbRoles = new Role;
         $roles = $dbRoles->getAll();
@@ -159,56 +129,24 @@ class UserController extends Controller
             return redirect('/admin/user')->with('flash_message_error8', 'Invalid argument supplied');
         }
     }
-	/**
-	 * Delete user using this method
-	 * Remove user by checking dependancy
-	 *
-	 * @param string $request
-	 *
-	 * @author ATL
-	 * @since Jan 2020
-	*/
+	
     public function delete(Request $request)
     {
 		$arrTableFields = array();
         return Common::commanDeletePage($this->objModel, $request);
     }
-    /**
-     * Toggle Module using this method
-     * Active/InActive module status
-     *
-     * @param string $request
-     *
-     * @author ATL
-     * @since Jan 2020
-     */
+   
     public function toggleStatus(Request $request)
     {
         return Common::commanTogglePage($this->objModel, $request, $arrTableFields);
     }
-    /**
-     * Export Module using this method
-     * export module with all data
-     *
-     * @param string $request
-     *
-     * @author ATL
-     * @since Jan 2020
-     */
+    
     public function export(Request $request)
     {
         $arrHeading = array('Module Name', 'Status');
         return Excel::download(new MainExport(MODELNAME, $arrHeading), 'module.xlsx');
     }
-	/**
-     * Retrive User Profile using this method
-     * Get user profile
-     *
-     * @param string $request
-     *
-     * @author ATL
-     * @since Jan 2020
-     */
+	
     public function myprofile(Request $request, $id = null)
     {
         // echo '<pre>'; print_r($request->all()); echo '</pre>'; die();
@@ -250,15 +188,7 @@ class UserController extends Controller
             }
         }
     }
-	/**
-     * Update User Password using this method
-     * Change user password
-     *
-     * @param string $request
-     *
-     * @author ATL
-     * @since Jan 2020
-     */
+	
     public function changepassword(Request $request, $id = null)
     {
         if ($id == Session::get('id')) {
@@ -306,21 +236,13 @@ class UserController extends Controller
             return redirect('admin/myprofile/'.Session::get('id'))->with(FLASH_MESSAGE_ERROR, Lang::get(COMMON_MSG_INVALID_ARGUE));
         }
     }
-	/**
-     * Get User Rights using this method
-     * Retrive user rights
-     *
-     * @param string $request
-     *
-     * @author ATL
-     * @since Jan 2020
-     */
+	
     public function getRights(Request $request){
         $data = $request->input();
         $dbRoles = new Role;
         $roleId = $data['role_id'];
         $roleDetails = $dbRoles->getOne($roleId);
-		$dbModules = new User;
+		$dbModules = new Users();
         $moduelsRights = $dbModules->getModules();
         $html = '<div class="card"><div class="card-body"><h4 class="card-title">Module Permission</h4><div class="card m-b-0 no-border"><div class="col-md-12"><div class="custom-control custom-checkbox"><input type="checkbox" class="custom-control-input" id="checkAll"><label class="custom-control-label" for="checkAll">Check / Uncheck Permission</label></div><div class="row row-eq-height">';
 		if(isset($moduelsRights) && !empty($moduelsRights)):
@@ -372,60 +294,28 @@ class UserController extends Controller
         $arrResult['result'] = $html;
 		echo json_encode($arrResult);die;
     }
-	/**
-     * Get State using this method
-     * Fetch State
-     *
-     * @param string $request
-     *
-     * @author ATL
-     * @since Jan 2020
-     */
+	
     public function getStates(Request $request) 
     {
         $dbStates  = new States;
         $state = $dbStates->getStateByCountryId($request->countryId);
         return response()->json($state);   
     }
-	/**
-     * Get City using this method
-     * Fetch City
-     *
-     * @param string $request
-     *
-     * @author ATL
-     * @since Jan 2020
-     */
+	
     public function getCities(Request $request) 
     {
         $dbCities  = new City;
         $cities = $dbCities->getCityByStateId($request->stateID);
         return response()->json($cities);   
     }
-    /**
-     * Get City using this method
-     * Fetch City
-     *
-     * @param string $request
-     *
-     * @author ATL
-     * @since Jan 2020
-     */
+  
     public function checkAvailability(Request $request){
         $dbUser = new User;
         $userDetails = $dbUser->getUserbyEmail($request->username,$request->id);        
         
         echo json_encode(array('message' => '', 'data' => $userDetails, 'status' => ''));die;
     }
-    /**
-     * Get City using this method
-     * Fetch City
-     *
-     * @param string $request
-     *
-     * @author ATL
-     * @since Jan 2020
-     */
+   
     public function deleteFile(Request $request){
         $deleted = Common::commanDeleteFile($request->tableName,$request->id, $request->path, $request->file);
         

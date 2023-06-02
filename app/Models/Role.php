@@ -1,46 +1,24 @@
 <?php
-/**
- * Role Model
- * Manage CRUD for the Role
- *
- * @author ATL
- * @since Jan 2020
-*/
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use DB;
+// use DB;
+use Illuminate\Support\Facades\DB;
 
 class Role extends Model
 {
-    /**
-    * Returns all records
-    *
-    * @author ATL
-    * @since Jan 2019
-    */
+    
     public function getRole()
     {
         return Role::where(['deleted' => 0])->get();
     }
 
-    /**
-    * Returns all records
-    *
-    * @author ATL
-    * @since Jan 2019
-    */
     public function getOneRoleById($roleId)
     {
         return Role::where(['id' => $roleId])->first();
     }
 
-    /**
-    * Returns all records
-    *
-    * @author ATL
-    * @since Jan 2019
-    */
     public function getAll($orderby=null, $where=array(), $dynamicWhere='')
     {
         if (empty($dynamicWhere)) {
@@ -63,69 +41,32 @@ class Role extends Model
             ->whereRaw($dynamicWhere)
             ->get();
     }
-    
-    /**
-    * Returns count of records
-    *
-    * @author ATL
-    * @since Jan 2019
-    */
+   
     public function getOne($id)
     {
         return Role::where(['id' => $id])->first();
     }
 
-    /**
-    * Delete specific records
-    *
-    * @author ATL
-    * @since Jan 2019
-    */
     public function deleteAll($ids, $arrUpdate)
     {
         return Role::whereIn('id', explode(',', $ids))->update($arrUpdate);
     }
 
-    /**
-    * Delete specific record
-    *
-    * @author ATL
-    * @since Jan 2019
-    */
     public function deleteOne($id, $arrUpdate)
     {
         return Role::where('id', $id)->update($arrUpdate);
     }
 
-
-    /**
-    * Update records in bulk
-    *
-    * @author ATL
-    * @since Jan 2019
-    */
     public function bulkUpdate($ids, $arrUpdate)
     {
         return Role::whereIn('id', explode(',', $ids))->update($arrUpdate);
     }
 
-    /**
-    * Update specific record
-    *
-    * @author ATL
-    * @since Jan 2019
-    */
     public function updateOne($id, $arrUpdate)
     {
         return Role::where('id', $id)->update($arrUpdate);
     }
 
-    /**
-    * Returns contry details based on id
-    *
-    * @author ATL
-    * @since Jan 2019
-    */
     public function getCountByCriteria($id = null, $criteria)
     {
         if ($id != null) {
@@ -135,12 +76,6 @@ class Role extends Model
         }
     }
 
-    /**
-    * Returns all records to export
-    *
-    * @author ATL
-    * @since Jan 2019
-    */
     public function getAllToExport()
     {
         return Role::where(['deleted' => 0])->select('name as Name', DB::raw('CASE WHEN status = 1 THEN "Active" ELSE "Inactive" END as Status'));

@@ -8,49 +8,30 @@
  */
 namespace App\Http\Controllers\Admin;
 
-use App\Exports\MainExport;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\Module;
-use App\Models\Right;
-use App\Models\User;
 use App\Library\Common;
-use Excel;
 use Illuminate\Http\Request;
-use Session;
-use Validator;
-use Lang;
-use DB;
+// use Lang;
+use Illuminate\Support\Facades\Lang;
+// use DB;
+use Illuminate\Support\Facades\DB;
 
 class RoleController extends Controller
 {
+    protected $objModel;
     public function __construct()
     {
         $this->objModel = new Role;
         Common::defineDynamicConstant('role');
     }
-    /**
-     * Default Method for the controller
-     * List of the Role
-     *
-     * @param string $request
-     *
-     * @author ATL
-     * @since Jan 2020
-     */
+    
     public function index(Request $request)
     {   
         return Common::commanListPage($this->objModel, '', '', '', '', $request->is_globle, '', '');
     }
-    /**
-     * Create Role using this method
-     * Add role
-     *
-     * @param string $request
-     *
-     * @author ATL
-     * @since Jan 2020
-     */
+    
     public function add(Request $request)
     {
 
@@ -69,15 +50,7 @@ class RoleController extends Controller
         }
         return view(RENDER_URL.'.add');
     }
-    /**
-     * Edit Role using this method
-     * Update role
-     *
-     * @param string $request
-     *
-     * @author ATL
-     * @since Jan 2020
-     */
+   
     public function edit(Request $request, $id = null)
     {
         $data = $this->objModel->getOne($id);
@@ -101,21 +74,11 @@ class RoleController extends Controller
         }
     }
 
-    /**
-     * View Roles using this method
-     * Read role
-     *
-     * @param string $request
-     * @param integer $id
-     *
-     * @author ATL
-     * @since Jan 2020
-    */
     public function view(Request $request, $id = null)
     {
-        $dbRoles = new Role;
+        $dbRoles = new Role();
         $roleDetails = $dbRoles->getOne($id);
-        $dbModules = new Module;
+        $dbModules = new Module();
         $moduelsRights = $dbModules->getModuleRights();
         if (isset($roleDetails) && !empty($roleDetails)) {
             if ($request->isMethod('post') && isset($id) && !empty($id)) {
@@ -173,29 +136,13 @@ class RoleController extends Controller
             return redirect('/admin/role')->with('flash_message_error10', 'Invalid argument supplied');
         }
     }
-	/**
-     * Delete Role using this method
-     * Remove role by checking dependancy
-     *
-     * @param string $request
-     *
-     * @author ATL
-     * @since Jan 2020
-     */
+	
     public function delete(Request $request)
     {
 		$arrTableFields = array();
         return Common::commanDeletePage($this->objModel, $request, $arrTableFields);
     }
-    /**
-     * Toggle Role using this method
-     * Active/InActive role status
-     *
-     * @param string $request
-     *
-     * @author ATL
-     * @since Jan 2020
-     */
+    
     public function toggleStatus(Request $request)
     {
         return Common::commanTogglePage($this->objModel, $request);

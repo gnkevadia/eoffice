@@ -30,7 +30,7 @@ License: You must have a valid license purchased only from themeforest(the above
 		<div id="kt_header_mobile" class="kt-header-mobile  kt-header-mobile--fixed ">
 			<div class="kt-header-mobile__logo">
 				<a href="{{ url('/admin/dashboard') }}" class="adminheader">
-					FuelTrend
+					eOffice
 				</a>
 			</div>
 			<div class="kt-header-mobile__toolbar">

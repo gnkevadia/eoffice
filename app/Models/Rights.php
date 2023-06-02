@@ -1,24 +1,12 @@
 <?php
-/**
- * Rights Model
- * Manage CRUD for the Rights
- *
- * @author ATL
- * @since Jan 2020
-*/
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use DB;
-
+// use DB;
+use Illuminate\Support\Facades\DB;
 class Rights extends Model
 {
-    /**
-    * Returns all records
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
     public function getAll($order_by=null, $where=array(), $dynamicWhere='')
     {
         if (empty($dynamicWhere)) {
@@ -42,69 +30,32 @@ class Rights extends Model
             ->whereRaw($dynamicWhere)
             ->get();
     }
-    
-    /**
-    * Returns count of records
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
     public function getOne($id)
     {
         return Rights::where(['id' => $id])->first();
     }
 
-    /**
-    * Delete specific records
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
+    
     public function deleteAll($ids, $arrUpdate)
     {
         return Rights::whereIn('id', explode(',', $ids))->update($arrUpdate);
     }
 
-    /**
-    * Delete specific record
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
     public function deleteOne($id, $arrUpdate)
     {
         return Rights::where('id', $id)->update($arrUpdate);
     }
 
-
-    /**
-    * Update records in bulk
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
     public function bulkUpdate($ids, $arrUpdate)
     {
         return Rights::whereIn('id', explode(',', $ids))->update($arrUpdate);
     }
 
-    /**
-    * Update specific record
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
     public function updateOne($id, $arrUpdate)
     {
         return Rights::where('id', $id)->update($arrUpdate);
     }
 
-    /**
-    * Returns contry details based on id
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
     public function getCountByCriteria($id = null, $criteria)
     {
         if ($id != null) {
@@ -114,12 +65,6 @@ class Rights extends Model
         }
     }
 
-    /**
-    * Returns all records to export
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
     public function getAllToExport()
     {
         return Rights::where(['right.deleted' => 0])

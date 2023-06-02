@@ -6,7 +6,7 @@
 	<div class="kt-aside__brand kt-grid__item " id="kt_aside_brand">
 		<div class="kt-aside__brand-logo">
 			<a href="{{ url('/admin/dashboard') }}" class="sideheader">
-				FuelTrend
+				eOffice
 			</a>
 		</div>
 		<div class="kt-aside__brand-tools">

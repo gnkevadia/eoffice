@@ -1,27 +1,14 @@
 <?php
-/**
- * Users Model
- * Manage CRUD for the Users
- *
- * @author ATL
- * @since Jan 2020
-*/
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use DB;
-use Session;
+use Illuminate\Support\Facades\DB;
 
 class Users extends Model
 {
     protected $table = 'users';
 
-    /**
-    * Returns all records
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
     public function getAll($orderby=null, $where=array(), $dynamicWhere='')
     {
         if (empty($dynamicWhere)) {
@@ -46,68 +33,31 @@ class Users extends Model
                     ->get();
     }
 
-    /**
-    * Returns specific record
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
     public function getOne($id)
     {
         return Users::where(['id' => $id])->first();
     }
 
-    /**
-    * Delete specific records
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
     public function deleteAll($ids, $arrUpdate)
     {
         return Users::whereIn('id', explode(',', $ids))->update($arrUpdate);
     }
 
-    /**
-    * Delete specific record
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
     public function deleteOne($id, $arrUpdate)
     {
         return Users::where('id', $id)->update($arrUpdate);
     }
 
-
-    /**
-    * Update records in bulk
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
     public function bulkUpdate($ids, $arrUpdate)
     {
         return Users::whereIn('id', explode(',', $ids))->update($arrUpdate);
     }
 
-    /**
-    * Update specific record
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
     public function updateOne($id, $arrUpdate)
     {
         return Users::where('id', $id)->update($arrUpdate);
     }
 
-    /**
-    * Returns contry details based on id
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
     public function getCountByCriteria($id = null, $criteria, $menuTypeId=null)
     {
         if ($id != null) {
@@ -117,63 +67,32 @@ class Users extends Model
         }
     }
 
-    /**
-    * Returns all records to export
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
     public static function getAllToExport()
     {
         return Users::where(['deleted' => 0])
                 ->select('name as Name', DB::raw('CASE WHEN status = 1 THEN "Active" ELSE "Inactive" END as Status'));
     }
-    /**
-    * Returns specific record
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
+   
     public function getPackageAddon($id)
     {
         return DB::table('package_addon')->where(['package_id' => $id])->get();
     }
-    /**
-    * Returns specific record
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
+   
     public function getAddonPackageFiles($packageId,$cityId)
     {
         return DB::table('package_addon')->join('package_addon_files', 'package_addon_files.package_addon_id', '=', 'package_addon.id')->where(['package_id' => $packageId,'package_addon_id' => $cityId])->select('package_addon_files.*')->get();
     }
-    /**
-    * Returns specific record
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
+    
     public function getPackageDetails()
     {
         return DB::table('package')->join('package_city', 'package.id', '=', 'package_city.package_id')->join('city_date_package', 'city_date_package.package_city_id', '=', 'package_city.id')->join('city', 'city.id', '=', 'package_city.city_id')->join('team', 'team.city_id', '=', 'city.id')->where('package.status','=','1')->where('package_date','>=',date('Y-m-d'))->select('*','city.name as cityname','package.name as packagename')->get();
     }
-    /**
-    * Returns specific record
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
+    
     public function getPackageDateDetails($orderby=null, $where=array(), $dynamicWhere='')
     {
         return DB::table('package')->join('package_city', 'package.id', '=', 'package_city.package_id')->join('city_date_package', 'city_date_package.package_city_id', '=', 'package_city.id')->join('city', 'city.id', '=', 'package_city.city_id')->where('package_date','>=',date('Y-m-d'))->whereRaw($dynamicWhere)->select('*','city.name as cityname','package.name as packagename')->orderBy('city_date_package.package_date')->get();
     }
-    /**
-    * Returns all records
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
+   
     public function getAllPackages($orderby=null, $where=array(), $dynamicWhere='')
     {
         if (empty($dynamicWhere)) {
@@ -195,12 +114,7 @@ class Users extends Model
                     ->select()
                     ->get();
     }
-    /**
-    * Returns all records
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
+   
     public function retrivePackage($orderby=null, $where=array(), $dynamicWhere='')
     {
         if (empty($dynamicWhere)) {
@@ -228,12 +142,7 @@ class Users extends Model
                     ->groupBy("package.id")
                     ->first();
     }
-    /**
-    * Returns all records
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
+   
     public function getDateCityPackage($orderby=null, $where=array(), $dynamicWhere='')
     {
         if (empty($dynamicWhere)) {
@@ -262,12 +171,6 @@ class Users extends Model
                     ->get();
     }
 
-    /**
-    * Returns all records
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
     public function getDateCityInventoryPackage($orderby=null, $where=array(), $dynamicWhere='')
     {
         if (empty($dynamicWhere)) {
@@ -275,7 +178,6 @@ class Users extends Model
         }
 
         $query = Users::query();
-        
         if (!empty($orderby)) {
             $query->orderBy($orderby);
         } else {
