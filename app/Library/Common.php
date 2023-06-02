@@ -3,7 +3,6 @@ namespace App\Library;
 
 use App\Models\Menu;
 use App\Models\Setting;
-use App\Models\Module;
 use App\Models\Category;
 use App\Models\UserDocument;
 use App\Models\UserSubscription;
@@ -11,17 +10,11 @@ use App\Models\UserPaymentHistory;
 use App\Models\Subscription;
 use App\User;
 use App\Models\TempProfile;
-use Illuminate\Support\Facades\Storage;
-use Auth;
-// use DB;
 use Illuminate\Support\Facades\DB;
 use Excel;
 use AWS;
-// use Session;
 use Illuminate\Support\Facades\Session;
-// use Lang;
 use Illuminate\Support\Facades\Lang;
-// use Validator;
 use Illuminate\Support\Facades\Validator;
 use \Eloquent;
 use Config;
@@ -29,7 +22,6 @@ use ReceiptValidator\iTunes\Validator as iTunesValidator;
 use Intervention\Image\ImageManagerStatic as Image;
 use App\Models\City;
 use App\Models\Package;
-use Illuminate\Http\Request;
 
 
 class Common extends Eloquent
@@ -369,8 +361,6 @@ class Common extends Eloquent
                 $request->merge(["created_by"=>Session::get('id'),'created_at' => date("Y-m-d H:i:s"), 'updated_by' => Session::get('id')]);
             }
             if (isset($arrFile['except']) && !empty($arrFile['except'])){
-            // echo '<pre>'; print_r($request->all()); echo '</pre>'; die();
-                // echo '<pre>'; print_r($request->except(array_merge(array('_token', $arrFile['except'],str_replace('_exist','',$arrFile['except'])),$arrExpect))); echo '</pre>'; die();
                 $objModel->insert($request->except(array_merge(array('_token', $arrFile['except'],str_replace('_exist','',$arrFile['except'])),$arrExpect)));
             }else{
                 $objModel->insert($request->except(array_merge(['_token'],$arrExpect)));
