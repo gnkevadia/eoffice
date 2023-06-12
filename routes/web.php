@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PagesController;
 use App\Http\Controllers\Admin\FeaturesController;
 use App\Http\Controllers\Admin\TaskController;
+use App\Http\Controllers\Admin\ProjectMasterController;
+use Illuminate\Support\Facades\Auth;
 
 
 /*
@@ -224,6 +226,11 @@ Route::group(['prefix' => 'admin', 'namespace' => '\App\Http\Controllers'], func
     Route::match(['post'], '/state/delete', 'Admin\StatesController@delete');
     Route::match(['post'], '/state/toggle', 'Admin\StatesController@toggleStatus');
     Route::match(['post'], '/state/getStates', 'Admin\StatesController@getStates');
+
+    /**  project Management Routes (Admin) */
+    Route::match(['get','post'], '/projectmaster',[ProjectMasterController::class, 'index']);
+    Route::match(['get','post'], '/projectmaster/add',[ProjectMasterController::class, 'add']);
+    Route::match(['get','post'], '/projectmaster/edit/{id}',[ProjectMasterController::class, 'edit']);
 
     /**  City Management Routes (Admin) */
     Route::match(['get','post'], '/city', 'Admin\CityController@index');
