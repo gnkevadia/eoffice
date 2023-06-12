@@ -12,6 +12,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\Module;
 use App\Library\Common;
+use App\Models\User;
+use App\Models\Users;
 use Illuminate\Http\Request;
 // use Lang;
 use Illuminate\Support\Facades\Lang;
@@ -77,6 +79,7 @@ class RoleController extends Controller
     public function view(Request $request, $id = null)
     {
         $dbRoles = new Role();
+        $dbUsers = new Users();
         $roleDetails = $dbRoles->getOne($id);
         $dbModules = new Module();
         $moduelsRights = $dbModules->getModuleRights();

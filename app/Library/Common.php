@@ -342,14 +342,14 @@ class Common extends Eloquent
     
     public static function commanAddPage($objModel, $request, $messages, $regxvalidator, $arrFile=array(), $additopnalOperation=array(),$arrExpect=array())
     {
-        $validator = Validator::make($request->all(), $regxvalidator, $messages);
+        // $validator = Validator::make($request->all(), $regxvalidator, $messages);
     
-        if ($validator->fails()) {
-            $msg = $validator->errors()->all();
-            $msg = implode('<br>', $msg);
-            Session::flash('flash_error', $msg);
-            return redirect(URL.'/add')->withInput();
-        } else {
+        // if ($validator->fails()) {
+        //     $msg = $validator->errors()->all();
+        //     $msg = implode('<br>', $msg);
+        //     Session::flash('flash_error', $msg);
+        //     return redirect(URL.'/add')->withInput();
+        // } else {
             if (isset($arrFile['name']) && !empty($arrFile['name']) && $request->hasFile(str_replace('_exist','',$arrFile['except']))) {
                 $img_name = Common::resizeFile($request, $arrFile);
                 $request->merge([$arrFile['name']=>$img_name]);
@@ -366,19 +366,19 @@ class Common extends Eloquent
                 $objModel->insert($request->except(array_merge(['_token'],$arrExpect)));
             }
             return redirect(URL)->with(FLASH_MESSAGE_SUCCESS, Lang::get('common_message.add', [MODULE_NAME => ucwords(str_replace("-"," ", MODELNAME))]));
-        }
+        // }
     }
 
     public static function commanEditPage($objModel, $request, $messages, $regxvalidator, $id, $arrFile=array(), $additopnalOperation=array(),$arrExpect=array())
     {
-        $validator = Validator::make($request->all(), $regxvalidator, $messages);
+        // $validator = Validator::make($request->all(), $regxvalidator, $messages);
                
-        if ($validator->fails()) {
-            $msg = $validator->errors()->all();
-            $msg = implode('<br>', $msg);
-            Session::flash('flash_error', $msg);
-            return redirect(URL.'/edit/'.$id)->withInput();
-        } else {
+        // if ($validator->fails()) {
+        //     $msg = $validator->errors()->all();
+        //     $msg = implode('<br>', $msg);
+        //     Session::flash('flash_error', $msg);
+        //     return redirect(URL.'/edit/'.$id)->withInput();
+        // } else {
             if (isset($arrFile['name']) && !empty($arrFile['name']) && $request->hasFile(str_replace('_exist','',$arrFile['except']))) {
                 $img_name = Common::resizeFile($request, $arrFile);
                 $request->merge([$arrFile['name']=>$img_name]);
@@ -390,7 +390,7 @@ class Common extends Eloquent
                 $objModel->updateOne($id, $request->except(array_merge(['_token'],$arrExpect)));
             }
             return redirect(URL)->with(FLASH_MESSAGE_SUCCESS, Lang::get('common_message.update', [MODULE_NAME => ucwords(str_replace("-"," ", MODELNAME))]));
-        }
+        // }
     }
 
     public static function commanCopyPage($objModel, $request)

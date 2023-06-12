@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\RightsController;
 use App\Http\Controllers\Admin\ModuleController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PagesController;
+use App\Http\Controllers\Admin\FeaturesController;
+use App\Http\Controllers\Admin\TaskController;
 
 
 /*
@@ -149,6 +151,18 @@ Route::group(['prefix' => 'admin', 'namespace' => '\App\Http\Controllers'], func
     Route::post('/menu/delete',[MenuController::class,'delete']); //my
     Route::match(['post'], '/menu/toggle', 'Admin\MenuController@toggleStatus');
     Route::post('/menu/optionSelect',[MenuController::class,'optionSelect']); //my
+
+    /** Features Routes (Admin) */
+
+    Route::match(['get', 'post'], '/features',[FeaturesController::class, 'index']);//my
+    Route::match(['get', 'post'], '/features/add',[FeaturesController::class, 'add']);//my
+    Route::match(['get', 'post'], '/features/edit/{id}',[FeaturesController::class, 'edit']);//my
+
+    /** Task Routes (Admin) */
+
+    Route::match(['get', 'post'], '/task',[TaskController::class, 'index']);//my
+    Route::match(['get', 'post'], '/task/add',[TaskController::class, 'add']);//my
+    Route::match(['get', 'post'], '/task/edit/{id}',[TaskController::class, 'edit']);//my
 
     /** Menu-type Management Routes (Admin) */
     Route::match(['get','post'],'/menu-types', 'Admin\MenuTypesController@index');
