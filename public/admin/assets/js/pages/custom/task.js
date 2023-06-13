@@ -55,7 +55,7 @@ var KTDatatableDataLocalDemo = function () {
                             field: 'project',
                             title: 'Project',
                         }, {
-                            field: 'module',
+                            field: 'features',
                             title: 'Features',
                         }, {
                             field: 'task',
@@ -123,7 +123,7 @@ var KTDatatableDataLocalDemo = function () {
                                 roleBasedAction += '<a href="task/edit/' + row.id + '" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Edit details"><i class="la la-edit"></i></a>'
                                 // }
                                 // if(isDeleteStatus == true){
-                                roleBasedAction += '<a href="javascript:;" data-toggle="modal" data-target="#delete_modules" data-id="' + row.id + '"  class="btn btn-sm btn-clean btn-icon btn-icon-md delete_row" title="Edit details"><i class="flaticon-delete"></i></a>'
+                                roleBasedAction += '<a href="javascript:;" data-toggle="modal" data-target="#delete_modules" data-id="' + row.id + '"  class="btn btn-sm btn-clean btn-icon btn-icon-md delete_row" title="Delete details"><i class="flaticon-delete"></i></a>'
                                 // }
                                 return roleBasedAction;
                             },

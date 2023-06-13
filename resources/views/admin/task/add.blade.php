@@ -40,7 +40,7 @@
                     </div>
                 </div>
                 <!--begin::Form-->
-                <form id="frmAddEdit" name="frmAddEdit" action="{{ url(VIEW_INFO['url'].'/add') }}" class="kt-form" method="post">
+                <form enctype="multipart/form-data" id="frmAddEdit" name="frmAddEdit" action="{{ url(VIEW_INFO['url'].'/add') }}" class="kt-form" method="post">
                     {{ csrf_field() }}
                     <div class="kt-portlet__body">
                         <div class="form-group form-group-last">
@@ -55,15 +55,17 @@
                         <div class="form-group">
                             <label for="exampleSelect1">Project<span class="required">*</span></label>
                             <select class="form-control" id="status" name="Project">
-                                <option value="1" selected>Active</option>
-                                <option value="0">Inactive</option>
+                                @foreach ($project as $value)
+                                  <option value="{{$value->id}}">{{$value->name}}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="exampleSelect1">Module<span class="required">*</span></label>
-                            <select class="form-control" id="status" name="module">
-                                <option value="1" selected>1</option>
-                                <option value="0">2</option>
+                            <label for="exampleSelect1">Features<span class="required">*</span></label>
+                            <select class="form-control" id="status" name="features">
+                                @foreach ($data as $value)
+                                  <option value="{{$value->id}}">{{$value->name}}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group">
@@ -76,7 +78,7 @@
                         </div>
                         <div class="form-group">
                             <label for="exampleSelect1">Attachment<span class="required">*</span></label>
-                            <input type="file" id="attachment" name="attachment" data-toggle="tooltip" title="Enter Attachment" class="form-control" placeholder="Enter Attachment" value="{{ old('name') }}" multiple>
+                            <input type="file" id="attachment" name="file[]" data-toggle="tooltip" title="Enter Attachment" class="form-control" placeholder="Enter Attachment" value="{{ old('name') }}" multiple>
 
                         </div>
                         <div class="form-group">
@@ -89,8 +91,8 @@
                         <div class="form-group">
                             <label for="exampleSelect1">Assignee<span class="required">*</span></label>
                             <select class="form-control" id="status" name="assignee">
-                                <option value="1" selected>Name</option>
-                                <option value="0">email</option>
+                                <option value="Name" selected>Name</option>
+                                <option value="email">email</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -138,81 +140,5 @@
 @stop
 
 @section('metronic_js')
-<script src="{{ asset('admin/assets/js/pages/custom/menu.js') }}"></script>
-<script>
-    $(document).ready(function() {
-        $("div.hideDiv").hide();
-        $("div.showDiv").show();
-        $("div.packageDiv").hide();
-        $("div.cmsDiv").hide();
-        let url = '{{URL::to(' / admin / menu / optionSelect / ')}}';
-        $('#menu_type_id').on('change', function() {
-            let selectType = $(this).val();
-            let pacakgeId = 1
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                type: 'POST',
-                url: url,
-                data: {
-                    typeId: selectType,
-                    pacakgeId: pacakgeId
-                },
-                success: function(data) {
-                    if (data.length) {
-                        data.forEach(el => {
-                            $("#parent_id").append(`<option value='${el.id}'> ${el.name}</option>`)
-                        })
-                    }
-                }
-            });
-
-            if (selectType == 1) {
-                $("div.showdiv").show();
-                $("div.hideDiv").hide();
-            } else {
-                $("div.showdiv").show();
-                $("div.hideDiv").show();
-            }
-        });
-        $('input[type=radio][name=open_in_new_tabs]').change(function() {
-            if (this.value == 1) {
-                let selectRadio = 1;
-                $("div.packageDiv").show();
-                $("div.cmsDiv").hide();
-            } else if (this.value == 2) {
-                let selectRadio = 2
-                $("div.cmsDiv").show();
-                $("div.packageDiv").hide();
-            }
-
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                type: 'POST',
-                url: url,
-                data: {
-                    selectRadio: selectRadio
-                },
-                success: function(response) {
-                    if (selectRadio == 1) {
-                        if (response.length) {
-                            response.forEach(el => {
-                                $("#packageId").append(`<option value='${el.id}'> ${el.name}</option>`)
-                            })
-                        }
-                    } else {
-                        if (response.length) {
-                            response.forEach(el => {
-                                $("#cmsId").append(`<option value='${el.page_id}'> ${el.page_name}</option>`)
-                            })
-                        }
-                    }
-                }
-            });
-        });
-    });
-</script>
+<script src="{{ asset('admin/assets/js/pages/custom/task-validation.js') }}"></script>
 @stop

@@ -54,10 +54,9 @@
                         @include('admin.includes.errormessage')
                         <div class="form-group">
                             <label for="exampleSelect1">Project<span class="required">*</span></label>
-                            <select class="form-control" id="status" name="Project">
-                                @foreach ($project as $value)
-                                  <option value="{{$value->id}}" {{($value->id == $data->project ? 'selected' : '')}}>{{$value->name}}</option>
-                                @endforeach
+                            <select class="form-control" id="status" name="business_id">
+                                <option {{($data->business_id == 1 ? 'selected' : '')}} value="1">Yes</option>
+                                <option {{($data->business_id == 0 ? 'selected' : '')}} value="0">No</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -67,14 +66,6 @@
                         <div class="form-group">
                             <label>Description</label>
                             <textarea name="description" id="description" cols="30" rows="3" class="form-control" placeholder="Enter Description">{{$data->description}}</textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleSelect1">Pryority<span class="required">*</span></label>
-                            <select class="form-control" id="status" name="Pryority">
-                                <option value="1" selected>Active</option>
-                                <option {{($data->Pryority == 1 ? 'selected' : '')}} value="1">Yes</option>
-                                <option {{($data->Pryority == 0 ? 'selected' : '')}} value="0">No</option>
-                            </select>
                         </div>
                         <div class="form-group">
                             <label for="exampleSelect1">Status<span class="required">*</span></label>
@@ -104,5 +95,5 @@
 @stop
 
 @section('metronic_js')
-<script src="{{ asset('admin/assets/js/pages/custom/features-validation.js') }}"></script>
+<script src="{{ asset('admin/assets/js/pages/custom/department-validation.js') }}"></script>
 @stop

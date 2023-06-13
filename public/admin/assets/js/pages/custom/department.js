@@ -9,7 +9,7 @@ var KTDatatableDataLocalDemo = function () {
     var init = function () {
         var dataJSONArray;
         $.ajax({
-            url: 'features',
+            url: 'department',
             dataType: 'json',
             type: 'get',
             contentType: 'application/json',
@@ -52,8 +52,8 @@ var KTDatatableDataLocalDemo = function () {
                             selector: { class: 'kt-checkbox--solid' },
                             textAlign: 'center',
                         }, {
-                            field: 'project',
-                            title: 'Project',
+                            field: 'business_id',
+                            title: 'Business Name',
                         }, {
                             field: 'name',
                             title: 'Name',
@@ -91,7 +91,7 @@ var KTDatatableDataLocalDemo = function () {
                                 // 	roleBasedAction += '<a href="'+viewURL+'/'+row.id+'" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Edit details"><i class="flaticon-eye"></i></a>'
                                 // }
                                 // if(isUpdateStatus == true){
-                                roleBasedAction += '<a href="features/edit/' + row.id + '" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Edit details"><i class="la la-edit"></i></a>'
+                                roleBasedAction += '<a href="department/edit/' + row.id + '" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Edit details"><i class="la la-edit"></i></a>'
                                 // }
                                 // if(isDeleteStatus == true){
                                 roleBasedAction += '<a href="javascript:;" data-toggle="modal" data-target="#delete_modules" data-id="' + row.id + '"  class="btn btn-sm btn-clean btn-icon btn-icon-md delete_row" title="Delete details"><i class="flaticon-delete"></i></a>'

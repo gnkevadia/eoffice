@@ -40,7 +40,7 @@
                     </div>
                 </div>
                 <!--begin::Form-->
-                <form id="frmAddEdit" name="frmAddEdit" action="{{ url(VIEW_INFO['url'].'/edit/'.$data->id) }}" class="kt-form" method="post">
+                <form enctype="multipart/form-data" id="frmAddEdit" name="frmAddEdit" action="{{ url(VIEW_INFO['url'].'/edit/'.$data->id) }}" class="kt-form" method="post">
                     {{ csrf_field() }}
                     <div class="kt-portlet__body">
                         <div class="form-group form-group-last">
@@ -55,15 +55,17 @@
                         <div class="form-group">
                             <label for="exampleSelect1">Project<span class="required">*</span></label>
                             <select class="form-control" id="status" name="Project">
-                                <option {{($data->Project == 1 ? 'selected' : '')}} value="1">1</option>
-                                <option {{($data->Project == 0 ? 'selected' : '')}} value="0">2</option>
+                                @foreach ($project as $value)
+                                  <option value="{{$value->id}}" {{($value->id == $data->project ? 'selected' : '')}}>{{$value->name}}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="exampleSelect1">Module<span class="required">*</span></label>
-                            <select class="form-control" id="status" name="module">
-                                <option {{($data->module == 1 ? 'selected' : '')}} value="1">Features</option>
-                                <option {{($data->module == 0 ? 'selected' : '')}} value="0">Types</option>
+                            <label for="exampleSelect1">Features<span class="required">*</span></label>
+                            <select class="form-control" id="status" name="features">
+                                @foreach ($features as $value)
+                                  <option value="{{$value->id}}" {{($value->id == $data->features ? 'selected' : '')}}>{{$value->name}}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group">
@@ -76,7 +78,7 @@
                         </div>
                         <div class="form-group">
                             <label for="exampleSelect1">Attachment<span class="required">*</span></label>
-                            <input type="file" id="attachment" name="attachment" data-toggle="tooltip" title="Enter Attachment" class="form-control" placeholder="Enter Attachment" value="{{$data->attachment}}">
+                            <input type="file" id="attachment" name="file[]" data-toggle="tooltip" title="Enter Attachment" class="form-control" placeholder="Enter Attachment" value="{{$data->attachment}}" multiple>
 
                         </div>
                         <div class="form-group">
@@ -138,4 +140,5 @@
 @stop
 
 @section('metronic_js')
+<script src="{{ asset('admin/assets/js/pages/custom/task-validation.js') }}"></script>
 @stop

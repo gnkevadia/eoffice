@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Library;
 
 use App\Models\Menu;
@@ -8,8 +9,10 @@ use App\Models\UserDocument;
 use App\Models\UserSubscription;
 use App\Models\UserPaymentHistory;
 use App\Models\Subscription;
+use App\Models\Task;
 use App\User;
 use App\Models\TempProfile;
+use App\Models\Task_image;
 use Illuminate\Support\Facades\DB;
 use Excel;
 use AWS;
@@ -109,15 +112,15 @@ class Common extends Eloquent
         return $userTreeArray;
     }
     /**
-    * N-Level Category
-    * herarchical category with all data
-    *
-    * @param integer $parent
-    * @param string $category
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
+     * N-Level Category
+     * herarchical category with all data
+     *
+     * @param integer $parent
+     * @param string $category
+     *
+     * @author ATL
+     * @since Jan 2020
+     */
     public static function fetchCategoryTree($parent = 0, $spacing = '', $userTreeArray = '', $typeId = '')
     {
         if (!is_array($userTreeArray)) {
@@ -171,8 +174,7 @@ class Common extends Eloquent
                 $html .= "</li>";
             } elseif ($valMenu->counter == 0) {
                 $html .= "<li data-id='" . $valMenu->id . "' class='dd-item dd3-item'><div class='dd-handle dd3-handle'></div><div class='dd3-content'>" . $valMenu->name . "</div></li>";
-            } else {
-                ;
+            } else {;
             }
         }
         $html .= "</" . $list . ">";
@@ -263,7 +265,7 @@ class Common extends Eloquent
         }
         return ($results->NumHits > 0) ? ($slug . '-' . $results->NumHits) : $slug;
     }
-    
+
     /**
      * Slug for Pages using this method
      * Unique Slug page with all data
@@ -293,7 +295,7 @@ class Common extends Eloquent
         }
     }
 
-   
+
     /**
      * Set API failure response using this method
      * Unique Slug page with all data
@@ -307,18 +309,18 @@ class Common extends Eloquent
     public static function respError($msg, $result = array(), $resp_code = 400)
     {
         return response()->json([
-                'status' => '0',
-                'message' => $msg,
-                'responseValue' => $result
-            ], $resp_code);
+            'status' => '0',
+            'message' => $msg,
+            'responseValue' => $result
+        ], $resp_code);
     }
 
     public static function defineDynamicConstant($constmodel)
     {
         define('MODEL', $constmodel);
-        define('URL', '/admin/'.MODEL);
+        define('URL', '/admin/' . MODEL);
         define('MODELNAME', ucfirst(MODEL));
-        define('RENDER_URL', 'admin.'.MODEL);
+        define('RENDER_URL', 'admin.' . MODEL);
         define('VIEW_INFO', array('url' => URL, 'title' => ucfirst(MODEL)));
         define('FLASH_MESSAGE_SUCCESS', 'flash_message_success');
         define('MODULE_NAME', 'module_name');
@@ -326,85 +328,129 @@ class Common extends Eloquent
         define('COMMON_MSG_INVALID_ARGUE', 'common_message.invalid_argument');
     }
 
-    public static function commanListPage($model, $orderby=null, $where=array(), $dynamicWhere='', $searchData='', $is_globle='', $start='', $limit='', $additionalParams='')
+    public static function commanListPage($model, $orderby = null, $where = array(), $dynamicWhere = '', $searchData = '', $is_globle = '', $start = '', $limit = '', $additionalParams = '')
     {
         $roleId = \Request::session()->get('role');
         $data = $model->getAll($orderby, $where, $dynamicWhere, $start, $limit);
-        $totalFiltered = $model->getAll($orderby, $where, $dynamicWhere);   
+        $totalFiltered = $model->getAll($orderby, $where, $dynamicWhere);
         if ($is_globle) {
             $resp['data'] = $data;
             $resp['recordsTotal'] = count($totalFiltered);
             $resp['recordsFiltered'] = count($totalFiltered);
             return response()->json($resp);
         }
-        return view(RENDER_URL.'.index', compact('data', 'searchData', 'roleId', 'additionalParams'));
-    }
-    
-    public static function commanAddPage($objModel, $request, $messages, $regxvalidator, $arrFile=array(), $additopnalOperation=array(),$arrExpect=array())
-    {
-        // $validator = Validator::make($request->all(), $regxvalidator, $messages);
-    
-        // if ($validator->fails()) {
-        //     $msg = $validator->errors()->all();
-        //     $msg = implode('<br>', $msg);
-        //     Session::flash('flash_error', $msg);
-        //     return redirect(URL.'/add')->withInput();
-        // } else {
-            if (isset($arrFile['name']) && !empty($arrFile['name']) && $request->hasFile(str_replace('_exist','',$arrFile['except']))) {
-                $img_name = Common::resizeFile($request, $arrFile);
-                $request->merge([$arrFile['name']=>$img_name]);
-            }
-            
-            if(isset($request->created_by) && !empty($request->created_by)){
-                $request->merge(["created_by"=>$request->created_by,'created_at' => date("Y-m-d H:i:s"), 'updated_by' => Session::get('id')]);
-            }else{
-                $request->merge(["created_by"=>Session::get('id'),'created_at' => date("Y-m-d H:i:s"), 'updated_by' => Session::get('id')]);
-            }
-            if (isset($arrFile['except']) && !empty($arrFile['except'])){
-                $objModel->insert($request->except(array_merge(array('_token', $arrFile['except'],str_replace('_exist','',$arrFile['except'])),$arrExpect)));
-            }else{
-                $objModel->insert($request->except(array_merge(['_token'],$arrExpect)));
-            }
-            return redirect(URL)->with(FLASH_MESSAGE_SUCCESS, Lang::get('common_message.add', [MODULE_NAME => ucwords(str_replace("-"," ", MODELNAME))]));
-        // }
+        return view(RENDER_URL . '.index', compact('data', 'searchData', 'roleId', 'additionalParams'));
     }
 
-    public static function commanEditPage($objModel, $request, $messages, $regxvalidator, $id, $arrFile=array(), $additopnalOperation=array(),$arrExpect=array())
+    public static function commanAddPage($objModel, $request, $messages, $regxvalidator, $arrFile = array(), $additopnalOperation = array(), $arrExpect = array())
     {
-        // $validator = Validator::make($request->all(), $regxvalidator, $messages);
-               
-        // if ($validator->fails()) {
-        //     $msg = $validator->errors()->all();
-        //     $msg = implode('<br>', $msg);
-        //     Session::flash('flash_error', $msg);
-        //     return redirect(URL.'/edit/'.$id)->withInput();
-        // } else {
-            if (isset($arrFile['name']) && !empty($arrFile['name']) && $request->hasFile(str_replace('_exist','',$arrFile['except']))) {
-                $img_name = Common::resizeFile($request, $arrFile);
-                $request->merge([$arrFile['name']=>$img_name]);
-            }
-            $request->merge(["updated_by"=>Session::get('id')]);
-            if (isset($arrFile['except']) && !empty($arrFile['except'])){
-                $objModel->updateOne($id, $request->except(array_merge(array('_token', $arrFile['except'],str_replace('_exist','',$arrFile['except'])),$arrExpect)));
+        $validator = Validator::make($request->all(), $regxvalidator, $messages);
+    
+        if ($validator->fails()) {
+            $msg = $validator->errors()->all();
+            $msg = implode('<br>', $msg);
+            Session::flash('flash_error', $msg);
+            return redirect(URL.'/add')->withInput();
+        } else {
+        if ($arrFile['multiple_file']) {
+            $task = new Task();
+            $task->project = $request['Project'];
+            $task->features = $request['features'];
+            $task->task = $request['task'];
+            $task->description = $request['description'];
+            $task->pryority = $request['Pryority'];
+            $task->assignee = $request['assignee'];
+            $task->start_date = $request['start_date'];
+            $task->end_date = $request['end_date'];
+            $task->cycle = $request['cycle'];
+            $task->status = $request['status'];
+            $task->created_by = Session::get('id');
+            $task->updated_by = Session::get('id');
+            $task->save();
+            $insertId = $task->id;
+
+            $files = $request->file;
+            $file_count = count($request->file);
+            if($file_count > 1){
+                foreach ($files as $file) {
+                    $image = $file;
+                    $extension = $image->getClientOriginalExtension();
+                    $img_name  = $arrFile['predefine'] ? $arrFile['predefine'] : rand() . time() . '.' . $extension;
+                    $file->move(public_path($arrFile['path']), $img_name);
+                    $image = new Task_image();
+                    $image->task_id	= $insertId;
+                    $image->images = $img_name;
+                    $image->save();
+                }
             }else{
-                $objModel->updateOne($id, $request->except(array_merge(['_token'],$arrExpect)));
+                $image = $files;
+                $extension = $image->getClientOriginalExtension();
+                $img_name  = $arrFile['predefine'] ? $arrFile['predefine'] : rand() . time() . '.' . $extension;
+                $image->move(public_path($arrFile['path']), $img_name);
+                $image = new Task_image();
+                $image->task_id	= $insertId;
+                $image->images = $img_name;
+                $image->save();
             }
-            return redirect(URL)->with(FLASH_MESSAGE_SUCCESS, Lang::get('common_message.update', [MODULE_NAME => ucwords(str_replace("-"," ", MODELNAME))]));
-        // }
+        } else {
+            die('q');
+            if (isset($arrFile['name']) && !empty($arrFile['name']) && $request->hasFile(str_replace('_exist', '', $arrFile['except']))) {
+                $img_name = Common::resizeFile($request, $arrFile);
+                $request->merge([$arrFile['name'] => $img_name]);
+            }
+
+            if (isset($request->created_by) && !empty($request->created_by)) {
+                $request->merge(["created_by" => $request->created_by, 'created_at' => date("Y-m-d H:i:s"), 'updated_by' => Session::get('id')]);
+            } else {
+                $request->merge(["created_by" => Session::get('id'), 'created_at' => date("Y-m-d H:i:s"), 'updated_by' => Session::get('id')]);
+            }
+            if (isset($arrFile['except']) && !empty($arrFile['except'])) {
+                $objModel->insert($request->except(array_merge(array('_token', $arrFile['except'], str_replace('_exist', '', $arrFile['except'])), $arrExpect)));
+            } else {
+                $objModel->insert($request->except(array_merge(['_token'], $arrExpect)));
+            }
+        }
+
+        return redirect(URL)->with(FLASH_MESSAGE_SUCCESS, Lang::get('common_message.add', [MODULE_NAME => ucwords(str_replace("-", " ", MODELNAME))]));
+        }
+    }
+
+    public static function commanEditPage($objModel, $request, $messages, $regxvalidator, $id, $arrFile = array(), $additopnalOperation = array(), $arrExpect = array())
+    {
+        $validator = Validator::make($request->all(), $regxvalidator, $messages);
+
+        if ($validator->fails()) {
+            $msg = $validator->errors()->all();
+            $msg = implode('<br>', $msg);
+            Session::flash('flash_error', $msg);
+            return redirect(URL . '/edit/' . $id)->withInput();
+        } else {
+            if (isset($arrFile['name']) && !empty($arrFile['name']) && $request->hasFile(str_replace('_exist', '', $arrFile['except']))) {
+                $img_name = Common::resizeFile($request, $arrFile);
+                $request->merge([$arrFile['name'] => $img_name]);
+            }
+            $request->merge(["updated_by" => Session::get('id')]);
+            if (isset($arrFile['except']) && !empty($arrFile['except'])) {
+                $objModel->updateOne($id, $request->except(array_merge(array('_token', $arrFile['except'], str_replace('_exist', '', $arrFile['except'])), $arrExpect)));
+            } else {
+                $objModel->updateOne($id, $request->except(array_merge(['_token'], $arrExpect)));
+            }
+            return redirect(URL)->with(FLASH_MESSAGE_SUCCESS, Lang::get('common_message.update', [MODULE_NAME => ucwords(str_replace("-", " ", MODELNAME))]));
+        }
     }
 
     public static function commanCopyPage($objModel, $request)
     {
         $data = $request->input();
         $copyDetails = $objModel::find($data['id']);
-        if(isset($copyDetails) && !empty($copyDetails)){
-            if(isset($data['id']) && !empty($data['id'])){
+        if (isset($copyDetails) && !empty($copyDetails)) {
+            if (isset($data['id']) && !empty($data['id'])) {
                 $copyData = $copyDetails->replicate();
-                $copyData->name = $copyDetails->name.' copy';
+                $copyData->name = $copyDetails->name . ' copy';
                 $copyData->save();
-                return redirect(URL)->with(FLASH_MESSAGE_SUCCESS, Lang::get('common_message.copy', [MODULE_NAME => ucwords(str_replace("-"," ", MODELNAME))]));
+                return redirect(URL)->with(FLASH_MESSAGE_SUCCESS, Lang::get('common_message.copy', [MODULE_NAME => ucwords(str_replace("-", " ", MODELNAME))]));
             }
-        }else{
+        } else {
             return redirect(URL)->with(FLASH_MESSAGE_ERROR, Lang::get(COMMON_MSG_INVALID_ARGUE));
         }
     }
@@ -413,7 +459,7 @@ class Common extends Eloquent
     {
         $data = $request->input();
         if (strpos($data['id'], 'on,') !== false) {
-            $data['id'] = str_replace('on,','',$data['id']);
+            $data['id'] = str_replace('on,', '', $data['id']);
         }
         $isDependacyExist = Common::checkDBDependacy($arrTableFields, $data['id']);
         if ($request->isMethod('post')) {
@@ -421,7 +467,7 @@ class Common extends Eloquent
                 return redirect(URL)->with(FLASH_MESSAGE_ERROR, Lang::get('common_message.not_deleted_dependency'));
             } else {
                 $update = array(
-                    'deleted' => 1,         
+                    'deleted' => 1,
                     'deleted_by' => Session::get('id'),
                 );
                 if (strpos($data['id'], ',') !== false) {
@@ -429,7 +475,7 @@ class Common extends Eloquent
                 } else {
                     $objModel->deleteOne($data['id'], $update);
                 }
-                return redirect(URL)->with(FLASH_MESSAGE_SUCCESS, Lang::get('common_message.delete', [MODULE_NAME => ucwords(str_replace("-"," ", MODELNAME))]));
+                return redirect(URL)->with(FLASH_MESSAGE_SUCCESS, Lang::get('common_message.delete', [MODULE_NAME => ucwords(str_replace("-", " ", MODELNAME))]));
             }
         } else {
             return redirect(URL)->with(FLASH_MESSAGE_ERROR, Lang::get(COMMON_MSG_INVALID_ARGUE));
@@ -455,14 +501,14 @@ class Common extends Eloquent
             return redirect(URL)->with(FLASH_MESSAGE_ERROR, Lang::get(COMMON_MSG_INVALID_ARGUE));
         }
     }
-   
+
     public static function buildQuery($searchData, $formData, $map = false)
     {
         $keywords = '';
         $fields = '';
-        $param ='';
+        $param = '';
         $mapping = '';
-        if (isset($formData) && !empty($formData !='')) {
+        if (isset($formData) && !empty($formData != '')) {
             $type = explode("|", $formData);
             $arr = $searchData['field'];
             $param .= " 1=1 ";
@@ -471,41 +517,41 @@ class Common extends Eloquent
                     if (isset($t) && !empty($t)) {
                         $keys = explode(":", $t);
                         if (isset($keys) && !empty($keys) && is_array($keys)) {
-                            if (in_array($keys[0], array_keys($arr))):
-                                    $operatorValue = $keys[1];
-                            $operate = Common::searchOperation($operatorValue);
-                            if ($operate == 'like') {
-                                if ($keys[0] == 'status' && $keys[2] == '2') {
-                                    $mapping .= '';
-                                } else {
-                                    if ($keys[0] == 'mobileNumber') {
-                                        $param .= " AND CONCAT('+',countryCode, ' ', mobileNumber) LIKE '%".$keys[2]."%%' ";
-                                        $mapping .= $keys[0].' LIKE '.$keys[2]. ' ';
+                            if (in_array($keys[0], array_keys($arr))) :
+                                $operatorValue = $keys[1];
+                                $operate = Common::searchOperation($operatorValue);
+                                if ($operate == 'like') {
+                                    if ($keys[0] == 'status' && $keys[2] == '2') {
+                                        $mapping .= '';
                                     } else {
-                                        $param .= " AND ".$keys[0]." LIKE '%".$keys[2]."%%' ";
-                                        $mapping .= $keys[0].' LIKE '.$keys[2]. ' ';
+                                        if ($keys[0] == 'mobileNumber') {
+                                            $param .= " AND CONCAT('+',countryCode, ' ', mobileNumber) LIKE '%" . $keys[2] . "%%' ";
+                                            $mapping .= $keys[0] . ' LIKE ' . $keys[2] . ' ';
+                                        } else {
+                                            $param .= " AND " . $keys[0] . " LIKE '%" . $keys[2] . "%%' ";
+                                            $mapping .= $keys[0] . ' LIKE ' . $keys[2] . ' ';
+                                        }
+                                    }
+                                } elseif ($operate == 'is_null') {
+                                    $param .= " AND " . $keys[0] . " IS NULL" . " OR " . $keys[0] . "=''";
+                                    $mapping .= $keys[0] . ' IS NULL ';
+                                } elseif ($operate == 'not_null') {
+                                    $param .= " AND " . $keys[0] . " IS NOT NULL " . " AND " . $keys[0] . " !='' ";
+                                    $mapping .= $keys[0] . ' IS NOT NULL ';
+                                } elseif ($operate == 'between') {
+                                    $param .= " AND (" . $keys[0] . " BETWEEN '" . $keys[2] . "' AND '" . $keys[3] . "' ) ";
+                                    $mapping .= $keys[0] . ' BETWEEN ' . $keys[2] . ' - ' . $keys[3] . ' ';
+                                } else {
+                                    if ($keys[0] == 'status' && $keys[2] == '2') {
+                                        $mapping .= '';
+                                    } elseif ($keys[0] == 'mobileNumber') {
+                                        $param .= " AND CONCAT('+',countryCode, ' ', mobileNumber) LIKE '%" . $keys[2] . "%%' ";
+                                        $mapping .= $keys[0] . ' LIKE ' . $keys[2] . ' ';
+                                    } else {
+                                        $param .= " AND " . $keys[0] . " " . Common::searchOperation($keys[1]) . " '" . $keys[2] . "' ";
+                                        $mapping .= $keys[0] . ' ' . Common::searchOperation($keys[1]) . ' ' . $keys[2] . '<br />';
                                     }
                                 }
-                            } elseif ($operate =='is_null') {
-                                $param .= " AND ".$keys[0]." IS NULL"." OR ".$keys[0]."=''";
-                                $mapping .= $keys[0].' IS NULL ';
-                            } elseif ($operate =='not_null') {
-                                $param .= " AND ".$keys[0]." IS NOT NULL "." AND ".$keys[0]." !='' ";
-                                $mapping .= $keys[0].' IS NOT NULL ';
-                            } elseif ($operate =='between') {
-                                $param .= " AND (".$keys[0]." BETWEEN '".$keys[2]."' AND '".$keys[3]."' ) ";
-                                $mapping .= $keys[0].' BETWEEN '.$keys[2]. ' - '. $keys[3] .' ';
-                            } else {
-                                if ($keys[0] == 'status' && $keys[2] == '2') {
-                                    $mapping .= '';
-                                } elseif ($keys[0] == 'mobileNumber') {
-                                    $param .= " AND CONCAT('+',countryCode, ' ', mobileNumber) LIKE '%".$keys[2]."%%' ";
-                                    $mapping .= $keys[0].' LIKE '.$keys[2]. ' ';
-                                } else {
-                                    $param .= " AND ".$keys[0]." ".Common::searchOperation($keys[1])." '".$keys[2]."' ";
-                                    $mapping .= $keys[0].' '.Common::searchOperation($keys[1]).' '.$keys[2]. '<br />';
-                                }
-                            }
                             endif;
                         }
                     }
@@ -519,56 +565,56 @@ class Common extends Eloquent
     {
         $val = '';
         switch ($operate) {
-                case 'equal':
-                    $val = '=' ;
-                    break;
-                case 'bigger_equal':
-                    $val = '>=' ;
-                    break;
-                case 'smaller_equal':
-                    $val = '<=' ;
-                    break;
-                case 'smaller':
-                    $val = '<' ;
-                    break;
-                case 'bigger':
-                    $val = '>' ;
-                    break;
-                case 'not_null':
-                    $val = 'not_null' ;
-                    break;
+            case 'equal':
+                $val = '=';
+                break;
+            case 'bigger_equal':
+                $val = '>=';
+                break;
+            case 'smaller_equal':
+                $val = '<=';
+                break;
+            case 'smaller':
+                $val = '<';
+                break;
+            case 'bigger':
+                $val = '>';
+                break;
+            case 'not_null':
+                $val = 'not_null';
+                break;
 
-                case 'is_null':
-                    $val = 'is_null' ;
-                    break;
+            case 'is_null':
+                $val = 'is_null';
+                break;
 
-                case 'like':
-                    $val = 'like' ;
-                    break;
+            case 'like':
+                $val = 'like';
+                break;
 
-                case 'between':
-                    $val = 'between' ;
-                    break;
+            case 'between':
+                $val = 'between';
+                break;
 
-                default:
-                    $val = '=' ;
-                    break;
-            }
+            default:
+                $val = '=';
+                break;
+        }
         return $val;
     }
 
     /**
-    * Unique field in filter
-    *
-    * @author ATL
-    * @since March 2019
-        */
-    public static function buildSearchFields($field, $forms = array(), $bulk=false, $value ='')
+     * Unique field in filter
+     *
+     * @author ATL
+     * @since March 2019
+     */
+    public static function buildSearchFields($field, $forms = array(), $bulk = false, $value = '')
     {
         $type = '';
         $bulk = ($bulk == true ? '[]' : '');
         $mandatory = '';
-        $form ='';
+        $form = '';
         //dd($field);
         foreach ($forms as $f) {
             // dd($f['lookup_table']);
@@ -576,22 +622,22 @@ class Common extends Eloquent
                 switch ($f['type']) {
 
                     case 'text':
-                        $form = "<input  type='text' name='".$f['column_name']."{$bulk}' class='form-control input-sm' $mandatory value='{$value}'/>";
+                        $form = "<input  type='text' name='" . $f['column_name'] . "{$bulk}' class='form-control input-sm' $mandatory value='{$value}'/>";
                         break;
                     case 'textarea':
-                        $form = "<input  type='text' name='".$f['column_name']."{$bulk}' class='form-control input-sm' $mandatory value='{$value}'/>";
+                        $form = "<input  type='text' name='" . $f['column_name'] . "{$bulk}' class='form-control input-sm' $mandatory value='{$value}'/>";
                         break;
                     case 'text_date':
-                        $form = "<input  type='date' name='".$f['column_name']."{$bulk}' class='date form-control input-sm' $mandatory value='{$value}'/> TO ";
-                        $form.= "<input  type='date' name='".$f['column_name']."_end"."{$bulk}' class='date form-control input-sm' $mandatory value='{$value}'/> ";
+                        $form = "<input  type='date' name='" . $f['column_name'] . "{$bulk}' class='date form-control input-sm' $mandatory value='{$value}'/> TO ";
+                        $form .= "<input  type='date' name='" . $f['column_name'] . "_end" . "{$bulk}' class='date form-control input-sm' $mandatory value='{$value}'/> ";
                         break;
 
                     case 'text_datetime':
-                        $form = "<input  type='text' name='".$f['column_name']."{$bulk}'  class='date form-control input-sm'  $mandatory value='{$value}'/> ";
+                        $form = "<input  type='text' name='" . $f['column_name'] . "{$bulk}'  class='date form-control input-sm'  $mandatory value='{$value}'/> ";
                         break;
 
                     case 'select':
-                        
+
                         if ($f['lookup-table']) {
                             if ($f['order-by']) {
                                 $data = DB::table($f['lookup-table'])->where(['deleted' => 0])->orderBy($f['order-by'], 'desc')->get();
@@ -599,28 +645,28 @@ class Common extends Eloquent
                                 $data = DB::table($f['lookup-table'])->where(['deleted' => 0])->orderBy('id', 'desc')->get();
                             }
                             $opts = '';
-                            foreach ($data as $row):
+                            foreach ($data as $row) :
                                 $selected = '';
-                            if (isset($row->{'id'}) && $f['lookup-table'] == 'subscription_plans') {
-                                $opts .= "<option $selected value='".$row->{'id'}."' $mandatory > ".$row->{'name'} ."(".$row->{'type'}.") </option> ";
-                            } elseif (isset($row->{'id'})) {
-                                $opts .= "<option $selected value='".$row->{'id'}."' $mandatory > ".$row->{'name'}." </option> ";
-                            } elseif (isset($row->{'level_id'})) {
-                                $opts .= "<option $selected value='".$row->{'level_id'}."' $mandatory > ".$row->{'title'}." </option> ";
-                            }
+                                if (isset($row->{'id'}) && $f['lookup-table'] == 'subscription_plans') {
+                                    $opts .= "<option $selected value='" . $row->{'id'} . "' $mandatory > " . $row->{'name'} . "(" . $row->{'type'} . ") </option> ";
+                                } elseif (isset($row->{'id'})) {
+                                    $opts .= "<option $selected value='" . $row->{'id'} . "' $mandatory > " . $row->{'name'} . " </option> ";
+                                } elseif (isset($row->{'level_id'})) {
+                                    $opts .= "<option $selected value='" . $row->{'level_id'} . "' $mandatory > " . $row->{'title'} . " </option> ";
+                                }
                             endforeach;
-                            $form = "<select name='".$f['column_name']."{$bulk}'  class='form-control' $mandatory >
+                            $form = "<select name='" . $f['column_name'] . "{$bulk}'  class='form-control' $mandatory >
                                     <option value=''> -- Select  -- </option>
                                     $opts
                                 </select>";
                         } elseif ($f['lookup']) {
                             $opts = '';
                             $data = $f['lookup'];
-                            foreach ($data as $row):
+                            foreach ($data as $row) :
                                 $selected = '';
-                            $opts .= "<option $selected value='".$row['data']."' $mandatory > ".$row['data']." </option> ";
+                                $opts .= "<option $selected value='" . $row['data'] . "' $mandatory > " . $row['data'] . " </option> ";
                             endforeach;
-                            $form = "<select name='".$f['column_name']."{$bulk}'  class='form-control' $mandatory >
+                            $form = "<select name='" . $f['column_name'] . "{$bulk}'  class='form-control' $mandatory >
                                     <option value=''> -- Select  -- </option>
                                     $opts
                                 </select>";
@@ -637,17 +683,17 @@ class Common extends Eloquent
     public static function sendSMS($Message, $countryCode, $mobileNumber)
     {
         $sms = AWS::createClient('sns');
-    
+
         $smsresp = $sms->publish([
-                    'Message' => $Message,
-                    'PhoneNumber' => '+'.$countryCode.$mobileNumber.'',
-                    'MessageAttributes' => [
-                    'AWS.SNS.SMS.SMSType'  => [
-                        'DataType'    => 'String',
-                        'StringValue' => 'Transactional',
-                     ]
-                 ],
-                ]);
+            'Message' => $Message,
+            'PhoneNumber' => '+' . $countryCode . $mobileNumber . '',
+            'MessageAttributes' => [
+                'AWS.SNS.SMS.SMSType'  => [
+                    'DataType'    => 'String',
+                    'StringValue' => 'Transactional',
+                ]
+            ],
+        ]);
         return $smsresp['MessageId'];
     }
 
@@ -671,7 +717,7 @@ class Common extends Eloquent
             'PlatformApplicationArn' => $platformApplicationArn,
             'Token' => $token,
         ));
-        
+
         $arn = isset($result['EndpointArn']) ? $result['EndpointArn'] : '';
 
         $notificationTitle = $title;
@@ -687,21 +733,21 @@ class Common extends Eloquent
         if ($endpointAtt != 'failed' && $endpointAtt['Attributes']['Enabled'] != 'false') {
             $fcmPayload = json_encode(
                 [
-                        "notification" =>
-                            [
-                                "title" => $notificationTitle,
-                                "body" => $notificationMessage,
-                                "sound" => 'default'
-                            ],
-                        "data" => $data // data key is used for sending content through notification.
-                    ]
-                );
+                    "notification" =>
+                    [
+                        "title" => $notificationTitle,
+                        "body" => $notificationMessage,
+                        "sound" => 'default'
+                    ],
+                    "data" => $data // data key is used for sending content through notification.
+                ]
+            );
             $message = json_encode(["default" => $notificationMessage, "GCM" => $fcmPayload]);
             $sns->publish([
-                    'TargetArn' => $arn,
-                    'Message' => $message,
-                    'MessageStructure' => 'json'
-                ]);
+                'TargetArn' => $arn,
+                'Message' => $message,
+                'MessageStructure' => 'json'
+            ]);
         }
     }
 
@@ -717,12 +763,12 @@ class Common extends Eloquent
         $user = new User();
         $tempProfile = new TempProfile();
 
-        $age = Common :: getAge($dateOfBirth);
+        $age = Common::getAge($dateOfBirth);
         //dd($age);
         if ($age < 18) {
-            $request->merge(["user_id"=>auth()->user()->id]);
+            $request->merge(["user_id" => auth()->user()->id]);
             $tempProfile->insert($request->all());
-                
+
             $profilestatus['childProfileApprovalStatus'] = 'pending';
             $result = $user->updateOne(auth()->user()->id, $profilestatus);
         }
@@ -733,10 +779,10 @@ class Common extends Eloquent
         $userdoc = new UserDocument();
         $user = new User();
 
-        $updateHealth = $userdoc->getUserHealthReport('', array('user_id'=>$user_id, 'user_documents.deleted'=>'0'));
+        $updateHealth = $userdoc->getUserHealthReport('', array('user_id' => $user_id, 'user_documents.deleted' => '0'));
 
         foreach ($updateHealth as $key => $value) {
-            if ($value['healthReportStatus']=='Positive') {
+            if ($value['healthReportStatus'] == 'Positive') {
                 $health['healthStatus'] = 'unhealthy';
                 break;
             } elseif ($value['healthReportStatus'] == null || $value['healthReportStatus'] == '') {
@@ -749,22 +795,22 @@ class Common extends Eloquent
         if (empty($updateHealth)) {
             $health['healthStatus'] = 'unknown';
         }
-                
+
         return $user->updateOne($user_id, $health);
     }
 
-    public static function manageProfileStatus($user_id, $is_suspend=0)
+    public static function manageProfileStatus($user_id, $is_suspend = 0)
     {
         $userdoc = new UserDocument();
         $user = new User();
         $category = new Category;
 
         $userData = $user->getOne($user_id);
-        
+
         $applicable_qry = '';
-        if ($userData->gender=='Male') {
+        if ($userData->gender == 'Male') {
             $applicable_qry .= ' categories.applicable_for IN ("All","Male") ';
-        } elseif ($userData->gender=='Female') {
+        } elseif ($userData->gender == 'Female') {
             $applicable_qry .= ' categories.applicable_for IN ("All","Female") ';
         } else {
             $applicable_qry .= ' categories.applicable_for IN ("All") ';
@@ -776,19 +822,19 @@ class Common extends Eloquent
             ['categories.parent_id', '=', '1']
         ];
 
-        $totalUploadDoc = $userdoc->getUserHealthReport('', array('user_id'=>$user_id, 'user_documents.deleted'=>'0'), $applicable_qry);
+        $totalUploadDoc = $userdoc->getUserHealthReport('', array('user_id' => $user_id, 'user_documents.deleted' => '0'), $applicable_qry);
         $totalRequiredDoc = $category->getAll('', $whereData, $applicable_qry);
 
-        if ($is_suspend==0 && count($totalUploadDoc) > 0) {
+        if ($is_suspend == 0 && count($totalUploadDoc) > 0) {
             foreach ($totalUploadDoc as $key => $value) {
-                if ($userData->profileStatus === 'suspended' &&  $value['isApproved']==0) {
+                if ($userData->profileStatus === 'suspended' &&  $value['isApproved'] == 0) {
                     $profile['profileStatus'] = 'suspended';
                     break;
                 } elseif (count($totalUploadDoc) != count($totalRequiredDoc)) {
                     $profile['profileStatus'] = 'pendingUpload';
                     break;
                 } else {
-                    if ($value['isApproved']=='' || $value['isApproved']==null) {
+                    if ($value['isApproved'] == '' || $value['isApproved'] == null) {
                         $profile['profileStatus'] = 'notVerified';
                         break;
                     } else {
@@ -810,14 +856,14 @@ class Common extends Eloquent
     }
 
     /**
-    * Method for the controller
-    * Create PreSigned Url
-    *
-    * @param string $request
-    *
-    * @author ATL
-    * @since Jan 2020
-    */
+     * Method for the controller
+     * Create PreSigned Url
+     *
+     * @param string $request
+     *
+     * @author ATL
+     * @since Jan 2020
+     */
 
     public static function createPreSignedUrl($method, $bucket, $file)
     {
@@ -862,62 +908,62 @@ class Common extends Eloquent
         $user = new User();
         $updatedUser = array();
 
-        $response = Common :: verifyReceipt($request->receipt);
-        
+        $response = Common::verifyReceipt($request->receipt);
+
         if ($response->isValid()) {
-            $actionResult = Common :: performActionOnIosReceipt($response, auth()->user()->id, "", "ios");
-            if (gettype($actionResult)=="string" && $actionResult == "INUSE") {
-                return Common :: respError('Your Receipt is already in use with another user', []);
+            $actionResult = Common::performActionOnIosReceipt($response, auth()->user()->id, "", "ios");
+            if (gettype($actionResult) == "string" && $actionResult == "INUSE") {
+                return Common::respError('Your Receipt is already in use with another user', []);
             }
-            if (gettype($actionResult)=="string" && $actionResult == '1') {
-                return Common :: respError('Your account goes to update,previous will be removed.', []);
+            if (gettype($actionResult) == "string" && $actionResult == '1') {
+                return Common::respError('Your account goes to update,previous will be removed.', []);
             }
 
 
             $updatedUser = $user->getOne(auth()->user()->id);
 
-            return Common :: respSuccess('Your Receipt is verified', ['user'=>$updatedUser]);
+            return Common::respSuccess('Your Receipt is verified', ['user' => $updatedUser]);
         } else {
             $resp['code'] = $response->getResultCode();
         }
 
-        return Common :: respError('Your Receipt is invalid', ['response'=>$resp,'user'=>$updatedUser]);
+        return Common::respError('Your Receipt is invalid', ['response' => $resp, 'user' => $updatedUser]);
     }
 
     public static function performActionOnIosReceipt($response, $user_id, $flag, $type, $request = "")
     {
-        DB::table('verifyreceipt_logs')->insert(array('log'=>$request,'type'=>'performaction','user_id'=>$user_id));
+        DB::table('verifyreceipt_logs')->insert(array('log' => $request, 'type' => 'performaction', 'user_id' => $user_id));
 
         $userSub = new UserSubscription();
         $subscriptionPlan = new Subscription();
-                
+
         $resp['receipt'] = json_decode(json_encode($response->getReceipt()));
         $resp['latest_receipt'] = $response->getLatestReceipt();
         $resp['pending_renewal_info'] = $response->getPendingRenewalInfo();
-       
-        if (Common :: checkIosReceiptExists($user_id, $resp['receipt']->in_app[0]->original_transaction_id)) {
+
+        if (Common::checkIosReceiptExists($user_id, $resp['receipt']->in_app[0]->original_transaction_id)) {
             if ($flag == "cronjob" || $flag == "notification") {
                 return;
             } else {
                 return "INUSE";
             }
         }
-        
+
         $receiptData = $response->getLatestReceiptInfo();
         $latestReceiptInfo = $receiptData[0];
-        
+
         if (isset($latestReceiptInfo)) {
             $latestInfo = $latestReceiptInfo;
         } else {
             $latestInfo = json_decode(json_encode(end($resp['receipt']->in_app)), true);
         }
-        
-        $subscriptionInfo =  $subscriptionPlan->getAll('', ["app_product_id" => $latestInfo['product_id'],"type" => $type]);
-        
+
+        $subscriptionInfo =  $subscriptionPlan->getAll('', ["app_product_id" => $latestInfo['product_id'], "type" => $type]);
+
         $expireDate = explode(' ', $latestInfo['expires_date']);
         $purchaseDate = explode(' ', $latestInfo['purchase_date']);
         $originalPurchaseDate = explode(' ', $latestInfo['original_purchase_date']);
-        
+
         $userInfo = $userSub->getAll('', ["user_id" => $user_id]);
 
         if (count($userInfo) > 0) {
@@ -927,28 +973,28 @@ class Common extends Eloquent
             $userResp['product_id'] = $latestInfo['product_id'];
             $userObj = json_decode(json_encode($userResp));
         }
-        
-        
+
+
         if ($flag == "cronjob") {
             $userExists = 1;
         } else {
             $userExists = (count($userInfo) > 0) ? 1 : 0;
         }
-        
+
         $data = array();
-        
+
         if (isset($request->notification_type)) {
             if (isset($request->latest_receipt_data['cancellation_date'])) {
                 $cancellationDate = explode(' ', $request->latest_receipt_data['cancellation_date']);
-                $data['cancellation_date'] = $cancellationDate[0].' '.$cancellationDate[1];
+                $data['cancellation_date'] = $cancellationDate[0] . ' ' . $cancellationDate[1];
             }
-            
-            
+
+
             if (isset($request->latest_receipt_data['cancellation_reason'])) {
                 $data['json_field'] = "cancellation_reason";
                 $data['json_key'] = $request->latest_receipt_data['cancellation_reason'];
             }
-            
+
             $data['auto_renew_product_id'] = $request->auto_renew_product_id;
             $data['notification_type'] = $request->notification_type;
             $data['auto_renew_status'] = $request->auto_renew_status;
@@ -961,21 +1007,21 @@ class Common extends Eloquent
         $data['product_id'] = $latestInfo['product_id'];
         $data['transaction_id'] = $latestInfo['transaction_id'];
         $data['original_transaction_id'] = $latestInfo['original_transaction_id'];
-        $data['expires_date'] = $expireDate[0].' '.$expireDate[1];
-            
-        $latestInfo['expires_date_cust'] = $expireDate[0].' '.$expireDate[1];
+        $data['expires_date'] = $expireDate[0] . ' ' . $expireDate[1];
+
+        $latestInfo['expires_date_cust'] = $expireDate[0] . ' ' . $expireDate[1];
 
         if (!$userExists) {
             $data['subscription_type'] = $type;
             $data['initial_receipt'] = $resp['latest_receipt'];
-            $data['original_purchase_date'] = $originalPurchaseDate[0].' '.$originalPurchaseDate[1];
-            
+            $data['original_purchase_date'] = $originalPurchaseDate[0] . ' ' . $originalPurchaseDate[1];
+
             $result = $userSub->insert($data);
-            
+
             unset($data['initial_receipt']);
             unset($data['subscription_type']);
         }
-        $data['purchase_date'] = $purchaseDate[0].' '.$purchaseDate[1];
+        $data['purchase_date'] = $purchaseDate[0] . ' ' . $purchaseDate[1];
         $data['web_order_line_item_id'] = $latestInfo['web_order_line_item_id'];
         $accountUpdate = '0';
         if (count($userInfo) > 0 && $userInfo[0]->original_transaction_id != $latestInfo['original_transaction_id'] && $flag != "notification") {
@@ -991,11 +1037,11 @@ class Common extends Eloquent
 
             $result = $userSub->updateOne($user_id, $subUpdate);
         }
-            
 
-        $data = Common :: performPendingRenewalInfo($resp, $data, $user_id); // change userstatus and add more info in data
-        $resultProduct = Common :: performProductDuplication($userObj, $subscriptionInfo, $latestInfo);
-        $result = Common :: performTransactionDuplication($data, $latestInfo);
+
+        $data = Common::performPendingRenewalInfo($resp, $data, $user_id); // change userstatus and add more info in data
+        $resultProduct = Common::performProductDuplication($userObj, $subscriptionInfo, $latestInfo);
+        $result = Common::performTransactionDuplication($data, $latestInfo);
         if ($accountUpdate == '1') {
             return $accountUpdate;
         }
@@ -1006,9 +1052,9 @@ class Common extends Eloquent
     {
         $userSub = new UserSubscription();
         $subscriptionPlan = new Subscription();
-                
+
         $cancellationDate = '';
-        $subscriptionInfo =  $subscriptionPlan->getAll('', ["app_product_id" => $request->latest_receipt_data['product_id'],"type" => 'ios']);
+        $subscriptionInfo =  $subscriptionPlan->getAll('', ["app_product_id" => $request->latest_receipt_data['product_id'], "type" => 'ios']);
         $seconds = $request->latest_receipt_data['expires_date'] / 1000;
         $expirydate = date("Y-m-d H:i:s", $seconds);
         $purchaseDate = explode(' ', $request->latest_receipt_data['purchase_date']);
@@ -1016,7 +1062,7 @@ class Common extends Eloquent
         if (isset($request->latest_receipt_data['cancellation_date'])) {
             $cancellationDate = explode(' ', $request->latest_receipt_data['cancellation_date']);
         }
-                
+
         $arrData['user_id'] = $getUser[0]->user_id;
         $arrData['auto_renew_product_id'] = $request->auto_renew_product_id;
         $arrData['subscription_id'] = $subscriptionInfo[0]->id;
@@ -1025,13 +1071,13 @@ class Common extends Eloquent
         $arrData['transaction_id'] = $request->latest_receipt_data['transaction_id'];
         $arrData['original_transaction_id'] = $request->latest_receipt_data['original_transaction_id'];
         $arrData['expires_date'] = $expirydate;
-        $arrData['purchase_date'] = $purchaseDate[0].' '.$purchaseDate[1];
-        $arrData['original_purchase_date'] = $orignalPurchaseDate[0].' '.$orignalPurchaseDate[1];
+        $arrData['purchase_date'] = $purchaseDate[0] . ' ' . $purchaseDate[1];
+        $arrData['original_purchase_date'] = $orignalPurchaseDate[0] . ' ' . $orignalPurchaseDate[1];
         $arrData['notification_type'] = $request->notification_type;
         $arrData['web_order_line_item_id'] = $request->latest_receipt_data['web_order_line_item_id'];
         $arrData['auto_renew_status'] = $request->auto_renew_status;
         if ($cancellationDate) {
-            $arrData['cancellation_date'] = $cancellationDate[0].' '.$cancellationDate[1];
+            $arrData['cancellation_date'] = $cancellationDate[0] . ' ' . $cancellationDate[1];
         }
         if (isset($request->latest_receipt_data['cancellation_reason'])) {
             $arrData['json_field'] = "cancellation_reason";
@@ -1040,11 +1086,11 @@ class Common extends Eloquent
 
         //check product id. if new then update
         $request->latest_receipt_data['expires_date_cust'] = $expirydate;
-        $result = Common :: performProductDuplication($getUser[0], $subscriptionInfo, $request->latest_receipt_data);
-                
+        $result = Common::performProductDuplication($getUser[0], $subscriptionInfo, $request->latest_receipt_data);
+
         //check trans id duplication. if exists then update
-        $result = Common :: performTransactionDuplication($arrData, $request->latest_receipt_data);
-        $result = $userSub->updateOne($getUser[0]->user_id, array("expires_date"=>$expirydate));
+        $result = Common::performTransactionDuplication($arrData, $request->latest_receipt_data);
+        $result = $userSub->updateOne($getUser[0]->user_id, array("expires_date" => $expirydate));
 
 
         return true;
@@ -1055,10 +1101,10 @@ class Common extends Eloquent
         $userSub = new UserSubscription();
 
         $where = [
-                ['user_id', '!=', $user_id],
-                ['original_transaction_id', $original_transaction_id],
-                ['deleted', '0']
-            ];
+            ['user_id', '!=', $user_id],
+            ['original_transaction_id', $original_transaction_id],
+            ['deleted', '0']
+        ];
 
         $checkValidUser = $userSub->getAll('', $where);
 
@@ -1086,13 +1132,13 @@ class Common extends Eloquent
             if (isset($infoData['auto_renew_status'])) {
                 $data['auto_renew_status'] = $infoData['auto_renew_status'];
             }
-            if (isset($infoData['expiration_intent']) || (isset($infoData['is_in_billing_retry_period']) && isset($infoData['is_in_billing_retry_period'])==1)) {
-                Common :: manageSubscriptionStatus('Expired', $user_id);
+            if (isset($infoData['expiration_intent']) || (isset($infoData['is_in_billing_retry_period']) && isset($infoData['is_in_billing_retry_period']) == 1)) {
+                Common::manageSubscriptionStatus('Expired', $user_id);
                 return $data;
             }
         }
-        Common :: manageSubscriptionStatus('Active', $user_id);
-        
+        Common::manageSubscriptionStatus('Active', $user_id);
+
         return $data;
     }
 
@@ -1100,19 +1146,19 @@ class Common extends Eloquent
     {
         $paymentHistory = new UserPaymentHistory();
         /* Deleted field for user payment history is for skip previous payment.*/
-        if (isset($data['json_field']) && $data['json_field']!='') {
+        if (isset($data['json_field']) && $data['json_field'] != '') {
             $where = [
-                    ['original_transaction_id', $latestInfo['original_transaction_id']],
-                    ['transaction_id', $latestInfo['transaction_id']],
-                    ['user_payment_history.json_field', $data['json_field']],
-                    ['deleted', '0']
-                 ];
+                ['original_transaction_id', $latestInfo['original_transaction_id']],
+                ['transaction_id', $latestInfo['transaction_id']],
+                ['user_payment_history.json_field', $data['json_field']],
+                ['deleted', '0']
+            ];
         } else {
             $where = [
-                    ['original_transaction_id', $latestInfo['original_transaction_id']],
-                    ['transaction_id', $latestInfo['transaction_id']],
-                    ['deleted', '0']
-                 ];
+                ['original_transaction_id', $latestInfo['original_transaction_id']],
+                ['transaction_id', $latestInfo['transaction_id']],
+                ['deleted', '0']
+            ];
         }
 
         $getPaymentHistory = $paymentHistory->getAll('', $where);
@@ -1128,7 +1174,7 @@ class Common extends Eloquent
     public static function performProductDuplication($userData, $subscriptionInfo, $latest_receipt_data)
     {
         $userSub = new UserSubscription();
-        
+
         if ($userData->product_id != $latest_receipt_data['product_id']) {
             $data['subscription_id'] = $subscriptionInfo[0]->id;
             $data['subscription_type'] = "ios";
@@ -1151,21 +1197,21 @@ class Common extends Eloquent
         $googleClient = new \Google_Client();
         $googleClient->setScopes([\Google_Service_AndroidPublisher::ANDROIDPUBLISHER]);
         $googleClient->setApplicationName(env('APP_NAME'));
-        $googleClient->setAuthConfig(public_path().Config::get('constants.GOOGLE_APPLICATION_CREDENTIALS'));
+        $googleClient->setAuthConfig(public_path() . Config::get('constants.GOOGLE_APPLICATION_CREDENTIALS'));
         $googleAndroidPublisher = new \Google_Service_AndroidPublisher($googleClient);
         $validator = new \ReceiptValidator\GooglePlay\Validator($googleAndroidPublisher);
-        
+
         try {
             /* $txt = "\nSuccess:- ".date("Y-m-d h:i:s")."\n".$request;
             $myfile = file_put_contents('androidServerNotificationLogsVerifyReceipt.txt', $txt.PHP_EOL, FILE_APPEND | LOCK_EX);
             */
 
             $response = $validator->setPackageName($request->receipt["packageName"])
-            ->setProductId($request->receipt["productId"])
-            ->setPurchaseToken($request->receipt["purchaseToken"])
-            ->validateSubscription();
+                ->setProductId($request->receipt["productId"])
+                ->setPurchaseToken($request->receipt["purchaseToken"])
+                ->validateSubscription();
         } catch (\Exception $e) {
-            return Common :: respSuccess('Your Token is invalid', [$e->getMessage()]);
+            return Common::respSuccess('Your Token is invalid', [$e->getMessage()]);
             // example message: Error calling GET ....: (404) Product not found for this application.
         }
         // success
@@ -1187,8 +1233,8 @@ class Common extends Eloquent
             }
             $seconds = $responseData->expiryTimeMillis / 1000;
             $expiryDate = date("Y-m-d H:i:s", $seconds);
-            
-            $subscriptionInfo =  $subscriptionPlan->getAll('', ["app_product_id" => $request->receipt["productId"],"type" => $type]);
+
+            $subscriptionInfo =  $subscriptionPlan->getAll('', ["app_product_id" => $request->receipt["productId"], "type" => $type]);
             $androiddata['user_id'] = $user_id;
             $androiddata['subscription_id'] = $subscriptionInfo[0]->id;
             $androiddata['subscription_type'] = "android";
@@ -1196,16 +1242,16 @@ class Common extends Eloquent
             $androiddata['transaction_id'] = $responseData->orderId;
             $androiddata['original_transaction_id'] = $request->receipt["purchaseToken"];
             $androiddata['expires_date'] = $expiryDate;
-            
+
             //dd($data);
 
             $checkExist = $userSub->getAll('', ["user_id" => $user_id]);
 
             if (count($checkExist) == 0) {
                 $androiddata['initial_receipt'] = $request->receipt["purchaseToken"];
-                
+
                 $result = $userSub->insert($androiddata);
-                
+
                 unset($androiddata['initial_receipt']);
             } else {
                 $updateData["expires_date"] = $androiddata['expires_date'];
@@ -1223,13 +1269,13 @@ class Common extends Eloquent
             if (isset($request->receipt["purchaseTime"])) {
                 $androiddata['purchase_date'] = $purchaseDate;
             }
-            
+
             $androiddata['auto_renew_status'] = $responseData->autoRenewing;
             if (isset($responseData->cancelReason)) {
                 $androiddata['json_field'] = 'cancelReason';
                 $androiddata['json_key'] = $responseData->cancelReason;
             }
-            
+
             if (isset($request->receipt["notificationType"])) {
                 $androiddata['notification_type'] = $request->receipt["notificationType"];
                 /* Deleted field for user payment history is for skip previous payment.*/
@@ -1238,20 +1284,20 @@ class Common extends Eloquent
                     ['notification_type', $request->receipt["notificationType"]],
                     ['deleted', '0'],
                     ['transaction_id', $androiddata['transaction_id']]
-                 ];
+                ];
             } else {
                 $where = [
                     ['original_transaction_id', $androiddata['original_transaction_id']],
                     ['transaction_id', $androiddata['transaction_id']],
                     ['deleted', '0']
-                 ];
+                ];
             }
-            
+
             if (isset($responseData->paymentState) && $responseData->paymentState == 0) {
                 $androiddata['json_field'] = 'paymentState';
                 $androiddata['json_key'] = $responseData->paymentState;
             }
-           
+
             $getPaymentHistory = $paymentHistory->getAll('', $where);
             $result = 1;
             if (count($getPaymentHistory) > 0) {
@@ -1260,60 +1306,74 @@ class Common extends Eloquent
                 DB::enableQueryLog();
 
                 $result = $paymentHistory->insert($androiddata);
-                $txt = "\nData:- ".date("Y-m-d h:i:s")."\n".print_r(DB::getQueryLog(), true);
-                $myfile = file_put_contents('testdata.txt', $txt.PHP_EOL, FILE_APPEND | LOCK_EX);
+                $txt = "\nData:- " . date("Y-m-d h:i:s") . "\n" . print_r(DB::getQueryLog(), true);
+                $myfile = file_put_contents('testdata.txt', $txt . PHP_EOL, FILE_APPEND | LOCK_EX);
             }
 
-            if ((isset($responseData->cancelReason) && $responseData->cancelReason == '1') || $responseData->paymentState=='0' || (isset($request->receipt["notificationType"]) && in_array($request->receipt["notificationType"], [3,12,13]) && $user_id > 0)) {
-                Common :: manageSubscriptionStatus('Expired', $user_id);
+            if ((isset($responseData->cancelReason) && $responseData->cancelReason == '1') || $responseData->paymentState == '0' || (isset($request->receipt["notificationType"]) && in_array($request->receipt["notificationType"], [3, 12, 13]) && $user_id > 0)) {
+                Common::manageSubscriptionStatus('Expired', $user_id);
             } else {
-                Common :: manageSubscriptionStatus('Active', $user_id);
+                Common::manageSubscriptionStatus('Active', $user_id);
             }
 
             $userData = $user->getOne($user_id);
 
-            return Common :: respSuccess('Your Token is verified', ['user'=>$userData]);
+            return Common::respSuccess('Your Token is verified', ['user' => $userData]);
         }
 
-        return Common :: respSuccess('User not found', ['user'=>array()]);
+        return Common::respSuccess('User not found', ['user' => array()]);
     }
     public static function resizeFile($request, $arrFile)
     {
-        if (isset($arrFile['resize']) && !empty($arrFile['resize']) && isset($arrFile['existing']) && !empty($arrFile['existing']) && file_exists(public_path($arrFile['path'].$arrFile['resize'].'x'.$arrFile['resize'].'/' .$arrFile['existing']))) {
-            @unlink(public_path($arrFile['path'].$arrFile['resize'].'x'.$arrFile['resize'].'/' .$arrFile['existing']));
-            @unlink(public_path($arrFile['path'].$arrFile['resize'].'x'.$arrFile['resize'].'/' .str_replace(pathinfo($arrFile['existing'], PATHINFO_EXTENSION),'png',$arrFile['existing'])));
-        }elseif (isset($arrFile['existing']) && !empty($arrFile['existing']) && file_exists(public_path($arrFile['path'].'/' .$arrFile['existing']))) {
-            @unlink(public_path($arrFile['path'].'/' .$arrFile['existing']));
-            @unlink(public_path($arrFile['path'].'/' .str_replace(pathinfo($arrFile['existing'], PATHINFO_EXTENSION),'png',$arrFile['existing'])));
+        if (isset($arrFile['resize']) && !empty($arrFile['resize']) && isset($arrFile['existing']) && !empty($arrFile['existing']) && file_exists(public_path($arrFile['path'] . $arrFile['resize'] . 'x' . $arrFile['resize'] . '/' . $arrFile['existing']))) {
+            @unlink(public_path($arrFile['path'] . $arrFile['resize'] . 'x' . $arrFile['resize'] . '/' . $arrFile['existing']));
+            @unlink(public_path($arrFile['path'] . $arrFile['resize'] . 'x' . $arrFile['resize'] . '/' . str_replace(pathinfo($arrFile['existing'], PATHINFO_EXTENSION), 'png', $arrFile['existing'])));
+        } elseif (isset($arrFile['existing']) && !empty($arrFile['existing']) && file_exists(public_path($arrFile['path'] . '/' . $arrFile['existing']))) {
+            @unlink(public_path($arrFile['path'] . '/' . $arrFile['existing']));
+            @unlink(public_path($arrFile['path'] . '/' . str_replace(pathinfo($arrFile['existing'], PATHINFO_EXTENSION), 'png', $arrFile['existing'])));
         }
-        $image     = $request->file(str_replace('_exist','',$arrFile['except']));        
-        $extension = $image->getClientOriginalExtension();
-        $img_name  = $arrFile['predefine']?$arrFile['predefine']:rand().time().'.'.$extension;
-        if(in_array($extension,array('png','jpg','jpeg','bmp'))){
-            $image_resize = Image::make($image->getRealPath());
-            if(isset($arrFile['resize']) && !empty($arrFile['resize'])){
-                // echo '<pre>'; print_r(public_path($arrFile['path'].$img_name)); echo '</pre>'; die();
-                $image_resize->save(public_path($arrFile['path'].$img_name));
-                $image_resize->fit($arrFile['resize'], $arrFile['resize']);
-                $image_resize->save(public_path($arrFile['path'].$arrFile['resize'].'x'.$arrFile['resize'].'/'.$img_name));
-            }else{
-                $image_resize->save(public_path($arrFile['path'].'/' .$img_name));
+        $file_count = count($request->file);
+        if ($file_count > 1) {
+            $files = $request->file;
+            // die('x');
+            foreach ($files as $file) {
+                // echo '<pre>'; print_r(str_replace('_exist','',$arrFile['except'])); echo '</pre>'; die();
+                $image = $file;
+                $extension = $image->getClientOriginalExtension();
+                $img_name  = $arrFile['predefine'] ? $arrFile['predefine'] : rand() . time() . '.' . $extension;
+                $file->move(public_path($arrFile['path']), $img_name);
             }
-        }else if(in_array($extension,array('mp4'))){
-            //$image->move(public_path($arrFile['path'].'/' .$img_name), $img_name);
-            if(isset($arrFile['resize']) && !empty($arrFile['resize'])){
-                $image->move(public_path($arrFile['path'].$arrFile['resize'].'x'.$arrFile['resize']), $img_name);
-            }else{
-                $image->move(public_path($arrFile['path']), $img_name);
-            }
-            exec("ffmpeg -i ".public_path($arrFile['path'].$arrFile['resize'].'x'.$arrFile['resize'].'/'. $img_name)." -r 1 -ss 00:00:05 -t 00:00:01 -s ".$arrFile['resize'].'x'.$arrFile['resize']." -f image2 ". public_path($arrFile['path'].$arrFile['resize'].'x'.$arrFile['resize'].'/'. str_replace($extension,'png',$img_name)));
-        }else{
-            if(isset($arrFile['resize']) && !empty($arrFile['resize'])){
-                $image->move(public_path($arrFile['path'].$arrFile['resize'].'x'.$arrFile['resize']),$img_name);
-            }else{
-                $image->move(public_path($arrFile['path'].'/' .$img_name));
+        } else {
+            $image     = $request->file(str_replace('_exist', '', $arrFile['except']));
+            $extension = $image->getClientOriginalExtension();
+            $img_name  = $arrFile['predefine'] ? $arrFile['predefine'] : rand() . time() . '.' . $extension;
+
+            if (in_array($extension, array('png', 'jpg', 'jpeg', 'bmp'))) {
+                $image_resize = Image::make($image->getRealPath());
+                if (isset($arrFile['resize']) && !empty($arrFile['resize'])) {
+                    $image_resize->save(public_path($arrFile['path'] . $img_name));
+                    $image_resize->fit($arrFile['resize'], $arrFile['resize']);
+                    $image_resize->save(public_path($arrFile['path'] . $arrFile['resize'] . 'x' . $arrFile['resize'] . '/' . $img_name));
+                } else {
+                    $image_resize->save(public_path($arrFile['path'] . '/' . $img_name));
+                }
+            } else if (in_array($extension, array('mp4'))) {
+                //$image->move(public_path($arrFile['path'].'/' .$img_name), $img_name);
+                if (isset($arrFile['resize']) && !empty($arrFile['resize'])) {
+                    $image->move(public_path($arrFile['path'] . $arrFile['resize'] . 'x' . $arrFile['resize']), $img_name);
+                } else {
+                    $image->move(public_path($arrFile['path']), $img_name);
+                }
+                exec("ffmpeg -i " . public_path($arrFile['path'] . $arrFile['resize'] . 'x' . $arrFile['resize'] . '/' . $img_name) . " -r 1 -ss 00:00:05 -t 00:00:01 -s " . $arrFile['resize'] . 'x' . $arrFile['resize'] . " -f image2 " . public_path($arrFile['path'] . $arrFile['resize'] . 'x' . $arrFile['resize'] . '/' . str_replace($extension, 'png', $img_name)));
+            } else {
+                if (isset($arrFile['resize']) && !empty($arrFile['resize'])) {
+                    $image->move(public_path($arrFile['path'] . $arrFile['resize'] . 'x' . $arrFile['resize']), $img_name);
+                } else {
+                    $image->move(public_path($arrFile['path'] . '/' . $img_name));
+                }
             }
         }
+
 
         return $img_name;
     }
@@ -1321,33 +1381,37 @@ class Common extends Eloquent
     {
         return abs(strtotime($endDateTime) - strtotime($startDateTime)) / 60;
     }
-    public static function getCommonCityList(){
+    public static function getCommonCityList()
+    {
         $dbCity = new City();
         $dynamicWhere = 'city.status = 1';
-        return $arrCity = $dbCity->getAll($orderby=null, $where=array(), $dynamicWhere);
+        return $arrCity = $dbCity->getAll($orderby = null, $where = array(), $dynamicWhere);
     }
-    public static function getCommonPacakgeList(){
+    public static function getCommonPacakgeList()
+    {
         $dbPackage = new Package();
         $orderby = "package.order";
-        if(!empty(Session::get('city_id'))){
-            $dynamicWhere = 'package.status = 1 AND package_city.city_id ='.Session::get('city_id');
-        }else{
+        if (!empty(Session::get('city_id'))) {
+            $dynamicWhere = 'package.status = 1 AND package_city.city_id =' . Session::get('city_id');
+        } else {
             $dynamicWhere = 'package.status = 1';
         }
-        return $arrPackage = $dbPackage->getAllPackages($orderby, $where=array(), $dynamicWhere);
+        return $arrPackage = $dbPackage->getAllPackages($orderby, $where = array(), $dynamicWhere);
     }
-    public static function generateOrderNumber(){
+    public static function generateOrderNumber()
+    {
         $today = date("Ymd");
-        $rand = strtoupper(substr(uniqid(sha1(time())),0,4));
+        $rand = strtoupper(substr(uniqid(sha1(time())), 0, 4));
         $uniqueNumber = $today . $rand;
         $arrResult = DB::select("SELECT count(order_number) as cnt FROM booking WHERE order_number IN ('" . $uniqueNumber . "')");
         if (isset($arrResult) && !empty($arrResult) && count($arrResult) > 0 && $arrResult[0]->cnt != 0) {
             Common::generateOrderNumber();
-        }else{
+        } else {
             return $uniqueNumber;
         }
     }
-    public static function sentMsg($number, $message){
+    public static function sentMsg($number, $message)
+    {
         // Account details
         $username = 'FuelTrendT';
         $apiKey = 'A5E3F-C37DC';
@@ -1359,70 +1423,73 @@ class Common extends Eloquent
         // Route details
         $apiRoute = 'TRANS';
         // Prepare data for POST request
-        $data = 'username='.$username.'&apikey='.$apiKey.'&apirequest='.$apiRequest.'&route='.$apiRoute.'&mobile='.$numbers.'&sender='.$sender."&message=".$message;
+        $data = 'username=' . $username . '&apikey=' . $apiKey . '&apirequest=' . $apiRequest . '&route=' . $apiRoute . '&mobile=' . $numbers . '&sender=' . $sender . "&message=" . $message;
         // Send the GET request with cURL
-        $url = 'http://www.alots.in/sms-panel/api/http/index.php?'.$data;
+        $url = 'http://www.alots.in/sms-panel/api/http/index.php?' . $data;
         $url = preg_replace("/ /", "%20", $url);
         $response = file_get_contents($url);
         // Process your response here
         return $response;
     }
-    public static function commanDeleteFile($tableName,$id,$path,$file){
+    public static function commanDeleteFile($tableName, $id, $path, $file)
+    {
         DB::table($tableName)->where(['id' => $id])->delete();
-        @unlink(public_path($path).$file);
-        
+        @unlink(public_path($path) . $file);
+
         return true;
     }
 
-    public static function apiJsonResponse($arrResponse, $code, $status = '', $message = '', $data = '', $authKey = ''){
+    public static function apiJsonResponse($arrResponse, $code, $status = '', $message = '', $data = '', $authKey = '')
+    {
         $apiResponseBody = json_encode($arrResponse);
-            if(isset($authKey) && !empty($authKey)){
-                $apiResponse = response()->json($arrResponse, $code)
-                        ->header('Content-Type', 'application/json; charset=utf-8;')
-                        ->header('status', $code)
-                        ->header('authkey', $authKey);
-            }else{
-                $apiResponse = response()->json($arrResponse, $code)
-                        ->header('Content-Type', 'application/json; charset=utf-8;')
-                        ->header('status', $code);
-            }
-            return $apiResponse;
+        if (isset($authKey) && !empty($authKey)) {
+            $apiResponse = response()->json($arrResponse, $code)
+                ->header('Content-Type', 'application/json; charset=utf-8;')
+                ->header('status', $code)
+                ->header('authkey', $authKey);
+        } else {
+            $apiResponse = response()->json($arrResponse, $code)
+                ->header('Content-Type', 'application/json; charset=utf-8;')
+                ->header('status', $code);
+        }
+        return $apiResponse;
     }
 
-    public static function getCommonCategoryList(){
+    public static function getCommonCategoryList()
+    {
         $dbCategory = new Category();
         $arrCategory = $dbCategory->getAll('name');
         return $arrCategory;
     }
 
-    public static function commanRequestPage($objModel, $request, $messages, $regxvalidator, $arrFile=array(), $additopnalOperation=array(),$arrExpect=array(), $pageName)
+    public static function commanRequestPage($objModel, $request, $messages, $regxvalidator, $arrFile = array(), $additopnalOperation = array(), $arrExpect = array(), $pageName)
     {
         $validator = Validator::make($request->all(), $regxvalidator, $messages);
-    
+
         if ($validator->fails()) {
             $msg = $validator->errors()->all();
             $msg = implode('<br>', $msg);
             Session::flash('flash_error', $msg);
             return redirect('/')->withInput();
         } else {
-            if (isset($arrFile['name']) && !empty($arrFile['name']) && $request->hasFile(str_replace('_exist','',$arrFile['except']))) {
+            if (isset($arrFile['name']) && !empty($arrFile['name']) && $request->hasFile(str_replace('_exist', '', $arrFile['except']))) {
                 $img_name = Common::resizeFile($request, $arrFile);
-                $request->merge([$arrFile['name']=>$img_name]);
-            }
-            
-            if(isset($request->created_by) && !empty($request->created_by)){
-                $request->merge(["created_by"=>$request->created_by,'created_at' => date("Y-m-d H:i:s"), 'updated_by' => Session::get('id')]);
-            }else{
-                $request->merge(["created_by"=>Session::get('id'),'created_at' => date("Y-m-d H:i:s"), 'updated_by' => Session::get('id')]);
-            }
-            
-            if (isset($arrFile['except']) && !empty($arrFile['except'])){
-                $objModel->insert($request->except(array_merge(array('_token', $arrFile['except'],str_replace('_exist','',$arrFile['except'])),$arrExpect)));
-            }else{
-                $objModel->insert($request->except(array_merge(['_token'],$arrExpect)));
+                $request->merge([$arrFile['name'] => $img_name]);
             }
 
-            if(isset($additopnalOperation) && !empty($additopnalOperation)){
+            if (isset($request->created_by) && !empty($request->created_by)) {
+                $request->merge(["created_by" => $request->created_by, 'created_at' => date("Y-m-d H:i:s"), 'updated_by' => Session::get('id')]);
+            } else {
+                $request->merge(["created_by" => Session::get('id'), 'created_at' => date("Y-m-d H:i:s"), 'updated_by' => Session::get('id')]);
+            }
+
+            if (isset($arrFile['except']) && !empty($arrFile['except'])) {
+                $objModel->insert($request->except(array_merge(array('_token', $arrFile['except'], str_replace('_exist', '', $arrFile['except'])), $arrExpect)));
+            } else {
+                $objModel->insert($request->except(array_merge(['_token'], $arrExpect)));
+            }
+
+            if (isset($additopnalOperation) && !empty($additopnalOperation)) {
                 $id = DB::getPdo()->lastInsertId();
                 $additopnalOperation[$additopnalOperation['pk_id']] = $id;
                 $objModel->additionalOperation($additopnalOperation);
@@ -1432,11 +1499,12 @@ class Common extends Eloquent
             $keywords = '';
             $description = '';
 
-            return view('/thank-you',compact('registerMessageId','title','keywords','description'));
+            return view('/thank-you', compact('registerMessageId', 'title', 'keywords', 'description'));
             // return redirect('/'.$pageName);
         }
     }
-    public static function limitString($string, $length = 35){
+    public static function limitString($string, $length = 35)
+    {
         // strip tags to avoid breaking any html
         $string = strip_tags($string);
         if (strlen($string) > $length) {
@@ -1446,39 +1514,39 @@ class Common extends Eloquent
             $endPoint = strrpos($stringCut, ' ');
 
             //if the string doesn't contain any space then it will cut without word basis.
-            $string = $endPoint? substr($stringCut, 0, $endPoint) : substr($stringCut, 0);
+            $string = $endPoint ? substr($stringCut, 0, $endPoint) : substr($stringCut, 0);
             $string .= '...';
         }
         return $string;
     }
-    public static function commanRegister($objModel, $request, $messages, $regxvalidator, $arrFile=array(), $additopnalOperation=array(),$arrExpect=array(), $pageName)
+    public static function commanRegister($objModel, $request, $messages, $regxvalidator, $arrFile = array(), $additopnalOperation = array(), $arrExpect = array(), $pageName)
     {
         $validator = Validator::make($request->all(), $regxvalidator, $messages);
-        
+
         if ($validator->fails()) {
             $msg = $validator->errors()->all();
             $msg = implode('<br>', $msg);
             Session::flash('flash_error', $msg);
             return redirect('/sign-up')->withInput();
         } else {
-            if (isset($arrFile['name']) && !empty($arrFile['name']) && $request->hasFile(str_replace('_exist','',$arrFile['except']))) {
+            if (isset($arrFile['name']) && !empty($arrFile['name']) && $request->hasFile(str_replace('_exist', '', $arrFile['except']))) {
                 $img_name = Common::resizeFile($request, $arrFile);
-                $request->merge([$arrFile['name']=>$img_name]);
-            }
-            
-            if(isset($request->created_by) && !empty($request->created_by)){
-                $request->merge(["created_by"=>$request->created_by,'created_at' => date("Y-m-d H:i:s"), 'updated_by' => Session::get('id')]);
-            }else{
-                $request->merge(["created_by"=>Session::get('id'),'created_at' => date("Y-m-d H:i:s"), 'updated_by' => Session::get('id')]);
-            }
-            
-            if (isset($arrFile['except']) && !empty($arrFile['except'])){
-                $objModel->insert($request->except(array_merge(array('_token', $arrFile['except'],str_replace('_exist','',$arrFile['except'])),$arrExpect)));
-            }else{
-                $objModel->insert($request->except(array_merge(['_token'],$arrExpect)));
+                $request->merge([$arrFile['name'] => $img_name]);
             }
 
-            if(isset($additopnalOperation) && !empty($additopnalOperation)){
+            if (isset($request->created_by) && !empty($request->created_by)) {
+                $request->merge(["created_by" => $request->created_by, 'created_at' => date("Y-m-d H:i:s"), 'updated_by' => Session::get('id')]);
+            } else {
+                $request->merge(["created_by" => Session::get('id'), 'created_at' => date("Y-m-d H:i:s"), 'updated_by' => Session::get('id')]);
+            }
+
+            if (isset($arrFile['except']) && !empty($arrFile['except'])) {
+                $objModel->insert($request->except(array_merge(array('_token', $arrFile['except'], str_replace('_exist', '', $arrFile['except'])), $arrExpect)));
+            } else {
+                $objModel->insert($request->except(array_merge(['_token'], $arrExpect)));
+            }
+
+            if (isset($additopnalOperation) && !empty($additopnalOperation)) {
                 $id = DB::getPdo()->lastInsertId();
                 $additopnalOperation[$additopnalOperation['pk_id']] = $id;
                 $objModel->additionalOperation($additopnalOperation);
@@ -1489,7 +1557,7 @@ class Common extends Eloquent
             $keywords = '';
             $description = '';
 
-            return view('/thank-you',compact('registerMessageId','title','keywords','description'));
+            return view('/thank-you', compact('registerMessageId', 'title', 'keywords', 'description'));
             // return redirect('/'.$pageName);
         }
     }

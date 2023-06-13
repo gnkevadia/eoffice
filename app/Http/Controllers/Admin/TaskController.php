@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\FeaturesController;
 use Illuminate\Http\Request;
 use App\Models\Task;
+use App\Models\Features;
+use App\Models\ProjectMaster;
+
 use App\Library\Common;
 use Illuminate\Support\Facades\DB;
 
@@ -25,37 +28,84 @@ class TaskController extends Controller
 
     public function add(Request $request)
     {
+        $data =  Features::get();
+        $project =  ProjectMaster::get();
+        /* $messages = [
+            'Project.required' => 'Please select Module Name',
+            'task.required' => 'Please specify Task',
+            'name.regex' => 'Name cannot have character other than a-z AND A-Z',
+            'description.required' => 'Please specify Description',
+            'description.regex' => 'Name cannot have character other than a-z AND A-Z',
+            'Project.required' => 'Please specify Project',
+            'features.required' => 'Please specify Features',
+            'start_date.required' => 'Please specify Start Date',
+            'end_date.required' => 'Please specify End Date',
+        ];
+        $regxvalidator = [
+            'Project' => 'required',
+            'features' => 'required',
+            'task' => 'required',
+            'description' => 'required',
+            'attachment' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
+        ]; */
+        $file_count = count($request->file);
+        $arrFile = array('name'=>'file','type'=>'image','path'=>'images/task/', 'predefine'=>'', 'except'=>'file_exist', 'multiple_file'=>true);
         if ($request->isMethod('post')) {
             $arrExpect = [
                 'packageId', 'cmsId', 'open_in_new_tabs'
             ];
-            return Common::commanAddPage($this->objModel, $request, null, null, null, null, $arrExpect);
+            // return Common::commanAddPage($this->objModel, $request, $arrFile, null, $arrExpect);
+            return Common::commanAddPage($this->objModel, $request, null, null, $arrFile, null, $arrExpect);
         } else {
-            return view('admin.Task.add');
+            return view(RENDER_URL . '.add', compact('data', 'project'));
         }
     }
 
     public function edit(Request $request, $id = null)
     {
         $data = $this->objModel->getOne($id);
+        $features =  Features::get();
+        $project =  ProjectMaster::get();
+        $messages = [
+            'Project.required' => 'Please select Module Name',
+            'task.required' => 'Please specify Task',
+            'name.regex' => 'Name cannot have character other than a-z AND A-Z',
+            'description.required' => 'Please specify Description',
+            'description.regex' => 'Name cannot have character other than a-z AND A-Z',
+            'Project.required' => 'Please specify Project',
+            'features.required' => 'Please specify Features',
+            'start_date.required' => 'Please specify Start Date',
+            'end_date.required' => 'Please specify End Date',
+        ];
+        $regxvalidator = [
+            'Project' => 'required',
+            'features' => 'required',
+            'task' => 'required',
+            'description' => 'required',
+            'file' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
+        ];
         if ($request->isMethod('post') && isset($id) && !empty($id)) {
-            // $data = $
             $arrExpect = [
                 'packageId', 'cmsId', 'open_in_new_tabs'
             ];
-            if ($image = $request['attachment']) {
-                foreach ($image as $file) {
-                    $filename = time() . rand(1, 100) . '.' . $file->getClientOriginalExtension();
-                    $file->move(public_path('deiver-license-images'), $filename);
-                    echo '<pre>';
-                    print_r($file);
-                    echo '</pre>';
-                    die();
-                }
-            }
-            return Common::commanEditPage($this->objModel, $request, null, null, $id, null, null, $arrExpect, $filename);
+            $request->merge(['path' => 'images/task/']);
+            return Common::commanEditPage($this->objModel, $request, $messages, $regxvalidator, $id, null, null, $arrExpect);
         } else {
-            return view('admin.Task.edit', compact('data'));
+            return view(RENDER_URL . '.edit', compact('data', 'features', 'project'));
         }
+    }
+    public function delete(Request $request)
+    {
+
+        $arrTableFields = array();
+        return Common::commanDeletePage($this->objModel, $request, $arrTableFields);
+    }
+    public function toggleStatus(Request $request)
+    {
+        return Common::commanTogglePage($this->objModel, $request);
     }
 }

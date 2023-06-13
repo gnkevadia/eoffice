@@ -38,12 +38,12 @@
                         </h3>
                     </div>
                     <div class="kt-portlet__head-toolbar">
-						<div class="kt-portlet__head-wrapper">
-							<div class="dropdown dropdown-inline">
-								@include('admin.includes.datatablesdropdown',['action_url' => VIEW_INFO['url']])
-							</div>
-						</div>
-					</div>
+                        <div class="kt-portlet__head-wrapper">
+                            <div class="dropdown dropdown-inline">
+                                @include('admin.includes.datatablesdropdown',['action_url' => VIEW_INFO['url']])
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="kt-portlet__body">
 					@include('admin.includes.errormessage')
@@ -71,5 +71,5 @@
 <!-- /.content -->
 @stop
 @section('metronic_js')
-<script src="{{ asset('admin/assets/js/pages/custom/task.js')}}" type="text/javascript"></script>
+<script src="{{ asset('admin/assets/js/pages/custom/department.js')}}" type="text/javascript"></script>
 @stop

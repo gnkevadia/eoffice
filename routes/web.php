@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\PagesController;
 use App\Http\Controllers\Admin\FeaturesController;
 use App\Http\Controllers\Admin\TaskController;
 use App\Http\Controllers\Admin\ProjectMasterController;
+use App\Http\Controllers\Admin\DepartmentController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -159,12 +160,24 @@ Route::group(['prefix' => 'admin', 'namespace' => '\App\Http\Controllers'], func
     Route::match(['get', 'post'], '/features',[FeaturesController::class, 'index']);//my
     Route::match(['get', 'post'], '/features/add',[FeaturesController::class, 'add']);//my
     Route::match(['get', 'post'], '/features/edit/{id}',[FeaturesController::class, 'edit']);//my
+    Route::match(['get', 'post'], '/features/delete',[FeaturesController::class, 'delete']);//my
+    Route::match(['get','post'], '/features/toggle',[FeaturesController::class, 'toggleStatus']);
 
     /** Task Routes (Admin) */
 
     Route::match(['get', 'post'], '/task',[TaskController::class, 'index']);//my
     Route::match(['get', 'post'], '/task/add',[TaskController::class, 'add']);//my
     Route::match(['get', 'post'], '/task/edit/{id}',[TaskController::class, 'edit']);//my
+    Route::match(['get', 'post'], '/task/delete',[TaskController::class, 'delete']);//my
+    Route::match(['get','post'], '/task/toggle',[TaskController::class, 'toggleStatus']);
+
+        /** Department Routes (Admin) */
+
+        Route::match(['get', 'post'], '/department',[DepartmentController::class, 'index']);//my
+        Route::match(['get', 'post'], '/department/add',[DepartmentController::class, 'add']);//my
+        Route::match(['get', 'post'], '/department/edit/{id}',[DepartmentController::class, 'edit']);//my
+        Route::match(['get', 'post'], '/department/delete',[DepartmentController::class, 'delete']);//my
+        Route::match(['get','post'], '/department/toggle',[DepartmentController::class, 'toggleStatus']);
 
     /** Menu-type Management Routes (Admin) */
     Route::match(['get','post'],'/menu-types', 'Admin\MenuTypesController@index');
