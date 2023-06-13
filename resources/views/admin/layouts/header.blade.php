@@ -119,7 +119,7 @@
 					@endif
 					@if(in_array('/admin/myprofile',Session::get('routes')))
 					<div class="kt-notification__custom kt-space-between">
-						<a href="{{ url('/logout') }}" class="btn btn-label btn-label-brand btn-sm btn-bold">Sign Out</a>
+						<a href="{{ url('admin/logout') }}" class="btn btn-label btn-label-brand btn-sm btn-bold">Sign Out</a>
 					</div>
 					@endif
 				</div>

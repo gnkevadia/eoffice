@@ -19,7 +19,20 @@ class ProjectMaster extends Model
     }
     public function getAll($orderby=null, $where=array(), $dynamicWhere='')
     {
-        return ProjectMaster::get();
-       
+        return ProjectMaster::where('deleted' , 0)->get();
     }
+    public function deleteOne($id, $arrUpdate)
+    {
+        return ProjectMaster::where('id', $id)->update($arrUpdate);
+    }
+    public function deleteAll($ids, $arrUpdate)
+    {
+        return ProjectMaster::whereIn('id', explode(',', $ids))->update($arrUpdate);
+    }
+    public function bulkUpdate($ids, $arrUpdate)
+    {
+        $allids = ltrim($ids, 'on,');
+        return ProjectMaster::whereIn('id', explode(',', $allids))->update($arrUpdate);
+    }
+   
 }

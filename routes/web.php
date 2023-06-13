@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\FeaturesController;
 use App\Http\Controllers\Admin\TaskController;
 use App\Http\Controllers\Admin\ProjectMasterController;
 use App\Http\Controllers\Admin\DepartmentController;
+use App\Http\Controllers\Admin\BusinessUnitController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -31,6 +32,7 @@ use Illuminate\Support\Facades\Auth;
 // Route::get('/admin/login', '\App\Http\Controllers\Auth\LoginController@showFormLogin');
 // Route::get('/logout', '\App\Http\Controllers\Auth\LoginController@logout');
 // Route::get('/admin/logout', '\App\Http\Controllers\Auth\LoginController@logout');
+Route::get('/admin/logout', [LoginController::class,'logout']);
 
 //  my 
 Route::get('/admin/login',[LoginController::class,'showFormLogin']);
@@ -240,10 +242,19 @@ Route::group(['prefix' => 'admin', 'namespace' => '\App\Http\Controllers'], func
     Route::match(['post'], '/state/toggle', 'Admin\StatesController@toggleStatus');
     Route::match(['post'], '/state/getStates', 'Admin\StatesController@getStates');
 
-    /**  project Management Routes (Admin) */
+    /**  Project Management Routes (Admin) */
     Route::match(['get','post'], '/projectmaster',[ProjectMasterController::class, 'index']);
     Route::match(['get','post'], '/projectmaster/add',[ProjectMasterController::class, 'add']);
     Route::match(['get','post'], '/projectmaster/edit/{id}',[ProjectMasterController::class, 'edit']);
+    Route::match(['get','post'], '/projectmaster/delete',[ProjectMasterController::class, 'delete']);
+    Route::match(['get','post'], '/projectmaster/toggle',[ProjectMasterController::class, 'toggleStatus']);
+
+    /**  Business Unit Management Routes (Admin) */
+    Route::match(['get','post'], '/business-unit',[BusinessUnitController::class, 'index']);
+    Route::match(['get','post'], '/business-unit/add',[BusinessUnitController::class, 'add']);
+    Route::match(['get','post'], '/business-unit/edit/{id}',[BusinessUnitController::class, 'edit']);
+    Route::match(['get','post'], '/business-unit/delete',[BusinessUnitController::class, 'delete']);
+    Route::match(['get','post'], 'business-unit/toggle',[BusinessUnitController::class, 'toggleStatus']);
 
     /**  City Management Routes (Admin) */
     Route::match(['get','post'], '/city', 'Admin\CityController@index');

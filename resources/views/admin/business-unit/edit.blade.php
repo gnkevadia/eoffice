@@ -46,28 +46,15 @@
                         </div>
                         @include('admin.includes.errormessage')
                         <div class="form-group">
-                            <label>Name<span class="required">*</span></label>
-                            <input type="text" id="name" name="name" data-toggle="tooltip" title="Enter Name" class="form-control" placeholder="Enter Name" value="{{ $data->name }}" />
-                        </div>
+                                <label>Name<span class="required">*</span></label>
+                                <input type="text" id="name" name="name" data-toggle="tooltip" title="Enter Business Name" class="form-control" placeholder="Enter Business Name" value="{{ $data->name }}" />
+                            </div>
+                            
                         <div class="form-group">
-                            <label>Manager<span class="required">*</span></label>
-                            <input type="text" id="manager" name="manager" data-toggle="tooltip" title="Enter Manager Name" class="form-control" placeholder="Enter Manager Name" value="{{ $data->manager }}" />
+                            <label>Description<span class="required">*</span></label>
+                            <input type="text" id="description" name="description" data-toggle="tooltip" title="Enter description" class="form-control" placeholder="Enter description" value="{{ $data->description }}" />
                         </div>
-
-                        <div class="form-group">
-                            <label>Start Date<span class="required">*</span></label>
-                            <input type="date" id="start_date" name="start_date" data-toggle="tooltip" title="Enter Start Date" class="form-control" placeholder="Enter Start Date" value="<?php if (isset($data->start_date)) {echo date('Y-m-d', strtotime($data->start_date));} else {echo old('start_date');} ?>">
-                        </div>
-
-                        <div class="form-group">
-                            <label>End Date<span class="required">*</span></label>
-                            <input type="date" id="end_date" name="end_date" data-toggle="tooltip" title="Enter End Date" class="form-control" placeholder="Enter End Date" value="<?php if (isset($data->end_date)) {
-                                                                                                                                                                                        echo date('Y-m-d', strtotime($data->end_date));
-                                                                                                                                                                                    } else {
-                                                                                                                                                                                        echo old('end_date');
-                                                                                                                                                                                    } ?>">
-                        </div>
-
+                        
                         <div class="form-group">
                             <label for="exampleSelect1">Status<span class="required">*</span></label>
                             <select class="form-control" id="status" name="status">
@@ -96,5 +83,5 @@
 @stop
 
 @section('metronic_js')
-<script src="{{ asset('admin/assets/js/pages/custom/rights.js') }}"></script>
+<!-- <script src="{{ asset('admin/assets/js/pages/custom/Business-unit-validation.js') }}"></script> -->
 @stop

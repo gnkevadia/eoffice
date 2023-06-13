@@ -15,7 +15,8 @@ use Redirect;
 // use Session;
 use Illuminate\Support\Facades\Session;
 use Config;
-use Auth;
+// use Auth;
+use Illuminate\Support\Facades\Auth;
 use Mail;
 use App\Models\User;
 // use App\Library\Common;
@@ -155,6 +156,36 @@ class LoginController extends Controller
                     $arrRights[11026] = '/admin/brand-states-statistics/edit';
                     $arrRights[11027] = '/admin/brand-states-statistics/toggle';
 
+                    $arrRights[11028] = '/admin/projectmaster';
+                    $arrRights[11029] = '/admin/projectmaster/add';
+                    $arrRights[11030] = '/admin/projectmaster/delete';
+                    $arrRights[11031] = '/admin/projectmaster/edit';
+                    $arrRights[11032] = '/admin/projectmaster/toggle';
+
+                    $arrRights[11033] = '/admin/features';
+                    $arrRights[11034] = '/admin/features/add';
+                    $arrRights[11035] = '/admin/features/delete';
+                    $arrRights[11036] = '/admin/features/edit';
+                    $arrRights[11037] = '/admin/features/toggle';
+
+                    $arrRights[11038] = '/admin/task';
+                    $arrRights[11039] = '/admin/task/add';
+                    $arrRights[11040] = '/admin/task/delete';
+                    $arrRights[11041] = '/admin/task/edit';
+                    $arrRights[11042] = '/admin/task/toggle';
+
+                    $arrRights[11043] = '/admin/business-unit';
+                    $arrRights[11044] = '/admin/business-unit/add';
+                    $arrRights[11045] = '/admin/business-unit/delete';
+                    $arrRights[11046] = '/admin/business-unit/edit';
+                    $arrRights[11047] = '/admin/business-unit/toggle';
+
+                    $arrRights[11043] = '/admin/department';
+                    $arrRights[11044] = '/admin/department/add';
+                    $arrRights[11045] = '/admin/department/delete';
+                    $arrRights[11046] = '/admin/department/edit';
+                    $arrRights[11047] = '/admin/department/toggle';
+
                     Session::put('routes', $arrRights);
                     if($request->admin == 'true'){
                         Session::put('admin', true);
@@ -284,6 +315,7 @@ class LoginController extends Controller
             $redirectTo = '/admin/login';
         }
         Auth::logout();
+        session()->flush(); 
         return redirect($redirectTo);
     }
 }

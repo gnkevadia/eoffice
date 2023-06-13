@@ -51,12 +51,16 @@
                             </div>
                             
                             <div class="form-group">
+                                <label>Manager<span class="required">*</span></label>
+                                <input type="text" id="manager" name="manager" data-toggle="tooltip" title="Enter Manager Name" class="form-control" placeholder="Enter Manager Name" value="{{ old('manager') }}" />
+                            </div>
+                            <!-- <div class="form-group">
                                 <label for="exampleSelect1">Manager<span class="required">*</span></label>
                                 <select class="form-control" id="manager" name="manager">
                                         <option value="1" selected>GK</option>
                                         <option value="0">Vipul Patel</option>
                                 </select>
-                            </div>
+                            </div> -->
 
                             <div class="form-group">
                                     <label>Start Date<span class="required">*</span></label>
@@ -99,5 +103,5 @@
 @stop
 
 @section('metronic_js')
-<script src="{{ asset('admin/assets/js/pages/custom/rights.js') }}"></script>
+<script src="{{ asset('admin/assets/js/pages/custom/project-master-validation.js') }}"></script>
 @stop
