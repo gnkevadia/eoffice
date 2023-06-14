@@ -16,9 +16,6 @@ var KTFormControls = function () {
                 description: {
                     required: true
                 },
-                file: {
-                    required: true
-                },
                 start_date: {
                     required: true
                 },
@@ -32,9 +29,6 @@ var KTFormControls = function () {
                 },
                 'description': {
                     required: "Please enter Description",
-                },
-                'file': {
-                    required: "Please enter Attachment",
                 },
                 'start_date': {
                     required: "Please enter Start Date",

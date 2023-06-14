@@ -9,6 +9,14 @@
         color: black;
         display: none;
     }
+
+    #attachment {
+        display: none;
+    }
+
+    .inputadd {
+        display: flex;
+    }
 </style>
 <h3 class="kt-subheader__title">{{ VIEW_INFO['title'] }} Managment</h3>
 <span class="kt-subheader__separator kt-hidden"></span>
@@ -56,7 +64,7 @@
                             <label for="exampleSelect1">Project<span class="required">*</span></label>
                             <select class="form-control" id="status" name="Project">
                                 @foreach ($project as $value)
-                                  <option value="{{$value->id}}">{{$value->name}}</option>
+                                <option value="{{$value->id}}">{{$value->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -64,7 +72,7 @@
                             <label for="exampleSelect1">Features<span class="required">*</span></label>
                             <select class="form-control" id="status" name="features">
                                 @foreach ($data as $value)
-                                  <option value="{{$value->id}}">{{$value->name}}</option>
+                                <option value="{{$value->id}}">{{$value->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -77,9 +85,13 @@
                             <textarea name="description" id="description" cols="30" rows="3" class="form-control" placeholder="Enter Description"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="exampleSelect1">Attachment<span class="required">*</span></label>
-                            <input type="file" id="attachment" name="file[]" data-toggle="tooltip" title="Enter Attachment" class="form-control" placeholder="Enter Attachment" value="{{ old('name') }}" multiple>
 
+                            <label for="exampleSelect1">Attachment<span class="required">*</span></label>
+                            <div class="row" id="addfild">
+                                <div class="col-lg-2">
+                                    <button type="button" class="btn btn-success mr-3 mt-2 addMultipleImages" id="addfilds">+</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="exampleSelect1">Pryority<span class="required">*</span></label>
@@ -141,4 +153,48 @@
 
 @section('metronic_js')
 <script src="{{ asset('admin/assets/js/pages/custom/task-validation.js') }}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var counter = 1;
+
+        $("#btnadd").on("click", function() {
+            counter++;
+            // alert('111');
+            // $("#addfild").append('<div id="file' + counter + '"><input type="file" class="form-control mt-2" name="License_image[]" multiple> <div class="text-right">   <button type="button" class="mt-2 btn btn-danger remove_btn"  id=' + counter + '>-</button></div></div>');
+
+        });
+        $(document).on("click", ".remove_btn", function() {
+            let row_id = $(this).attr('id');
+            $('#file' + row_id + '').remove();
+        })
+        $(".addMultipleImages").click(function() {
+            console.log(counter);
+            if (counter >= 2) {
+                if ($('#attachment' + (counter - 1)).val()) {
+                    if ($('#attachment' + (counter - 1))[0].files[0].name != null) {
+                        $("#addfild").prepend(' <div class="col-lg-3 inputadd multipleImage ml-2 mt-2"><input id="attachment' + counter + '" type="file" class="form-control testing attachment' + counter + '" name="file[]" /> <button type="button" class="btn btn-danger ml-2" id="delete_img" style="text-align:center">X</button></div>');
+                        $('#attachment' + counter).click();
+                        counter++;
+
+                    }
+                }
+                if ($('.testing').length == 0) {
+                    $("#addfild").prepend(' <div class="col-lg-3 inputadd multipleImage ml-2 mt-2"><input id="attachment' + counter + '" type="file" class="form-control testing attachment' + counter + '" name="file[]" /> <button type="button" class="btn btn-danger ml-2" id="delete_img" style="text-align:center">X</button></div>');
+                    $('#attachment' + counter).click();
+                    counter++;
+                }
+            } else {
+                $("#addfild").prepend(' <div class="col-lg-3 inputadd multipleImage ml-2 mt-2"></p><input id="attachment' + counter + '" type="file" class="form-control testing attachment' + counter + '" name="file[]" /> <button type="button" class="btn btn-danger ml-2" id="delete_img" style="text-align:center">X</button></div>');
+                // $('#attachment' + counter).trigger('click');
+                $(this).parent().siblings('.inputadd').children('#attachment' + counter).trigger('click');
+                counter++;
+            }
+        });
+        $(document).on("click", "#delete_img", function() {
+            $(this).parent().remove();
+        });
+
+
+    });
+</script>
 @stop
