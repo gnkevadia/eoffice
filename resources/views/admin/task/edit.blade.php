@@ -210,19 +210,19 @@
             if (counter >= 2) {
                 if ($('#attachment' + (counter - 1)).val()) {
                     if ($('#attachment' + (counter - 1))[0].files[0].name != null) {
-                        $("#addfild").prepend(' <div class="col-lg-3 inputadd multipleImage ml-2 mt-2"><input id="attachment' + counter + '" type="file" class="form-control testing attachment' + counter + '" name="file[]" /> <button type="button" class="btn btn-danger ml-2"  style="text-align:center">X</button></div>');
+                        $("#addfild").prepend(' <div class="col-lg-3 inputadd multipleImage ml-2 mt-2"><input id="attachment' + counter + '" type="file" class="form-control testing attachment' + counter + '" name="file[]" /> <button type="button" class="btn btn-danger ml-2 delete_input"  style="text-align:center">X</button></div>');
                         $('#attachment' + counter).click();
                         counter++;
 
                     }
                 }
                 if ($('.testing').length == 0) {
-                    $("#addfild").prepend(' <div class="col-lg-3 inputadd multipleImage ml-2 mt-2"><input id="attachment' + counter + '" type="file" class="form-control testing attachment' + counter + '" name="file[]" /> <button type="button" class="btn btn-danger ml-2" style="text-align:center">X</button></div>');
+                    $("#addfild").prepend(' <div class="col-lg-3 inputadd multipleImage ml-2 mt-2"><input id="attachment' + counter + '" type="file" class="form-control testing attachment' + counter + '" name="file[]" /> <button type="button" class="btn btn-danger ml-2 delete_input" style="text-align:center">X</button></div>');
                     $('#attachment' + counter).click();
                     counter++;
                 }
             } else {
-                $("#addfild").prepend(' <div class="col-lg-3 inputadd multipleImage ml-2 mt-2"><input id="attachment' + counter + '" type="file" class="form-control testing attachment' + counter + '" name="file[]" /> <button type="button" class="btn btn-danger ml-2" style="text-align:center">X</button></div>');
+                $("#addfild").prepend(' <div class="col-lg-3 inputadd multipleImage ml-2 mt-2"><input id="attachment' + counter + '" type="file" class="form-control testing attachment' + counter + '" name="file[]" /> <button type="button" class="btn btn-danger ml-2 delete_input" style="text-align:center">X</button></div>');
                 // $('#attachment' + counter).trigger('click');
                 $(this).parent().siblings('.inputadd').children('#attachment' + counter).trigger('click');
                 counter++;
@@ -235,7 +235,7 @@
         $(document).on("click", ".delete_img", function() {
             $(this).parent().remove();
         });
-        $(document).on("click", "#delete_input", function() {
+        $(document).on("click", ".delete_input", function() {
             $(this).parent().remove();
         });
     });
