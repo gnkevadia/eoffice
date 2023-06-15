@@ -7,6 +7,7 @@ use App\Http\Controllers\FeaturesController;
 use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\Features;
+use App\Models\Pryority;
 use App\Models\ProjectMaster;
 
 use App\Library\Common;
@@ -31,6 +32,7 @@ class TaskController extends Controller
         
         $data =  Features::get();
         $project =  ProjectMaster::get();
+        $pryority =  Pryority::get();
         $messages = [
             'Project.required' => 'Please select Module Name',
             'task.required' => 'Please specify Task',
@@ -47,21 +49,18 @@ class TaskController extends Controller
             'features' => 'required',
             'task' => 'required',
             'description' => 'required',
-            // 'attachment' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
         ];
-        // $file_count = count($request->file);
         $arrFile = array('name'=>'file','type'=>'image','path'=>'images/task/', 'predefine'=>'', 'except'=>'file_exist', 'multiple_file'=>true);
         if ($request->isMethod('post')) {
            
             $arrExpect = [
                 'packageId', 'cmsId', 'open_in_new_tabs'
             ];
-            // return Common::commanAddPage($this->objModel, $request, $arrFile, null, $arrExpect);
             return Common::commanAddPage($this->objModel, $request, $messages, $regxvalidator, $arrFile, null, $arrExpect);
         } else {
-            return view(RENDER_URL . '.add', compact('data', 'project'));
+            return view(RENDER_URL . '.add', compact('data', 'project', 'pryority'));
         }
     }
 
@@ -70,6 +69,7 @@ class TaskController extends Controller
         $data = $this->objModel->getOne($id);
         $features =  Features::get();
         $project =  ProjectMaster::get();
+        $pryority =  Pryority::get();
         $messages = [
             'Project.required' => 'Please select Module Name',
             'task.required' => 'Please specify Task',
@@ -86,7 +86,6 @@ class TaskController extends Controller
             'features' => 'required',
             'task' => 'required',
             'description' => 'required',
-            // 'file' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
         ];
@@ -97,7 +96,7 @@ class TaskController extends Controller
             $request->merge(['path' => 'images/task/']);
             return Common::commanEditPage($this->objModel, $request, $messages, $regxvalidator, $id, null, null, $arrExpect);
         } else {
-            return view(RENDER_URL . '.edit', compact('data', 'features', 'project'));
+            return view(RENDER_URL . '.edit', compact('data', 'features', 'project', 'pryority'));
         }
     }
     public function delete(Request $request)

@@ -54,9 +54,11 @@
                         @include('admin.includes.errormessage')
                         <div class="form-group">
                             <label for="exampleSelect1">Business Name<span class="required">*</span></label>
-                            <select class="form-control" id="status" name="business_id">
-                                <option value="1" selected>Yes</option>
-                                <option value="0">No</option>
+                            <select class="form-control" id="business" name="business_id">
+                                <option value="" data-id="0">Select Business Name</option>
+                                @foreach ($data as $value)
+                                <option value="{{$value->id}}">{{$value->name}}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group">
@@ -76,9 +78,9 @@
                         </div>
                         <div class="kt-portlet__foot">
                             <div class="kt-form__actions">
-                                <button type="submit" class="btn btn-primary">Save</button>
-                                <button type="button" id="reset" class="btn btn-danger">Reset</button>
-                                <a href="{{ url(VIEW_INFO['url']) }}"><button type="button" class="btn btn-warning" id="back">Back</button></a>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="button" id="reset" class="btn btn-secondary">Reset</button>
+                                <a href="{{ url(VIEW_INFO['url']) }}"><button type="button" class="btn btn-success" id="back">Cancel</button></a>
                             </div>
                         </div>
                 </form>

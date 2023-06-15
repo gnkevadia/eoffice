@@ -22,7 +22,7 @@
         display: flex;
     }
 
-    #delete_img {
+    .delete_img {
         position: absolute;
         top: -3px;
         right: 45px;
@@ -72,7 +72,8 @@
                         @include('admin.includes.errormessage')
                         <div class="form-group">
                             <label for="exampleSelect1">Project<span class="required">*</span></label>
-                            <select class="form-control" id="status" name="Project">
+                            <select class="form-control" id="Project" name="Project">
+                                <option value="" data-id="0">Select Project</option>
                                 @foreach ($project as $value)
                                 <option value="{{$value->id}}" {{($value->id == $data->project ? 'selected' : '')}}>{{$value->name}}</option>
                                 @endforeach
@@ -80,7 +81,8 @@
                         </div>
                         <div class="form-group">
                             <label for="exampleSelect1">Features<span class="required">*</span></label>
-                            <select class="form-control" id="status" name="features">
+                            <select class="form-control" id="features" name="features">
+                                <option value="" data-id="0">Select Features</option>
                                 @foreach ($features as $value)
                                 <option value="{{$value->id}}" {{($value->id == $data->features ? 'selected' : '')}}>{{$value->name}}</option>
                                 @endforeach
@@ -104,23 +106,37 @@
                         </div>
                         <div class="row">
                             @foreach($data->task_images as $image)
-                            <div class="col-lg-2 col-md-4 my-3 ml-3 mb-4" style="left:0;right:0;display:inline-block;margin:0;padding:3px">
-                                <img src="{{url('images/task/').'/'.$image->images}}" alt="" width="150">
-                                <input id="dltImg" type="text" name="remainimg[]" value="{{$image->id}}">
-                                <button type="button" class="mt-2 btn btn-danger btn-sm" id="delete_img">X</button>
-                            </div>
+                            <?php
+                            $ext = pathinfo($image->images, PATHINFO_EXTENSION);
+                            if ($ext == 'pdf') { ?>
+                                <div class="col-lg-2 col-md-4 my-3 ml-3 mb-4" style="left:0;right:0;display:inline-block;margin:0;padding:3px">
+                                    <img src="{{url('images/profile_image')}}/pdf.jpg" height="85" alt="" onclick="window.open('{{url('images/task')}}/{{$image->images}}','_blank')">
+                                    <input id="dltImg" type="text" name="remainimg[]" value="{{$image->id}}">
+                                    <button type="button" class="mt-2 btn btn-danger btn-sm delete_img">X</button>
+                                </div>
+                            <?php } else { ?>
+                                <div class="col-lg-2 col-md-4 my-3 ml-3 mb-4" style="left:0;right:0;display:inline-block;margin:0;padding:3px">
+                                    <img src="{{url('images/task/').'/'.$image->images}}" alt="" width="150">
+                                    <input id="dltImg" type="text" name="remainimg[]" value="{{$image->id}}">
+                                    <button type="button" class="mt-2 btn btn-danger btn-sm delete_img">X</button>
+                                </div>
+                            <?php }
+                            ?>
                             @endforeach
                         </div>
                         <div class="form-group">
                             <label for="exampleSelect1">Pryority<span class="required">*</span></label>
-                            <select class="form-control" id="status" name="Pryority">
-                                <option {{($data->Pryority == 1 ? 'selected' : '')}} value="1">Yes</option>
-                                <option {{($data->Pryority == 0 ? 'selected' : '')}} value="0">No</option>
+                            <select class="form-control" id="Pryority" name="Pryority">
+                                <option value="" data-id="0">Select Pryority</option>
+                                @foreach ($pryority as $value)
+                                <option value="{{$value->id}}" {{($value->id == $data->pryority ? 'selected' : '')}}>{{$value->pryority_fild}}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="exampleSelect1">Assignee<span class="required">*</span></label>
-                            <select class="form-control" id="status" name="assignee">
+                            <select class="form-control" id="assignee" name="assignee">
+                                <option value="" data-id="0">Select Assignee</option>
                                 <option {{($data->assignee == 1 ? 'selected' : '')}} value="1">jatan</option>
                                 <option {{($data->assignee == 0 ? 'selected' : '')}} value="0">fenil</option>
                             </select>
@@ -145,7 +161,8 @@
 
                         <div class="form-group">
                             <label for="exampleSelect1">Cycle<span class="required">*</span></label>
-                            <select class="form-control" id="status" name="cycle">
+                            <select class="form-control" id="cycle" name="cycle">
+                                <option value="" data-id="0">Select Cycle</option>
                                 <option {{($data->cycle == 1 ? 'selected' : '')}} value="1">00</option>
                                 <option {{($data->cycle == 0 ? 'selected' : '')}} value="0">11</option>
                             </select>
@@ -159,9 +176,9 @@
                         </div>
                         <div class="kt-portlet__foot">
                             <div class="kt-form__actions">
-                                <button type="submit" class="btn btn-primary">Save</button>
-                                <button type="button" id="reset" class="btn btn-danger">Reset</button>
-                                <a href="{{ url(VIEW_INFO['url']) }}"><button type="button" class="btn btn-warning" id="back">Back</button></a>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="button" id="reset" class="btn btn-secondary">Reset</button>
+                                <a href="{{ url(VIEW_INFO['url']) }}"><button type="button" class="btn btn-success" id="back">Cancel</button></a>
                             </div>
                         </div>
                 </form>
@@ -193,19 +210,19 @@
             if (counter >= 2) {
                 if ($('#attachment' + (counter - 1)).val()) {
                     if ($('#attachment' + (counter - 1))[0].files[0].name != null) {
-                        $("#addfild").prepend(' <div class="col-lg-3 inputadd multipleImage ml-2 mt-2"><input id="attachment' + counter + '" type="file" class="form-control testing attachment' + counter + '" name="file[]" /> <button type="button" class="btn btn-danger ml-2" id="delete_img" style="text-align:center">X</button></div>');
+                        $("#addfild").prepend(' <div class="col-lg-3 inputadd multipleImage ml-2 mt-2"><input id="attachment' + counter + '" type="file" class="form-control testing attachment' + counter + '" name="file[]" /> <button type="button" class="btn btn-danger ml-2"  style="text-align:center">X</button></div>');
                         $('#attachment' + counter).click();
                         counter++;
 
                     }
                 }
                 if ($('.testing').length == 0) {
-                    $("#addfild").prepend(' <div class="col-lg-3 inputadd multipleImage ml-2 mt-2"><input id="attachment' + counter + '" type="file" class="form-control testing attachment' + counter + '" name="file[]" /> <button type="button" class="btn btn-danger ml-2" id="delete_img" style="text-align:center">X</button></div>');
+                    $("#addfild").prepend(' <div class="col-lg-3 inputadd multipleImage ml-2 mt-2"><input id="attachment' + counter + '" type="file" class="form-control testing attachment' + counter + '" name="file[]" /> <button type="button" class="btn btn-danger ml-2" style="text-align:center">X</button></div>');
                     $('#attachment' + counter).click();
                     counter++;
                 }
             } else {
-                $("#addfild").prepend(' <div class="col-lg-3 inputadd multipleImage ml-2 mt-2"></p><input id="attachment' + counter + '" type="file" class="form-control testing attachment' + counter + '" name="file[]" /> <button type="button" class="btn btn-danger ml-2" id="delete_img" style="text-align:center">X</button></div>');
+                $("#addfild").prepend(' <div class="col-lg-3 inputadd multipleImage ml-2 mt-2"><input id="attachment' + counter + '" type="file" class="form-control testing attachment' + counter + '" name="file[]" /> <button type="button" class="btn btn-danger ml-2" style="text-align:center">X</button></div>');
                 // $('#attachment' + counter).trigger('click');
                 $(this).parent().siblings('.inputadd').children('#attachment' + counter).trigger('click');
                 counter++;
@@ -215,7 +232,7 @@
             let row_id = $(this).attr('id');
             $('#file' + row_id + '').remove();
         })
-        $(document).on("click", "#delete_img", function() {
+        $(document).on("click", ".delete_img", function() {
             $(this).parent().remove();
         });
         $(document).on("click", "#delete_input", function() {

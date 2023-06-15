@@ -15,7 +15,7 @@ var KTDatatableDataLocalDemo = function () {
             contentType: 'application/json',
             data: $("#list-form").serialize(),
             success: function (data, textStatus, jQxhr) {
-                console.log('datsssss',data);
+                console.log('datsssss', data);
                 dataJSONArray = JSON.parse(JSON.stringify(data.data));
                 datatable = $('.kt-datatable').KTDatatable({
                     // datasource definition
@@ -52,14 +52,14 @@ var KTDatatableDataLocalDemo = function () {
                             selector: { class: 'kt-checkbox--solid' },
                             textAlign: 'center',
                         }, {
+                            field: 'task',
+                            title: 'Task',
+                        }, {
                             field: 'project',
                             title: 'Project',
                         }, {
                             field: 'features',
                             title: 'Features',
-                        }, {
-                            field: 'task',
-                            title: 'Task',
                         }, {
                             field: 'description',
                             title: 'Description',

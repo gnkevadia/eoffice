@@ -23,7 +23,8 @@ class Department extends Model
 
     public function getAll($orderby = null, $where = array(), $dynamicWhere = '')
     {
-        return Department::where('department.deleted' , 0)->get();
+        $data = Department::join('business_unit', 'department.business_id', '=', 'business_unit.id')->where('department.deleted', 0)->select('department.*', 'business_unit.name as business_name')->get();
+        return $data;
     }
 
     public function deleteOne($id, $arrUpdate)

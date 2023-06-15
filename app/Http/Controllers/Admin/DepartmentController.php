@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Department;
+use App\Models\BusinessUnit;
 use App\Library\Common;
 
 class DepartmentController extends Controller
@@ -23,29 +24,46 @@ class DepartmentController extends Controller
 
     public function add(Request $request)
     {
-        // $project =  ProjectMaster::get();
+        $data =  BusinessUnit::get();
+        $messages = [
+            'name.regex' => 'Name cannot have character other than a-z AND A-Z',
+            'description.required' => 'Please specify Description',
+            'description.regex' => 'Name cannot have character other than a-z AND A-Z',
+        ];
+        $regxvalidator = [
+            'description' => 'required',
+            'name' => 'required',
+        ];
         if ($request->isMethod('post')) {
             $arrExpect = [
                 'packageId', 'cmsId', 'open_in_new_tabs'
             ];
-            return Common::commanAddPage($this->objModel, $request, null, null, null, null, $arrExpect);
+            return Common::commanAddPage($this->objModel, $request,  $messages, $regxvalidator, null, null, $arrExpect);
         } else {
-            return view(RENDER_URL . '.add');
-            // return view(RENDER_URL.'.add', compact('project'));
+            return view(RENDER_URL . '.add', compact('data'));
         }
     }
 
     public function edit(Request $request, $id = null)
     {
         $data = $this->objModel->getOne($id);
-        // $project =  ProjectMaster::get();
+        $business  =  BusinessUnit::get();
+        $messages = [
+            'name.regex' => 'Name cannot have character other than a-z AND A-Z',
+            'description.required' => 'Please specify Description',
+            'description.regex' => 'Name cannot have character other than a-z AND A-Z',
+        ];
+        $regxvalidator = [
+            'description' => 'required',
+            'name' => 'required',
+        ];
         if ($request->isMethod('post') && isset($id) && !empty($id)) {
             $arrExpect = [
                 'packageId', 'cmsId', 'open_in_new_tabs'
             ];
-            return Common::commanEditPage($this->objModel, $request, null, null, $id, null, null, $arrExpect);
+            return Common::commanEditPage($this->objModel, $request, $messages, $regxvalidator, $id, null, null, $arrExpect);
         } else {
-            return view(RENDER_URL.'.edit', compact('data'));
+            return view(RENDER_URL . '.edit', compact('data', 'business'));
             // return view('admin.Features.edit', compact('data', 'project'));
         }
     }

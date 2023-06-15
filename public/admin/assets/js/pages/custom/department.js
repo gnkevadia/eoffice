@@ -52,15 +52,15 @@ var KTDatatableDataLocalDemo = function () {
                             selector: { class: 'kt-checkbox--solid' },
                             textAlign: 'center',
                         }, {
-                            field: 'business_id',
-                            title: 'Business Name',
-                        }, {
                             field: 'name',
                             title: 'Name',
                         }, {
+                            field: 'business_name',
+                            title: 'Business Name',
+                        }, {
                             field: 'description',
                             title: 'Description',
-                        },{
+                        }, {
                             field: 'status',
                             title: 'Status',
                             template: function (row) {

@@ -16,6 +16,9 @@ var KTFormControls = function () {
                 description: {
                     required: true
                 },
+                business_id: {
+                    required: true
+                }
             },
             messages: {
                 'name': {
@@ -23,6 +26,9 @@ var KTFormControls = function () {
                 },
                 'description': {
                     required: "Please enter description",
+                },
+                'business_id': {
+                    required: "Please enter Business Name",
                 },
             },
 
@@ -61,5 +67,6 @@ jQuery(document).ready(function() {
     $("#reset").click(function () {
         $(':input', '#frmAddEdit').not(':button, :submit, :reset, :hidden').val('').prop('checked', false).prop('selected', false);
         $("#status").val('1').trigger('change');
+        $("#business").attr('data-id',0).trigger('change');
     });
 });

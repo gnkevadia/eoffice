@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Features;
 use App\Library\Common;
 use App\Models\ProjectMaster;
+use App\Models\Pryority;
 
 class FeaturesController extends Controller
 {
@@ -25,6 +26,7 @@ class FeaturesController extends Controller
     public function add(Request $request)
     {
         $project =  ProjectMaster::get();
+        $pryority =  Pryority::get();
         $messages = [
             'Project.required' => 'Please select Module Name',
             'name.required' => 'Please specify Rights',
@@ -41,10 +43,10 @@ class FeaturesController extends Controller
             $arrExpect = [
                 'packageId', 'cmsId', 'open_in_new_tabs'
             ];
-            return Common::commanAddPage($this->objModel, $request, $messages, $regxvalidator, $arrExpect);
+            return Common::commanAddPage($this->objModel, $request, $messages, $regxvalidator, null, null, $arrExpect);
         } else {
             // return view('admin.Features.add', compact('project'));
-            return view(RENDER_URL . '.add', compact('project'));
+            return view(RENDER_URL . '.add', compact('project', 'pryority'));
         }
     }
 
@@ -52,6 +54,7 @@ class FeaturesController extends Controller
     {
         $data = $this->objModel->getOne($id);
         $project =  ProjectMaster::get();
+        $pryority =  Pryority::get();
         $messages = [
             'Project.required' => 'Please select Module Name',
             'name.required' => 'Please specify Name',
@@ -72,7 +75,7 @@ class FeaturesController extends Controller
             ];
             return Common::commanEditPage($this->objModel, $request, $messages, $regxvalidator, $id, null, null, $arrExpect);
         } else {
-            return view(RENDER_URL . '.edit', compact('data', 'project'));
+            return view(RENDER_URL . '.edit', compact('data', 'project', 'pryority'));
         }
     }
 

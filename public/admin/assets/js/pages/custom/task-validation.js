@@ -22,6 +22,24 @@ var KTFormControls = function () {
                 end_date: {
                     required: true
                 },
+                file: {
+                    required: true
+                },
+                Project: {
+                    required: true
+                },
+                features: {
+                    required: true
+                },
+                Pryority: {
+                    required: true
+                },
+                assignee: {
+                    required: true
+                },
+                cycle: {
+                    required: true
+                },
             },
             messages: {
                 'task': {
@@ -35,6 +53,24 @@ var KTFormControls = function () {
                 },
                 'end_date': {
                     required: "Please enter End Date",
+                },
+                'file': {
+                    required: "Please enter Attachment"
+                },
+                'Project': {
+                    required: "Please enter Project"
+                },
+                'features': {
+                    required: "Please enter Features"
+                },
+                'Pryority': {
+                    required: "Please enter Features"
+                },
+                'assignee': {
+                    required: "Please enter Assignee"
+                },
+                'cycle': {
+                    required: "Please enter Cycle"
                 },
             },
 
@@ -73,5 +109,10 @@ jQuery(document).ready(function() {
     $("#reset").click(function () {
         $(':input', '#frmAddEdit').not(':button, :submit, :reset, :hidden').val('').prop('checked', false).prop('selected', false);
         $("#status").val('1').trigger('change');
+        $("#Pryority").attr('data-id',0).trigger('change');
+        $("#Project").attr('data-id',0).trigger('change');
+        $("#assignee").attr('data-id',0).trigger('change');
+        $("#cycle").attr('data-id',0).trigger('change');
+        $("#features").attr('data-id',0).trigger('change');
     });
 });

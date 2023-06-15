@@ -345,73 +345,62 @@ class Common extends Eloquent
     public static function commanAddPage($objModel, $request, $messages, $regxvalidator, $arrFile = array(), $additopnalOperation = array(), $arrExpect = array())
     {
         $validator = Validator::make($request->all(), $regxvalidator, $messages);
-    
+
         if ($validator->fails()) {
             $msg = $validator->errors()->all();
             $msg = implode('<br>', $msg);
             Session::flash('flash_error', $msg);
-            return redirect(URL.'/add')->withInput();
+            return redirect(URL . '/add')->withInput();
         } else {
-        if ($arrFile['multiple_file']) {
-            $task = new Task();
-            $task->project = $request['Project'];
-            $task->features = $request['features'];
-            $task->task = $request['task'];
-            $task->description = $request['description'];
-            $task->pryority = $request['Pryority'];
-            $task->assignee = $request['assignee'];
-            $task->start_date = $request['start_date'];
-            $task->end_date = $request['end_date'];
-            $task->cycle = $request['cycle'];
-            $task->status = $request['status'];
-            $task->created_by = Session::get('id');
-            $task->updated_by = Session::get('id');
-            $task->save();
-            $insertId = $task->id;
-
-            $files = $request->file;
-            $file_count = count($request->file);
-            if($file_count > 1){
-                foreach ($files as $file) {
-                    $image = $file;
-                    $extension = $image->getClientOriginalExtension();
-                    $img_name  = $arrFile['predefine'] ? $arrFile['predefine'] : rand() . time() . '.' . $extension;
-                    $file->move(public_path($arrFile['path']), $img_name);
-                    $image = new Task_image();
-                    $image->task_id	= $insertId;
-                    $image->images = $img_name;
-                    $image->save();
+            if (isset($arrFile) && $arrFile['multiple_file']) {
+                $task = new Task();
+                $task->project = $request['Project'];
+                $task->features = $request['features'];
+                $task->task = $request['task'];
+                $task->description = $request['description'];
+                $task->pryority = $request['Pryority'];
+                $task->assignee = $request['assignee'];
+                $task->start_date = $request['start_date'];
+                $task->end_date = $request['end_date'];
+                $task->cycle = $request['cycle'];
+                $task->status = $request['status'];
+                $task->created_by = Session::get('id');
+                $task->updated_by = Session::get('id');
+                $task->save();
+                $insertId = $task->id;
+                if (empty($request->file)) {
+                } else {
+                    $files = $request->file;
+                    foreach ($files as $file) {
+                        $image = $file;
+                        $extension = $image->getClientOriginalExtension();
+                        $img_name  = $arrFile['predefine'] ? $arrFile['predefine'] : rand() . time() . '.' . $extension;
+                        $file->move(public_path($arrFile['path']), $img_name);
+                        $image = new Task_image();
+                        $image->task_id    = $insertId;
+                        $image->images = $img_name;
+                        $image->save();
+                    }
                 }
-            }else{
-                $image = $files;
-                $extension = $image->getClientOriginalExtension();
-                $img_name  = $arrFile['predefine'] ? $arrFile['predefine'] : rand() . time() . '.' . $extension;
-                $image->move(public_path($arrFile['path']), $img_name);
-                $image = new Task_image();
-                $image->task_id	= $insertId;
-                $image->images = $img_name;
-                $image->save();
-            }
-        } else {
-            die('q');
-            if (isset($arrFile['name']) && !empty($arrFile['name']) && $request->hasFile(str_replace('_exist', '', $arrFile['except']))) {
-                $img_name = Common::resizeFile($request, $arrFile);
-                $request->merge([$arrFile['name'] => $img_name]);
+            } else {
+                if (isset($arrFile['name']) && !empty($arrFile['name']) && $request->hasFile(str_replace('_exist', '', $arrFile['except']))) {
+                    $img_name = Common::resizeFile($request, $arrFile);
+                    $request->merge([$arrFile['name'] => $img_name]);
+                }
+
+                if (isset($request->created_by) && !empty($request->created_by)) {
+                    $request->merge(["created_by" => $request->created_by, 'created_at' => date("Y-m-d H:i:s"), 'updated_by' => Session::get('id')]);
+                } else {
+                    $request->merge(["created_by" => Session::get('id'), 'created_at' => date("Y-m-d H:i:s"), 'updated_by' => Session::get('id')]);
+                }
+                if (isset($arrFile['except']) && !empty($arrFile['except'])) {
+                    $objModel->insert($request->except(array_merge(array('_token', $arrFile['except'], str_replace('_exist', '', $arrFile['except'])), $arrExpect)));
+                } else {
+                    $objModel->insert($request->except(array_merge(['_token'], $arrExpect)));
+                }
             }
 
-            if (isset($request->created_by) && !empty($request->created_by)) {
-                $request->merge(["created_by" => $request->created_by, 'created_at' => date("Y-m-d H:i:s"), 'updated_by' => Session::get('id')]);
-            } else {
-                $request->merge(["created_by" => Session::get('id'), 'created_at' => date("Y-m-d H:i:s"), 'updated_by' => Session::get('id')]);
-            }
-            if (isset($arrFile['except']) && !empty($arrFile['except'])) {
-                $objModel->insert($request->except(array_merge(array('_token', $arrFile['except'], str_replace('_exist', '', $arrFile['except'])), $arrExpect)));
-            } else {
-                $objModel->insert($request->except(array_merge(['_token'], $arrExpect)));
-            }
-        }
-
-        return redirect(URL)->with(FLASH_MESSAGE_SUCCESS, Lang::get('common_message.add', [MODULE_NAME => ucwords(str_replace("-", " ", MODELNAME))]));
+            return redirect(URL)->with(FLASH_MESSAGE_SUCCESS, Lang::get('common_message.add', [MODULE_NAME => ucwords(str_replace("-", " ", MODELNAME))]));
         }
     }
 

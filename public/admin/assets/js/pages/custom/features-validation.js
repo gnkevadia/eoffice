@@ -16,6 +16,12 @@ var KTFormControls = function () {
                 description: {
                     required: true
                 },
+                Project: {
+                    required: true
+                },
+                Pryority: {
+                    required: true
+                },
             },
             messages: {
                 'name': {
@@ -23,6 +29,12 @@ var KTFormControls = function () {
                 },
                 'description': {
                     required: "Please enter description",
+                },
+                'Project': {
+                    required: "Please Select Project",
+                },
+                'Pryority': {
+                    required: "Please Select Pryority",
                 },
             },
 
@@ -61,5 +73,7 @@ jQuery(document).ready(function() {
     $("#reset").click(function () {
         $(':input', '#frmAddEdit').not(':button, :submit, :reset, :hidden').val('').prop('checked', false).prop('selected', false);
         $("#status").val('1').trigger('change');
+        $("#Project").attr('data-id',0).trigger('change');
+        $("#Pryority").attr('data-id',0).trigger('change');
     });
 });

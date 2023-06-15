@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use APP\Models\Task_image;
 use Illuminate\Support\Facades\File;
+use Monolog\Handler\ElasticaHandler;
 
 class Task extends Model
 {
@@ -21,14 +22,16 @@ class Task extends Model
     {
         $task_imges = $this->getOne($id);
         foreach ($task_imges->task_images as $image) {
-            $images = $request['remainimg'];
-            if (!is_null($images)) {
-                if (!in_array($image->id, $images)) {
-                    if (File::exists(public_path('images/task/' . $image->images))) {
-                        File::delete(public_path('images/task/' . $image->images));
+            if (array_key_exists("remainimg", $request)) {
+                $images = $request['remainimg'];
+                if (!is_null($images)) {
+                    if (!in_array($image->id, $images)) {
+                        if (File::exists(public_path('images/task/' . $image->images))) {
+                            File::delete(public_path('images/task/' . $image->images));
+                        }
+                        $taskimage = Task_image::where('id', $image->id)->delete();
                     }
-                    $taskimage = Task_image::where('id', $image->id)->delete();
-                }
+                } 
             } else {
                 if (File::exists(public_path('images/task/' . $image->images))) {
                     File::delete(public_path('images/task/' . $image->images));
@@ -51,15 +54,15 @@ class Task extends Model
         $task->updated_by = session()->get('id');
         $task->save();
         $insertId = $task->id;
-        if (array_key_exists("file",$request)) {
+        if (array_key_exists("file", $request)) {
             $files = $request['file'];
-            foreach($files as $file) {
+            foreach ($files as $file) {
                 $image = $file;
                 $extension = $image->getClientOriginalExtension();
                 $img_name  =   rand() . time() . '.' . $extension;
                 $file->move(public_path($request['path']), $img_name);
                 $image = new Task_image();
-                $image->task_id    = $insertId; 
+                $image->task_id    = $insertId;
                 $image->images = $img_name;
                 $image->save();
             }
