@@ -54,10 +54,11 @@ class TaskController extends Controller
         ];
         $arrFile = array('name'=>'file','type'=>'image','path'=>'images/task/', 'predefine'=>'', 'except'=>'file_exist', 'multiple_file'=>true);
         if ($request->isMethod('post')) {
-           
             $arrExpect = [
                 'packageId', 'cmsId', 'open_in_new_tabs'
             ];
+            $request['start_date']=date('Y-m-d H:i:s');
+            $request['end_date']=date('Y-m-d H:i:s');
             return Common::commanAddPage($this->objModel, $request, $messages, $regxvalidator, $arrFile, null, $arrExpect);
         } else {
             return view(RENDER_URL . '.add', compact('data', 'project', 'pryority'));
