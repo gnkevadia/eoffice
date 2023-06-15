@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\TaskController;
 use App\Http\Controllers\Admin\ProjectMasterController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\BusinessUnitController;
+use App\Http\Controllers\Admin\CompanyController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -243,11 +244,11 @@ Route::group(['prefix' => 'admin', 'namespace' => '\App\Http\Controllers'], func
     Route::match(['post'], '/state/getStates', 'Admin\StatesController@getStates');
 
     /**  Project Management Routes (Admin) */
-    Route::match(['get','post'], '/projectmaster',[ProjectMasterController::class, 'index']);
-    Route::match(['get','post'], '/projectmaster/add',[ProjectMasterController::class, 'add']);
-    Route::match(['get','post'], '/projectmaster/edit/{id}',[ProjectMasterController::class, 'edit']);
-    Route::match(['get','post'], '/projectmaster/delete',[ProjectMasterController::class, 'delete']);
-    Route::match(['get','post'], '/projectmaster/toggle',[ProjectMasterController::class, 'toggleStatus']);
+    Route::match(['get','post'], '/project',[ProjectMasterController::class, 'index']);
+    Route::match(['get','post'], '/project/add',[ProjectMasterController::class, 'add']);
+    Route::match(['get','post'], '/project/edit/{id}',[ProjectMasterController::class, 'edit']);
+    Route::match(['get','post'], '/project/delete',[ProjectMasterController::class, 'delete']);
+    Route::match(['get','post'], '/project/toggle',[ProjectMasterController::class, 'toggleStatus']);
 
     /**  Business Unit Management Routes (Admin) */
     Route::match(['get','post'], '/business-unit',[BusinessUnitController::class, 'index']);
@@ -255,6 +256,15 @@ Route::group(['prefix' => 'admin', 'namespace' => '\App\Http\Controllers'], func
     Route::match(['get','post'], '/business-unit/edit/{id}',[BusinessUnitController::class, 'edit']);
     Route::match(['get','post'], '/business-unit/delete',[BusinessUnitController::class, 'delete']);
     Route::match(['get','post'], 'business-unit/toggle',[BusinessUnitController::class, 'toggleStatus']);
+
+    /**  Company Management Routes (Admin) */
+    Route::match(['get','post'], '/company',[CompanyController::class, 'index']);
+    Route::match(['get','post'], '/company/add',[CompanyController::class, 'add']);
+    Route::match(['get','post'], '/company/edit/{id}',[CompanyController::class, 'edit']);
+    Route::match(['get','post'], '/company/delete',[CompanyController::class, 'delete']);
+    Route::match(['get','post'], '/company/toggle',[CompanyController::class, 'toggleStatus']);
+
+
 
     /**  City Management Routes (Admin) */
     Route::match(['get','post'], '/city', 'Admin\CityController@index');

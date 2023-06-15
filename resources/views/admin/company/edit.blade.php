@@ -33,7 +33,7 @@
                         </div>
                     </div>
                     <!--begin::Form-->
-                    <form id="frmAddEdit" name="frmAddEdit" action="{{ url(VIEW_INFO['url'].'/add') }}" class="kt-form" method="post">
+                    <form id="frmAddEdit" name="frmAddEdit" action="{{ url(VIEW_INFO['url'].'/edit/'.$data->id) }}" class="kt-form" method="post">
                         {{ csrf_field() }}
                         <div class="kt-portlet__body">
                                 <div class="form-group form-group-last">
@@ -47,36 +47,28 @@
                                     @include('admin.includes.errormessage')
                             <div class="form-group">
                                 <label>Name<span class="required">*</span></label>
-                                <input type="text" id="name" name="name" data-toggle="tooltip" title="Enter Project Name" class="form-control" placeholder="Enter Project Name" value="{{ old('name') }}" />
+                                <input type="text" id="name" name="name" data-toggle="tooltip" title="Enter Company Name" class="form-control" placeholder="Enter Company Name" value="{{ $data->name }}" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="exampleSelect1">Department<span class="required">*</span></label>
+                                <select class="form-control" id="department" name="department_id">
+                                    <option value=''>Select</option>
+                                    @foreach($departmentData as $department)    
+                                    <option value="{{$department->id}}" <?php if($department->id == $data->department_id){ echo 'selected';} ?>>{{$department->name}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             
                             <div class="form-group">
-                                <label>Manager<span class="required">*</span></label>
-                                <input type="text" id="manager" name="manager" data-toggle="tooltip" title="Enter Manager Name" class="form-control" placeholder="Enter Manager Name" value="{{ old('manager') }}" />
+                                <label>Description<span class="required">*</span></label>
+                                <textarea  id="description" name="description" data-toggle="tooltip" title="Enter description" class="form-control" placeholder="Enter description" >{{$data->description}}</textarea>
                             </div>
-                            <!-- <div class="form-group">
-                                <label for="exampleSelect1">Manager<span class="required">*</span></label>
-                                <select class="form-control" id="manager" name="manager">
-                                        <option value="1" selected>GK</option>
-                                        <option value="0">Vipul Patel</option>
-                                </select>
-                            </div> -->
-
-                            <div class="form-group">
-                                    <label>Start Date<span class="required">*</span></label>
-                                    <input type="date" id="start_date" name="start_date" data-toggle="tooltip" title="Enter Start Date" class="form-control" placeholder="Enter Start Date" value="{{ old('start_date') }}">
-                            </div>
-                           
-                            <div class="form-group">
-                                    <label>End Date<span class="required">*</span></label>
-                                    <input type="date" id="end_date" name="end_date" data-toggle="tooltip" title="Enter End Date" class="form-control" placeholder="Enter End Date" value="{{ old('end_date') }}">
-                            </div>
-
                             <div class="form-group">
                                 <label for="exampleSelect1">Status<span class="required">*</span></label>
                                 <select class="form-control" id="status" name="status">
-                                        <option value="1" selected>Active</option>
-                                        <option value="0">Inactive</option>
+                                <option {{($data->status == 1 ? 'selected' : '')}} value="1">Active</option>
+                                <option {{($data->status == 0 ? 'selected' : '')}} value="0">Inactive</option>
                                 </select>
                             </div>
 
@@ -103,5 +95,5 @@
 @stop
 
 @section('metronic_js')
-<script src="{{ asset('admin/assets/js/pages/custom/project-master-validation.js') }}"></script>
+<script src="{{ asset('admin/assets/js/pages/custom/company-validation.js') }}"></script>
 @stop

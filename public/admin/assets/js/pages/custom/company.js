@@ -9,7 +9,7 @@ var KTDatatableDataLocalDemo = function() {
 	var init = function() {
 		var dataJSONArray;
 		$.ajax({
-			url: 'project',
+			url: 'company',
 			dataType: 'json',
 			type: 'get',
 			contentType: 'application/json',
@@ -54,34 +54,15 @@ var KTDatatableDataLocalDemo = function() {
 							field: 'name',
 							title: 'Name',
 						}, {
-							field: 'manager',
-							title: 'Manager',
+							field: 'department_name',
+							title: 'Department',
 						}, {
-							field: 'start_date',
-							title: 'Start Date',
-							template: function(row) {
-								var date = new Date(row.start_date);
-								var month = ("0" + (date.getMonth() + 1)).slice(-2)
-								var dates = ("0" + (date.getDate())).slice(-2);
-								var year = date.getFullYear();
-								return dates + "-" + month + "-" + year;
-							}
-	
-						}, {
-							field: 'end_date',
-							title: 'End Date',
-							template: function(row) {
-								var date = new Date(row.end_date);
-								var month = ("0" + (date.getMonth() + 1)).slice(-2)
-								var dates = ("0" + (date.getDate())).slice(-2);
-								var year = date.getFullYear();
-								return dates + "-" + month + "-" + year;
-							}
+							field: 'description',
+							title: 'Description',
 						}, {
 							field: 'status',
 							title: 'Status',
 							template: function(row) {
-								// console.log(row.status);
 								let statuss = '';
 								if(row.status == 1){
 									 statuss = 'Active';
@@ -108,7 +89,7 @@ var KTDatatableDataLocalDemo = function() {
 								// 	roleBasedAction += '<a href="'+viewURL+'/'+row.id+'" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Edit details"><i class="flaticon-eye"></i></a>'
 								// }
 								// if(isUpdateStatus == true){
-									roleBasedAction += '<a href="project/edit/'+row.id+'" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Edit details"><i class="la la-edit"></i></a>'
+									roleBasedAction += '<a href="company/edit/'+row.id+'" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Edit details"><i class="la la-edit"></i></a>'
 								// }
 								// if(isDeleteStatus == true){
 									roleBasedAction += '<a href="javascript:;" data-toggle="modal" data-target="#delete_modules" data-id="'+row.id+'"  class="btn btn-sm btn-clean btn-icon btn-icon-md delete_row" title="Edit details"><i class="flaticon-delete"></i></a>'

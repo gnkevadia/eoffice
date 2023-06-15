@@ -156,11 +156,11 @@ class LoginController extends Controller
                     $arrRights[11026] = '/admin/brand-states-statistics/edit';
                     $arrRights[11027] = '/admin/brand-states-statistics/toggle';
 
-                    $arrRights[11028] = '/admin/projectmaster';
-                    $arrRights[11029] = '/admin/projectmaster/add';
-                    $arrRights[11030] = '/admin/projectmaster/delete';
-                    $arrRights[11031] = '/admin/projectmaster/edit';
-                    $arrRights[11032] = '/admin/projectmaster/toggle';
+                    $arrRights[11028] = '/admin/project';
+                    $arrRights[11029] = '/admin/project/add';
+                    $arrRights[11030] = '/admin/project/delete';
+                    $arrRights[11031] = '/admin/project/edit';
+                    $arrRights[11032] = '/admin/project/toggle';
 
                     $arrRights[11033] = '/admin/features';
                     $arrRights[11034] = '/admin/features/add';
@@ -185,6 +185,12 @@ class LoginController extends Controller
                     $arrRights[11045] = '/admin/department/delete';
                     $arrRights[11046] = '/admin/department/edit';
                     $arrRights[11047] = '/admin/department/toggle';
+
+                    $arrRights[11048] = '/admin/company';
+                    $arrRights[11049] = '/admin/company/add';
+                    $arrRights[11050] = '/admin/company/delete';
+                    $arrRights[11051] = '/admin/company/edit';
+                    $arrRights[11052] = '/admin/company/toggle';
 
                     Session::put('routes', $arrRights);
                     if($request->admin == 'true'){

@@ -47,14 +47,23 @@
                                     @include('admin.includes.errormessage')
                             <div class="form-group">
                                 <label>Name<span class="required">*</span></label>
-                                <input type="text" id="name" name="name" data-toggle="tooltip" title="Enter Business Name" class="form-control" placeholder="Enter Business Name" value="{{ old('name') }}" />
+                                <input type="text" id="name" name="name" data-toggle="tooltip" title="Enter Company Name" class="form-control" placeholder="Enter Company Name" value="{{ old('name') }}" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="exampleSelect1">Department<span class="required">*</span></label>
+                                <select class="form-control" id="department" name="department_id">
+                                    <option value='' data-id='0' selected>Select</option>
+                                    @foreach($departmentData as $department)    
+                                    <option value="{{$department->id}}">{{$department->name}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             
                             <div class="form-group">
                                 <label>Description<span class="required">*</span></label>
-                                <textarea type="text" id="description" name="description" data-toggle="tooltip" title="Enter description" class="form-control" placeholder="Enter description">{{ old('description') }}</textarea>
+                                <textarea  id="description" name="description" data-toggle="tooltip" title="Enter description" class="form-control" placeholder="Enter description" value="{{ old('description') }}"></textarea>
                             </div>
-                            
                             <div class="form-group">
                                 <label for="exampleSelect1">Status<span class="required">*</span></label>
                                 <select class="form-control" id="status" name="status">
@@ -63,6 +72,7 @@
                                 </select>
                             </div>
 
+                            
                         <div class="kt-portlet__foot">
                             <div class="kt-form__actions">
                                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -85,5 +95,5 @@
 @stop
 
 @section('metronic_js')
-<script src="{{ asset('admin/assets/js/pages/custom/Business-unit-validation.js') }}"></script>
+<script src="{{ asset('admin/assets/js/pages/custom/company-validation.js') }}"></script>
 @stop

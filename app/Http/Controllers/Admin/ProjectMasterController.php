@@ -14,7 +14,7 @@ class ProjectMasterController extends Controller
     public function __construct()
     {
         $this->objModel = new ProjectMaster();
-        Common::defineDynamicConstant('projectmaster');
+        Common::defineDynamicConstant('project');
     }
    public function index(Request $request){
     return Common::commanListPage($this->objModel, '', '', '', '', $request->is_globle, '', '');
@@ -41,7 +41,7 @@ class ProjectMasterController extends Controller
         ];
         return Common::commanAddPage($this->objModel, $request, $messages, $regxvalidator,null,null,$arrExpect);
     }else{
-        return view('admin.projectmaster.add');
+        return view(RENDER_URL . '.add');
     }
    }
 
@@ -68,7 +68,8 @@ class ProjectMasterController extends Controller
         ];
         return Common::commanEditPage($this->objModel, $request, $messages, $regxvalidator, $id, null, null, $arrExpect);
     }else{
-        return view('admin.projectmaster.edit',compact('data'));
+        return view(RENDER_URL . '.edit',compact('data'));
+
     }
    }
    public function delete(Request $request)

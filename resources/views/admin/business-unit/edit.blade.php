@@ -52,7 +52,7 @@
                             
                         <div class="form-group">
                             <label>Description<span class="required">*</span></label>
-                            <input type="text" id="description" name="description" data-toggle="tooltip" title="Enter description" class="form-control" placeholder="Enter description" value="{{ $data->description }}" />
+                            <textarea type="text" id="description" name="description" data-toggle="tooltip" title="Enter description" class="form-control" placeholder="Enter description" >{{ $data->description }}</textarea>
                         </div>
                         
                         <div class="form-group">
@@ -83,5 +83,5 @@
 @stop
 
 @section('metronic_js')
-<!-- <script src="{{ asset('admin/assets/js/pages/custom/Business-unit-validation.js') }}"></script> -->
+<script src="{{ asset('admin/assets/js/pages/custom/Business-unit-validation.js') }}"></script>
 @stop
