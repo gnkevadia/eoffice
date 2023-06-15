@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use APP\Models\Task_image;
+use Illuminate\Support\Facades\File;
 
 class Task extends Model
 {
@@ -12,11 +14,28 @@ class Task extends Model
 
     public function getOne($id)
     {
-        return Task::where(['id' => $id])->first();
+        return Task::with('task_images')->where(['id' => $id])->first();
     }
 
     public function updateOne($id, $request)
     {
+        $task_imges = $this->getOne($id);
+        foreach ($task_imges->task_images as $image) {
+            $images = $request['remainimg'];
+            if (!is_null($images)) {
+                if (!in_array($image->id, $images)) {
+                    if (File::exists(public_path('images/task/' . $image->images))) {
+                        File::delete(public_path('images/task/' . $image->images));
+                    }
+                    $taskimage = Task_image::where('id', $image->id)->delete();
+                }
+            } else {
+                if (File::exists(public_path('images/task/' . $image->images))) {
+                    File::delete(public_path('images/task/' . $image->images));
+                }
+                $taskimage = Task_image::where('id', $image->id)->delete();
+            }
+        }
         $task = Task::where(['id' => $id])->first();
         $task->project = $request['Project'];
         $task->features = $request['features'];
@@ -32,29 +51,18 @@ class Task extends Model
         $task->updated_by = session()->get('id');
         $task->save();
         $insertId = $task->id;
-        $files = $request['file'];
-        $file_count = count($request['file']);
-        if ($file_count > 1) {
-            foreach ($files as $file) {
-                // echo '<pre>'; print_r(str_replace('_exist','',$arrFile['except'])); echo '</pre>'; die();
+        if (array_key_exists("file",$request)) {
+            $files = $request['file'];
+            foreach($files as $file) {
                 $image = $file;
                 $extension = $image->getClientOriginalExtension();
                 $img_name  =   rand() . time() . '.' . $extension;
                 $file->move(public_path($request['path']), $img_name);
                 $image = new Task_image();
-                $image->task_id    = $insertId;
+                $image->task_id    = $insertId; 
                 $image->images = $img_name;
                 $image->save();
             }
-        } else {
-            $image = $files;
-            $extension = $image->getClientOriginalExtension();
-            $img_name  =  rand() . time() . '.' . $extension;
-            $image->move(public_path($request['path']), $img_name);
-            $image = new Task_image();
-            $image->task_id    = $insertId;
-            $image->images = $img_name;
-            $image->save();
         }
         return true;
     }
@@ -75,5 +83,10 @@ class Task extends Model
     {
         $allids = ltrim($ids, 'on,');
         return Task::whereIn('id', explode(',', $allids))->update($arrUpdate);
+    }
+
+    public function task_images()
+    {
+        return $this->hasMany('App\Models\Task_image', 'task_id', 'id');
     }
 }
