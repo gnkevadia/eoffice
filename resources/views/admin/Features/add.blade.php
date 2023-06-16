@@ -55,7 +55,7 @@
                         <div class="form-group">
                             <label for="exampleSelect1">Project<span class="required">*</span></label>
                             <select class="form-control" id="Project" name="Project">
-                                <option value="" data-id="0">Select Project</option>
+                                <option value="" data-id="0">-Select Project-</option>
                                 @foreach ($project as $value)
                                 <option value="{{$value->id}}">{{$value->name}}</option>
                                 @endforeach
@@ -66,15 +66,15 @@
                             <input type="text" id="name" name="name" data-toggle="tooltip" title="Enter Name" class="form-control" placeholder="Enter Name" value="{{ old('name') }}">
                         </div>
                         <div class="form-group">
-                            <label>Description</label>
+                            <label>Description<span class="required">*</span></label>
                             <textarea name="description" id="description" cols="30" rows="3" class="form-control" placeholder="Enter Description"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="exampleSelect1">Pryority<span class="required">*</span></label>
-                            <select class="form-control" id="Pryority" name="Pryority">
-                                <option value="" data-id="0">Select Pryority</option>
-                                @foreach ($pryority as $value)
-                                <option value="{{$value->id}}">{{$value->pryority_fild}}</option>
+                            <label for="exampleSelect1">Priority<span class="required">*</span></label>
+                            <select class="form-control" id="priority" name="priority">
+                                <option value="" data-id="0">-Select Priority-</option>
+                                @foreach ($priority as $value)
+                                <option value="{{$value->id}}">{{$value->priority}}</option>
                                 @endforeach
                             </select>
                         </div>

@@ -24,7 +24,7 @@ class DepartmentController extends Controller
 
     public function add(Request $request)
     {
-        $data =  BusinessUnit::get();
+        $data =  BusinessUnit::where('deleted', 0)->get();
         $messages = [
             'name.regex' => 'Name cannot have character other than a-z AND A-Z',
             'description.required' => 'Please specify Description',
@@ -47,7 +47,7 @@ class DepartmentController extends Controller
     public function edit(Request $request, $id = null)
     {
         $data = $this->objModel->getOne($id);
-        $business  =  BusinessUnit::get();
+        $business  =  BusinessUnit::where('deleted', 0)->get();
         $messages = [
             'name.regex' => 'Name cannot have character other than a-z AND A-Z',
             'description.required' => 'Please specify Description',

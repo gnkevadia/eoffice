@@ -44,7 +44,7 @@ class Task extends Model
         $task->features = $request['features'];
         $task->task = $request['task'];
         $task->description = $request['description'];
-        $task->pryority = $request['Pryority'];
+        $task->priority = $request['priority'];
         $task->assignee = $request['assignee'];
         $task->start_date = $request['start_date'];
         $task->end_date = $request['end_date'];
@@ -71,7 +71,7 @@ class Task extends Model
     }
     public function getAll($orderby = null, $where = array(), $dynamicWhere = '')
     {
-        $data =  Task::join('features_master', 'task_master.features', '=', 'features_master.id')->join('projectmaster', 'task_master.project', '=', 'projectmaster.id')->where('task_master.deleted', 0)->select('task_master.*', 'features_master.name as features', 'projectmaster.name as project')->get();
+        $data =  Task::join('users', 'task_master.assignee', '=', 'users.id')->join('features_master', 'task_master.features', '=', 'features_master.id')->join('projectmaster', 'task_master.project', '=', 'projectmaster.id')->where('task_master.deleted', 0)->select('task_master.*', 'features_master.name as features', 'projectmaster.name as project', 'users.name as assignee')->get();
         return $data;
     }
     public function deleteOne($id, $arrUpdate)

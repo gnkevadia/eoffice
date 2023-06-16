@@ -55,7 +55,7 @@
                         <div class="form-group">
                             <label for="exampleSelect1">Business Name<span class="required">*</span></label>
                             <select class="form-control" id="business" name="business_id">
-                                <option value="" data-id="0">Select Business Name</option>
+                                <option value="" data-id="0">-Select Business Name-</option>
                                 @foreach ($business as $value)
                                 <option value="{{$value->id}}" {{($value->id == $data->business_id ? 'selected' : '')}}>{{$value->name}}</option>
                                 @endforeach
@@ -66,7 +66,7 @@
                             <input type="text" id="name" name="name" data-toggle="tooltip" title="Enter Name" class="form-control" placeholder="Enter Name" value="{{$data->name}}">
                         </div>
                         <div class="form-group">
-                            <label>Description</label>
+                            <label>Description<span class="required">*</span></label>
                             <textarea name="description" id="description" cols="30" rows="3" class="form-control" placeholder="Enter Description">{{$data->description}}</textarea>
                         </div>
                         <div class="form-group">

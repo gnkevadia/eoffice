@@ -358,7 +358,7 @@ class Common extends Eloquent
                 $task->features = $request['features'];
                 $task->task = $request['task'];
                 $task->description = $request['description'];
-                $task->pryority = $request['Pryority'];
+                $task->priority = $request['priority'];
                 $task->assignee = $request['assignee'];
                 $task->start_date = $request['start_date'];
                 $task->end_date = $request['end_date'];

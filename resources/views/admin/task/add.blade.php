@@ -17,6 +17,14 @@
     .inputadd {
         display: flex;
     }
+
+    #delete_img {
+        font-weight: 900;
+    }
+
+    .addMultipleImages {
+        font-weight: 900;
+    }
 </style>
 <h3 class="kt-subheader__title">{{ VIEW_INFO['title'] }} Managment</h3>
 <span class="kt-subheader__separator kt-hidden"></span>
@@ -63,7 +71,7 @@
                         <div class="form-group">
                             <label for="exampleSelect1">Project<span class="required">*</span></label>
                             <select class="form-control" id="Project" name="Project">
-                                <option value="" data-id="0">Select Project</option>
+                                <option value="" data-id="0">-Select Project-</option>
                                 @foreach ($project as $value)
                                 <option value="{{$value->id}}">{{$value->name}}</option>
                                 @endforeach
@@ -72,7 +80,7 @@
                         <div class="form-group">
                             <label for="exampleSelect1">Features<span class="required">*</span></label>
                             <select class="form-control" id="features" name="features">
-                                <option value="" data-id="0">Select Features</option>
+                                <option value="" data-id="0">-Select Features-</option>
                                 @foreach ($data as $value)
                                 <option value="{{$value->id}}">{{$value->name}}</option>
                                 @endforeach
@@ -83,33 +91,34 @@
                             <input type="text" id="task" name="task" data-toggle="tooltip" title="Enter Task" class="form-control" placeholder="Enter task" value="{{ old('name') }}">
                         </div>
                         <div class="form-group">
-                            <label>Description</label>
+                            <label>Description<span class="required">*</span></label>
                             <textarea name="description" id="description" cols="30" rows="3" class="form-control" placeholder="Enter Description"></textarea>
                         </div>
                         <div class="form-group">
 
                             <label for="exampleSelect1">Attachment<span class="required">*</span></label>
-                            <div class="row" id="addfild">
+                            <div class="row" id="addfield">
                                 <div class="col-lg-2">
-                                    <button type="button" class="btn btn-success mr-3 mt-2 addMultipleImages" id="addfilds">+</button>
+                                    <button type="button" class="btn btn-success mr-3 mt-2 addMultipleImages" id="addfields">+</button>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="exampleSelect1">Pryority<span class="required">*</span></label>
-                            <select class="form-control" id="Pryority" name="Pryority">
-                                <option value="" data-id="0">Select Pryority</option>
-                                @foreach ($pryority as $value)
-                                <option value="{{$value->id}}">{{$value->pryority_fild}}</option>
+                            <label for="exampleSelect1">Priority<span class="required">*</span></label>
+                            <select class="form-control" id="priority" name="priority">
+                                <option value="" data-id="0">-Select Priority-</option>
+                                @foreach ($priority as $value)
+                                <option value="{{$value->id}}">{{$value->priority}}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="exampleSelect1">Assignee<span class="required">*</span></label>
                             <select class="form-control" id="assignee" name="assignee">
-                                <option value="" data-id="0">Select Assignee</option>
-                                <option value="Name">Name</option>
-                                <option value="email">email</option>
+                                <option value="" data-id="0">-Select Assignee-</option>
+                                @foreach ($users as $value)
+                                <option value="{{$value->id}}">{{$value->name}}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group">
@@ -125,9 +134,12 @@
                         <div class="form-group">
                             <label for="exampleSelect1">Cycle<span class="required">*</span></label>
                             <select class="form-control" id="cycle" name="cycle">
-                                <option value="" data-id="0">Select Cycle</option>
-                                <option value="1">AA</option>
-                                <option value="2">CC</option>
+                                <option value="" data-id="0">-Select Cycle-</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -166,7 +178,7 @@
         $("#btnadd").on("click", function() {
             counter++;
             // alert('111');
-            // $("#addfild").append('<div id="file' + counter + '"><input type="file" class="form-control mt-2" name="License_image[]" multiple> <div class="text-right">   <button type="button" class="mt-2 btn btn-danger remove_btn"  id=' + counter + '>-</button></div></div>');
+            // $("#addfield").append('<div id="file' + counter + '"><input type="file" class="form-control mt-2" name="License_image[]" multiple> <div class="text-right">   <button type="button" class="mt-2 btn btn-danger remove_btn"  id=' + counter + '>-</button></div></div>');
 
         });
         $(document).on("click", ".remove_btn", function() {
@@ -178,19 +190,19 @@
             if (counter >= 2) {
                 if ($('#attachment' + (counter - 1)).val()) {
                     if ($('#attachment' + (counter - 1))[0].files[0].name != null) {
-                        $("#addfild").prepend(' <div class="col-lg-3 inputadd multipleImage ml-2 mt-2"><input id="attachment' + counter + '" type="file" class="form-control testing attachment' + counter + '" name="file[]" /> <button type="button" class="btn btn-danger ml-2" id="delete_img" style="text-align:center">X</button></div>');
+                        $("#addfield").prepend(' <div class="col-lg-3 inputadd multipleImage ml-2 mt-2"><input id="attachment' + counter + '" type="file" class="form-control testing attachment' + counter + '" name="file[]" /> <button type="button" class="btn btn-danger ml-2" id="delete_img" style="text-align:center">x</button></div>');
                         $('#attachment' + counter).click();
                         counter++;
 
                     }
                 }
                 if ($('.testing').length == 0) {
-                    $("#addfild").prepend(' <div class="col-lg-3 inputadd multipleImage ml-2 mt-2"><input id="attachment' + counter + '" type="file" class="form-control testing attachment' + counter + '" name="file[]" /> <button type="button" class="btn btn-danger ml-2" id="delete_img" style="text-align:center">X</button></div>');
+                    $("#addfield").prepend(' <div class="col-lg-3 inputadd multipleImage ml-2 mt-2"><input id="attachment' + counter + '" type="file" class="form-control testing attachment' + counter + '" name="file[]" /> <button type="button" class="btn btn-danger ml-2" id="delete_img" style="text-align:center">x</button></div>');
                     $('#attachment' + counter).click();
                     counter++;
                 }
             } else {
-                $("#addfild").prepend(' <div class="col-lg-3 inputadd multipleImage ml-2 mt-2"></p><input id="attachment' + counter + '" type="file" class="form-control testing attachment' + counter + '" name="file[]" /> <button type="button" class="btn btn-danger ml-2" id="delete_img" style="text-align:center">X</button></div>');
+                $("#addfield").prepend(' <div class="col-lg-3 inputadd multipleImage ml-2 mt-2"></p><input id="attachment' + counter + '" type="file" class="form-control testing attachment' + counter + '" name="file[]" /> <button type="button" class="btn btn-danger ml-2" id="delete_img" style="text-align:center">x</button></div>');
                 // $('#attachment' + counter).trigger('click');
                 $(this).parent().siblings('.inputadd').children('#attachment' + counter).trigger('click');
                 counter++;

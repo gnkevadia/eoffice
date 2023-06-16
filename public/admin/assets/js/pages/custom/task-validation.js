@@ -31,7 +31,7 @@ var KTFormControls = function () {
                 features: {
                     required: true
                 },
-                Pryority: {
+                priority: {
                     required: true
                 },
                 assignee: {
@@ -63,8 +63,8 @@ var KTFormControls = function () {
                 'features': {
                     required: "Please enter Features"
                 },
-                'Pryority': {
-                    required: "Please enter Features"
+                'priority': {
+                    required: "Please enter Priority"
                 },
                 'assignee': {
                     required: "Please enter Assignee"
@@ -109,7 +109,7 @@ jQuery(document).ready(function() {
     $("#reset").click(function () {
         $(':input', '#frmAddEdit').not(':button, :submit, :reset, :hidden').val('').prop('checked', false).prop('selected', false);
         $("#status").val('1').trigger('change');
-        $("#Pryority").attr('data-id',0).trigger('change');
+        $("#priority").attr('data-id',0).trigger('change');
         $("#Project").attr('data-id',0).trigger('change');
         $("#assignee").attr('data-id',0).trigger('change');
         $("#cycle").attr('data-id',0).trigger('change');

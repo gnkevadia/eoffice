@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Features;
 use App\Library\Common;
 use App\Models\ProjectMaster;
-use App\Models\Pryority;
+use App\Models\Priority;
 
 class FeaturesController extends Controller
 {
@@ -25,8 +25,8 @@ class FeaturesController extends Controller
 
     public function add(Request $request)
     {
-        $project =  ProjectMaster::get();
-        $pryority =  Pryority::get();
+        $project =  ProjectMaster::where('deleted', 0)->get();
+        $priority =  Priority::get();
         $messages = [
             'Project.required' => 'Please select Module Name',
             'name.required' => 'Please specify Rights',
@@ -46,28 +46,28 @@ class FeaturesController extends Controller
             return Common::commanAddPage($this->objModel, $request, $messages, $regxvalidator, null, null, $arrExpect);
         } else {
             // return view('admin.Features.add', compact('project'));
-            return view(RENDER_URL . '.add', compact('project', 'pryority'));
+            return view(RENDER_URL . '.add', compact('project', 'priority'));
         }
     }
 
     public function edit(Request $request, $id = null)
     {
         $data = $this->objModel->getOne($id);
-        $project =  ProjectMaster::get();
-        $pryority =  Pryority::get();
+        $project =  ProjectMaster::where('deleted', 0)->get();
+        $priority =  Priority::get();
         $messages = [
             'Project.required' => 'Please select Module Name',
             'name.required' => 'Please specify Name',
             'name.regex' => 'Name cannot have character other than a-z AND A-Z',
             'name.unique' => 'Rights already exists for selected Module',
             'description.required' => 'Please specify Description',
-            'Pryority.required' => 'Please specify Pryority',
+            'priority.required' => 'Please specify Priority',
             'description.regex' => 'Name cannot have character other than a-z AND A-Z',
         ];
         $regxvalidator = [
             'name' => 'required',
             'description' => 'required',
-            'Pryority' => 'required',
+            'priority' => 'required',
         ];
         if ($request->isMethod('post') && isset($id) && !empty($id)) {
             $arrExpect = [
@@ -75,7 +75,7 @@ class FeaturesController extends Controller
             ];
             return Common::commanEditPage($this->objModel, $request, $messages, $regxvalidator, $id, null, null, $arrExpect);
         } else {
-            return view(RENDER_URL . '.edit', compact('data', 'project', 'pryority'));
+            return view(RENDER_URL . '.edit', compact('data', 'project', 'priority'));
         }
     }
 
