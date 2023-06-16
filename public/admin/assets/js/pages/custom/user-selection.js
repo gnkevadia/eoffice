@@ -60,7 +60,7 @@ var KTDatatableDataLocalDemo = function() {
 							title: 'Email',
                         },
                         {
-							field: 'assigned_role',
+							field: 'roleName',
 							title: 'Role',
                         },
                          {

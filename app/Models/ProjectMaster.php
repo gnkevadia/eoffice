@@ -19,7 +19,7 @@ class ProjectMaster extends Model
     }
     public function getAll($orderby=null, $where=array(), $dynamicWhere='')
     {
-        return ProjectMaster::where('deleted' , 0)->get();
+        return ProjectMaster::join('users','users.id','=','projectmaster.manager')->where('projectmaster.deleted' , 0)->select('projectmaster.*','users.name as manager')->get();
     }
     public function deleteOne($id, $arrUpdate)
     {

@@ -24,8 +24,8 @@
 
     .delete_img {
         position: absolute;
-        top: -3px;
-        right: 42px;
+        top: -7px;
+        right: 0;
         font-weight: 900;
     }
 
@@ -37,11 +37,17 @@
         font-weight: 900;
     }
 
-    .test {
+    .childImage{
         width: 154px;
         border: solid black 1px;
         text-align: center;
         height: 89px;
+    }.ImagesPdfCss{
+        display: flex;
+        justify-content: center;
+    }
+    .childImage{
+        position: relative;
     }
 </style>
 <h3 class="kt-subheader__title">{{ VIEW_INFO['title'] }} Managment</h3>
@@ -125,16 +131,16 @@
                             <?php
                             $ext = pathinfo($image->images, PATHINFO_EXTENSION);
                             if ($ext == 'pdf') { ?>
-                                <div class="col-lg-2 col-md-4 my-3 ml-3 mb-4" style="left:0;right:0;display:inline-block;margin:0;padding:3px">
-                                    <div class="test">
+                                <div class="col-lg-2 col-md-4 my-3 ml-3 mb-4 ImagesPdfCss" >
+                                    <div class="childImage">
                                         <img src="{{url('images/profile_image')}}/pdf.jpg" height="80" alt="" onclick="window.open('{{url('images/task')}}/{{$image->images}}','_blank')" style="padding-top: 4px;">
                                         <input id="dltImg" type="text" name="remainimg[]" value="{{$image->id}}">
                                         <button type="button" class="mt-2 btn btn-danger btn-sm delete_img">x</button>
                                     </div>
                                 </div>
                             <?php } else { ?>
-                                <div class="col-lg-2 col-md-4 my-3 ml-3 mb-4" style="left:0;right:0;display:inline-block;margin:0;padding:3px">
-                                    <div class="test">
+                                <div class="col-lg-2 col-md-4 my-3 ml-3 mb-4">
+                                    <div class="childImage">
                                         <img src="{{url('images/task/').'/'.$image->images}}" alt="" width="150">
                                         <input id="dltImg" type="text" name="remainimg[]" value="{{$image->id}}">
                                         <button type="button" class="mt-2 btn btn-danger btn-sm delete_img">x</button>
@@ -257,7 +263,7 @@
             $('#file' + row_id + '').remove();
         })
         $(document).on("click", ".delete_img", function() {
-            $(this).parent().remove();
+            $(this).parent().parent().remove();
         });
         $(document).on("click", ".delete_input", function() {
             $(this).parent().remove();

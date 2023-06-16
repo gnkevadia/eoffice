@@ -53,7 +53,7 @@
                             <div class="form-group">
                                 <label for="exampleSelect1">Department<span class="required">*</span></label>
                                 <select class="form-control" id="department" name="department_id">
-                                    <option value=''>Select</option>
+                                    <option value=''>-Select Department-</option>
                                     @foreach($departmentData as $department)    
                                     <option value="{{$department->id}}" <?php if($department->id == $data->department_id){ echo 'selected';} ?>>{{$department->name}}</option>
                                     @endforeach

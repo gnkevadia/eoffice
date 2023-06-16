@@ -17,10 +17,7 @@ class DashboardController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->objModel = new Package;
-    }
+    
 
     /**
      * Show the application dashboard.

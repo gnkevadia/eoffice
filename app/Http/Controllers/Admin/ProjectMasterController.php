@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ProjectMaster;
+use App\Models\Users;
 use App\Library\Common;
 
 
@@ -32,16 +33,21 @@ class ProjectMasterController extends Controller
 
         $regxvalidator = [
             'name' => 'required|regex:/^[a-zA-Z ]*$/',
-            'manager' => 'required|regex:/^[a-zA-Z ]*$/',
+            'manager' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
         ];
         $arrExpect = [
             'packageId','cmsId','open_in_new_tabs'
         ];
+        $request['start_date']=date('Y-m-d H:i:s');
+        $request['end_date']=date('Y-m-d H:i:s');
         return Common::commanAddPage($this->objModel, $request, $messages, $regxvalidator,null,null,$arrExpect);
     }else{
-        return view(RENDER_URL . '.add');
+        
+        $users = new Users();
+        $datas = $users->getAll();
+        return view(RENDER_URL . '.add',compact('datas'));
     }
    }
 
@@ -66,8 +72,12 @@ class ProjectMasterController extends Controller
         $arrExpect = [
             'packageId','cmsId','open_in_new_tabs'
         ];
+        $request['start_date']=date('Y-m-d H:i:s');
+        $request['end_date']=date('Y-m-d H:i:s');
         return Common::commanEditPage($this->objModel, $request, $messages, $regxvalidator, $id, null, null, $arrExpect);
     }else{
+        $department = new Users();
+        $departmentData = $department->getAll();
         return view(RENDER_URL . '.edit',compact('data'));
 
     }

@@ -352,7 +352,7 @@ class Common extends Eloquent
             Session::flash('flash_error', $msg);
             return redirect(URL . '/add')->withInput();
         } else {
-            if (isset($arrFile) && $arrFile['multiple_file']) {
+            if (isset($arrFile) && array_key_exists("multiple_file",$arrFile)) {
                 $task = new Task();
                 $task->project = $request['Project'];
                 $task->features = $request['features'];

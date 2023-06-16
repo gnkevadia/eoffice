@@ -79,119 +79,15 @@ class LoginController extends Controller
                     Session::put('firstname', $userDetails->firstName);
                     Session::put('lastname', $userDetails->lastName);
                     Session::put('name', $userDetails->name);
-                    // echo '<pre>'; print_r( asset('admin/assets/media/users/50x50/'.$userDetails->profile_photo)); echo '</pre>'; die();
-                    // echo '<pre>'; print_r( asset('admin/assets/media/users/50x50/'.$userDetails->profile_photo)); echo '</pre>'; die();
-                    // echo '<pre>'; print_r(public_path('admin/assets/media/users/50x50/').$userDetails->profile_photo); echo '</pre>'; die();
                     Session::put('profile_photo', asset('admin/assets/media/users/50x50/'.$userDetails->profile_photo));
                 
                     $roleDetails = Role::where(['id' => $userDetails->role_id])->first();
-                
                     Session::put('rights', explode(",", $roleDetails->rights));
                     $rightDetails = Rights::whereIn('id', explode(",", $roleDetails->rights))->get();
-
                     $arrRights = array();
                     foreach ($rightDetails as $keyRights => $valRights) {
                         $arrRights[$valRights->id] = $valRights->routes;
                     }
-                    
-                    $arrRights[999] = '/admin/terminal';
-                    $arrRights[9991] = '/admin/terminal/view';
-                    $arrRights[9992] = '/admin/terminal/add';
-                    $arrRights[9993] = '/admin/terminal/delete';
-                    $arrRights[9994] = '/admin/terminal/import';
-                    $arrRights[9995] = '/admin/terminal/edit';
-                    $arrRights[9996] = '/admin/terminal/toggle';
-
-                    $arrRights[999] = '/admin/currency';
-                    $arrRights[9991] = '/admin/currency/view';
-                    $arrRights[9992] = '/admin/currency/add';
-                    $arrRights[9993] = '/admin/currency/edit';
-                    $arrRights[9994] = '/admin/currency/delete';
-                    
-                    $arrRights[9995] = '/admin/country-language';
-                    $arrRights[9996] = '/admin/country-language/view';
-                    $arrRights[9997] = '/admin/country-language/add';
-                    $arrRights[9998] = '/admin/country-language/edit';
-                    $arrRights[9999] = '/admin/country-language/delete';
-
-                    $arrRights[10001] = '/admin/region';
-                    $arrRights[10002] = '/admin/region/view';
-                    $arrRights[10003] = '/admin/region/add';
-                    $arrRights[10004] = '/admin/region/edit';
-                    $arrRights[10005] = '/admin/region/delete';
-
-                    $arrRights[10006] = '/admin/menu';
-                    $arrRights[10007] = '/admin/menu/view';
-                    $arrRights[10008] = '/admin/menu/add';
-                    $arrRights[10009] = '/admin/menu/edit';
-                    $arrRights[11001] = '/admin/menu/delete';
-
-                    $arrRights[11002] = '/admin/feedback';
-                    $arrRights[11004] = '/admin/feedback/add';
-                    $arrRights[11005] = '/admin/feedback/delete';
-                    $arrRights[11006] = '/admin/feedback/edit';
-                    $arrRights[11007] = '/admin/feedback/toggle';
-
-                    $arrRights[11008] = '/admin/industries';
-                    $arrRights[11009] = '/admin/industries/add';
-                    $arrRights[11010] = '/admin/industries/delete';
-                    $arrRights[11011] = '/admin/industries/edit';
-                    $arrRights[11012] = '/admin/industries/toggle';
-
-                    $arrRights[11013] = '/admin/news';
-                    $arrRights[11014] = '/admin/news/add';
-                    $arrRights[11015] = '/admin/news/delete';
-                    $arrRights[11016] = '/admin/news/edit';
-                    $arrRights[11017] = '/admin/news/toggle';
-
-                    $arrRights[11018] = '/admin/brand';
-                    $arrRights[11019] = '/admin/brand/add';
-                    $arrRights[11020] = '/admin/brand/delete';
-                    $arrRights[11021] = '/admin/brand/edit';
-                    $arrRights[11022] = '/admin/brand/toggle';
-
-                    $arrRights[11023] = '/admin/brand-states-statistics';
-                    $arrRights[11024] = '/admin/brand-states-statistics/add';
-                    $arrRights[11025] = '/admin/brand-states-statistics/delete';
-                    $arrRights[11026] = '/admin/brand-states-statistics/edit';
-                    $arrRights[11027] = '/admin/brand-states-statistics/toggle';
-
-                    $arrRights[11028] = '/admin/project';
-                    $arrRights[11029] = '/admin/project/add';
-                    $arrRights[11030] = '/admin/project/delete';
-                    $arrRights[11031] = '/admin/project/edit';
-                    $arrRights[11032] = '/admin/project/toggle';
-
-                    $arrRights[11033] = '/admin/features';
-                    $arrRights[11034] = '/admin/features/add';
-                    $arrRights[11035] = '/admin/features/delete';
-                    $arrRights[11036] = '/admin/features/edit';
-                    $arrRights[11037] = '/admin/features/toggle';
-
-                    $arrRights[11038] = '/admin/task';
-                    $arrRights[11039] = '/admin/task/add';
-                    $arrRights[11040] = '/admin/task/delete';
-                    $arrRights[11041] = '/admin/task/edit';
-                    $arrRights[11042] = '/admin/task/toggle';
-
-                    $arrRights[11043] = '/admin/business-unit';
-                    $arrRights[11044] = '/admin/business-unit/add';
-                    $arrRights[11045] = '/admin/business-unit/delete';
-                    $arrRights[11046] = '/admin/business-unit/edit';
-                    $arrRights[11047] = '/admin/business-unit/toggle';
-
-                    $arrRights[11043] = '/admin/department';
-                    $arrRights[11044] = '/admin/department/add';
-                    $arrRights[11045] = '/admin/department/delete';
-                    $arrRights[11046] = '/admin/department/edit';
-                    $arrRights[11047] = '/admin/department/toggle';
-
-                    $arrRights[11048] = '/admin/company';
-                    $arrRights[11049] = '/admin/company/add';
-                    $arrRights[11050] = '/admin/company/delete';
-                    $arrRights[11051] = '/admin/company/edit';
-                    $arrRights[11052] = '/admin/company/toggle';
-
                     Session::put('routes', $arrRights);
                     if($request->admin == 'true'){
                         Session::put('admin', true);

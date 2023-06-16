@@ -5,10 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use DB;
  
-class Inventory extends Model
+class EmailTemplateTypes extends Model
 {
-    protected $table = 'inventory';
-    protected $fillable = ['zip_code', 'year', 'states', 'amount', 'ga_amount','gas_station', 'code_total', 'gas_station_total'];
+    protected $table = 'email_template_types';
 
     public function getAll($orderby=null, $where=array(), $dynamicWhere='')
     {
@@ -16,7 +15,7 @@ class Inventory extends Model
             $dynamicWhere = " 1 = 1";
         }
 
-        $query = Inventory::query();
+        $query = EmailTemplateTypes::query();
         
         if (!empty($orderby)) {
             $query->orderBy($orderby);
@@ -37,47 +36,48 @@ class Inventory extends Model
 
     function getOne($id)
     {   
-        return Inventory::where(['id' => $id])->first();
+        return EmailTemplateTypes::where(['id' => $id])->first();
     }
 
     public function deleteAll($ids, $arrUpdate)
     {
-        return Inventory::whereIn('id', explode(',', $ids))->update($arrUpdate);
+        return EmailTemplateTypes::whereIn('id', explode(',', $ids))->update($arrUpdate);
     }
 
     function deleteOne($id,$arrUpdate)
     {     
-        return Inventory::where('id', $id)->update($arrUpdate);
+        return EmailTemplateTypes::where('id', $id)->update($arrUpdate);
     }
 
     public function bulkUpdate($ids, $arrUpdate)
     {
-        return Inventory::whereIn('id', explode(',', $ids))->update($arrUpdate);
+        return EmailTemplateTypes::whereIn('id', explode(',', $ids))->update($arrUpdate);
     }  
 
     public function updateOne($id, $arrUpdate)
     {
-        return Inventory::where('id', $id)->update($arrUpdate);
+        return EmailTemplateTypes::where('id', $id)->update($arrUpdate);
     }
 
     public function getCountByCriteria($id = null, $criteria, $menuTypeId=null)
     {
         if ($id != null) {
-            return Inventory::where($criteria)->where('id', '<>', $id)->count();
+            //return Category::where($criteria)->where('id', '<>',  $id )->where('menu_type_id', '=',  $menuTypeId)->count();
+            return EmailTemplateTypes::where($criteria)->where('id', '<>', $id)->count();
         } else {
-            return Inventory::where($criteria)->count();
+            return EmailTemplateTypes::where($criteria)->count();
         }
     }
 
     public static function getAllToExport()
     {
-        return Inventory::where(['deleted' => 0])
+        return EmailTemplateTypes::where(['deleted' => 0])
                 ->select('name as Name', 'controller_name as ControllerName', DB::raw('CASE WHEN status = 1 THEN "Active" ELSE "Inactive" END as Status'));
     }
 
     public function getModuleRights()
     {
-        return Inventory::leftJoin('rights', 'rights.module_id', '=', 'modules.id')
+        return EmailTemplateTypes::leftJoin('rights', 'rights.module_id', '=', 'modules.id')
                         ->where(['modules.deleted' => 0])
                         ->where(['rights.deleted' => 0])
                         ->select('rights.id as rightsId', 'rights.name as rightsName', 'modules.id as moduleId', 'modules.name as moduleName')

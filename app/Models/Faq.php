@@ -1,7 +1,7 @@
 <?php
 /**
- * USP Model
- * Manage CRUD for the USP
+ * Module Model
+ * Manage CRUD for the Module
  *
  * @author ATL
  * @since Jan 2020
@@ -11,9 +11,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 
-class Usp extends Model
+class Faq extends Model
 {
-    protected $table = 'usp';
+    protected $table = 'faq';
 
     /**
     * Returns all records
@@ -27,7 +27,7 @@ class Usp extends Model
             $dynamicWhere = " 1 = 1";
         }
 
-        $query = Usp::query();
+        $query = Faq::query();
         
         if (!empty($orderby)) {
             $query->orderBy($orderby);
@@ -38,9 +38,9 @@ class Usp extends Model
         if (!empty($where)) {
             $query->where($where);
         }
-        
+
         return $query->where(['deleted' => 0])
-                    ->select('*', DB::raw('CASE WHEN usp.status = 1 THEN "Active" ELSE "Inactive" END as status'))
+                    ->select('*', DB::raw('CASE WHEN status = 1 THEN "Active" ELSE "Inactive" END as status'))
                     ->whereRaw($dynamicWhere)
                     ->get();
     }
@@ -53,7 +53,7 @@ class Usp extends Model
     */
     public function getOne($id)
     {
-        return Usp::where(['id' => $id])->first();
+        return Faq::where(['id' => $id])->first();
     }
 
     /**
@@ -64,7 +64,7 @@ class Usp extends Model
     */
     public function deleteAll($ids, $arrUpdate)
     {
-        return Usp::whereIn('id', explode(',', $ids))->update($arrUpdate);
+        return Faq::whereIn('id', explode(',', $ids))->update($arrUpdate);
     }
 
     /**
@@ -75,7 +75,7 @@ class Usp extends Model
     */
     public function deleteOne($id, $arrUpdate)
     {
-        return Usp::where('id', $id)->update($arrUpdate);
+        return Faq::where('id', $id)->update($arrUpdate);
     }
 
 
@@ -87,7 +87,7 @@ class Usp extends Model
     */
     public function bulkUpdate($ids, $arrUpdate)
     {
-        return Usp::whereIn('id', explode(',', $ids))->update($arrUpdate);
+        return Faq::whereIn('id', explode(',', $ids))->update($arrUpdate);
     }
 
     /**
@@ -98,7 +98,7 @@ class Usp extends Model
     */
     public function updateOne($id, $arrUpdate)
     {
-        return Usp::where('id', $id)->update($arrUpdate);
+        return Faq::where('id', $id)->update($arrUpdate);
     }
 
     /**
@@ -110,9 +110,10 @@ class Usp extends Model
     public function getCountByCriteria($id = null, $criteria, $menuTypeId=null)
     {
         if ($id != null) {
-            return Usp::where($criteria)->where('id', '<>', $id)->count();
+            //return Category::where($criteria)->where('id', '<>',  $id )->where('menu_type_id', '=',  $menuTypeId)->count();
+            return Faq::where($criteria)->where('id', '<>', $id)->count();
         } else {
-            return Usp::where($criteria)->count();
+            return Faq::where($criteria)->count();
         }
     }
 
@@ -124,7 +125,25 @@ class Usp extends Model
     */
     public static function getAllToExport()
     {
-        return Usp::where(['deleted' => 0])
-                ->select('name as Name', DB::raw('CASE WHEN status = 1 THEN "Active" ELSE "Inactive" END as Status'));
+        return Faq::where(['deleted' => 0])
+                ->select('name as Name', 'controller_name as ControllerName', DB::raw('CASE WHEN status = 1 THEN "Active" ELSE "Inactive" END as Status'));
+    }
+
+    /**
+    * Returns rights of Module
+    *
+    * @author ATL
+    * @since Jan 2020
+    */
+    public function getModuleRights()
+    {
+        return Faq::leftJoin('rights', 'rights.module_id', '=', 'modules.id')
+                        ->where(['modules.deleted' => 0])
+                        ->where(['rights.deleted' => 0])
+                        ->select('rights.id as rightsId', 'rights.name as rightsName', 'modules.id as moduleId', 'modules.name as moduleName')
+                        //->groupBy('rights.id')
+                        ->orderBy('modules.name')
+                        ->orderBy('rights.name')
+                        ->get();
     }
 }

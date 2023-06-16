@@ -53,7 +53,7 @@
                             <div class="form-group">
                                 <label for="exampleSelect1">Department<span class="required">*</span></label>
                                 <select class="form-control" id="department" name="department_id">
-                                    <option value='' data-id='0' selected>Select</option>
+                                    <option value='' data-id='0' selected>-Select Department-</option>
                                     @foreach($departmentData as $department)    
                                     <option value="{{$department->id}}">{{$department->name}}</option>
                                     @endforeach
