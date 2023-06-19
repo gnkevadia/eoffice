@@ -26,17 +26,17 @@ class City extends Model
             $dynamicWhere = " 1 = 1";
         }
 
-        $query = Inclusion::query();
+        // $query = Inclusion::query();
         
-        if (!empty($orderby)) {
-            $query->orderBy($orderby);
-        } else {
-            $query->orderBy('id', 'desc');
-        }
+        // if (!empty($orderby)) {
+        //     $query->orderBy($orderby);
+        // } else {
+        //     $query->orderBy('id', 'desc');
+        // }
 
-        if (!empty($where)) {
-            $query->where($where);
-        }
+        // if (!empty($where)) {
+        //     $query->where($where);
+        // }
 
         return City::where(['city.deleted' => 0])
             ->join('states','states.id','=','city.state_id')

@@ -100,10 +100,10 @@ class LoginController extends Controller
                         $arrRights[$valRights->id] = $valRights->routes;
                     }
                     Session::put('routes', $arrRights);
-                    if($request->admin == 'true'){
-                        Session::put('admin', true);
-                        return json_encode(array("status"=>1,"msg"=>"Login Successful.","action"=>"/admin/dashboard","data"=>$userDetails));
+                    if($roleDetails->id == '1'){
+                        Session::put('superAdmin', true);
                     }
+                        return json_encode(array("status"=>1,"msg"=>"Login Successful.","action"=>"/admin/dashboard","data"=>$userDetails));
                 } else {
                     session()->flush();
                     return json_encode(array("status"=>0,"msg"=>"Ip is not allowed.","action"=>"login","data"=>array()));

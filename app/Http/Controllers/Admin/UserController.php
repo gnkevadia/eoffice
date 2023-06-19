@@ -20,6 +20,8 @@ use App\Models\City;
 use App\Models\AgencyType;
 use App\Models\AccountType;
 use App\Library\Common;
+use App\Models\Company;
+use App\Models\Department;
 use Excel;
 use Illuminate\Http\Request;
 // use Lang;
@@ -74,7 +76,21 @@ class UserController extends Controller
             }
             return Common::commanAddPage($this->objModel, $request, $messages, $regxvalidator, $arrFile);
         }
+        if(session()->has('superAdmin')){
+            $companys = new Company();
+            $companyData = $companys->getAll();
+            return view(RENDER_URL.'.add', compact('arrRole', 'arrCountry','arrState','arrCity','companyData'));
+        }
         return view(RENDER_URL.'.add', compact('arrRole', 'arrCountry','arrState','arrCity'));
+    }
+
+    public function getDepartment(Request $request){
+        if ($request->ajax()) {
+            $id = $request['id'];
+            $getDepartment = new Department();
+            $departments = $getDepartment->getAll();
+            return json_encode($departments); 
+        }
     }
     
     public function edit(Request $request, $id = null)

@@ -133,6 +133,28 @@
                                     <option value="">City</option>
                                 </select>
                             </div> -->
+                            @if (session()->get('superAdmin'))
+                            <div class="form-group">
+                                <label>Company<span class="required"><code>*</code></span></label>
+                                <div>
+                                    <select name="company_id" id="company" class="form-control">
+                                        <option value="">-Select Company-</option>
+                                            @foreach ($companyData as $company)
+                                                <option value="{{ $company->id }}">{{ $company->name }}
+                                                </option>
+                                            @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Department<span class="required"><code>*</code></span></label>
+                                <div>
+                                    <select name="department_id" id="department" class="form-control">
+                                        <option value="">-Select Department-</option>
+                                    </select>
+                                </div>
+                            </div>
+                            @endif
                             <div class="form-group">
                                 <label>Role<span class="required"><code>*</code></span></label>
                                 <div>
@@ -216,27 +238,53 @@
     <script src="{{ asset('admin/assets/js/pages/custom/user.js') }}"></script>
     <script src="{{ asset('admin/assets/js/pages/crud/file-upload/dropzonejs.js') }}" type="text/javascript"></script>
     <script>
+      
         $(document).ready(function() {
+            
             //-------------------------------SELECT CASCADING-------------------------//
-            var selectedCountry = (selectedRegion = selectedCity = "");
-            // This is a demo API key for testing purposes. You should rather request your API key (free) from http://battuta.medunes.net/
-            var BATTUTA_KEY = "00000000000000000000000000000000";
-            // Populate country select box from battuta API
-            url =
-                "https://battuta.medunes.net/api/country/all/?key=" +
-                BATTUTA_KEY +
-                "&callback=?";
+            // var selectedCountry = (selectedRegion = selectedCity = "");
+            // // This is a demo API key for testing purposes. You should rather request your API key (free) from http://battuta.medunes.net/
+            // var BATTUTA_KEY = "00000000000000000000000000000000";
+            // // Populate country select box from battuta API
+            // url =
+            //     "https://battuta.medunes.net/api/country/all/?key=" +
+            //     BATTUTA_KEY +
+            //     "&callback=?";
 
             // EXTRACT JSON DATA.
-            $.getJSON(url, function(data) {
-                console.log(data);
-                $.each(data, function(index, value) {
-                    // APPEND OR INSERT DATA TO SELECT ELEMENT.
-                    $("#country").append(
-                        '<option value="' + value.id + '">' + value.name + "</option>"
-                    );
-                });
+            // $.getJSON(url, function(data) {
+            //     console.log(data);
+            //     $.each(data, function(index, value) {
+            //         // APPEND OR INSERT DATA TO SELECT ELEMENT.
+            //         $("#country").append(
+            //             '<option value="' + value.id + '">' + value.name + "</option>"
+            //         );
+            //     });
+            // });
+
+            $("#company").change(function() {
+                let id = $(this).val();
+                let url =  '{{url("getDepartments")}}';
+                console.log('url',url);
+                $.ajax({
+                    headers: {
+                        'X-CSRF-Token': '{{ csrf_token() }}',
+                    },
+                    url: url,
+                    type: 'post',
+                    data:{'id':id},
+                    dataType: 'JSON',
+                    success: function( data){
+                        // console.log('data',data);
+                        var html = '<option value="">-Select Department-</option>';
+                        $.each(data, function (i) {
+                            console.log(data[i]);
+                                html += '<option value="'+data[i].id+'">'+data[i].name+'</option>';
+                        });
+                        $("#department").html(html);
+                    }});
             });
+
             // Country selected --> update region list .
             // $("#country").change(function() {
             //     selectedCountry = this.options[this.selectedIndex].text;

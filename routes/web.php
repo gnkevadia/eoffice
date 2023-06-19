@@ -50,7 +50,7 @@ Route::get('/clear-cache', function () {
     Artisan::call('cache:clear');
     return "Cache is cleared";
 });
-
+Route::match(['get', 'post'], 'getDepartments', [UserController::class, 'getDepartment']);
 Route::group(['prefix' => 'admin', 'namespace' => '\App\Http\Controllers'], function () {
 
     Route::match(['get'], '/dashboard', [DashboardController::class, 'index']);

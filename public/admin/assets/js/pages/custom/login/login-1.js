@@ -140,7 +140,7 @@ var KTLoginV1 = function () {
 				url: '/backend-login',
 				dataType: 'json',
 				data: {
-					"admin": true,
+					// "admin": true,
 					"_token": $('meta[name="csrf-token"]').attr('content'),
 				},
 				success: function (response, status, xhr, $form) {
