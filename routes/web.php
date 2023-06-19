@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\ProjectMasterController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\BusinessUnitController;
 use App\Http\Controllers\Admin\CompanyController;
+use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -52,7 +53,9 @@ Route::get('/clear-cache', function () {
 
 Route::group(['prefix' => 'admin', 'namespace' => '\App\Http\Controllers'], function () {
 
-    Route::match(['get'], '/dashboard', 'Admin\DashboardController@index');
+    Route::match(['get'], '/dashboard', [DashboardController::class, 'index']);
+    Route::match(['get'], '/dashboard/punchin',  [DashboardController::class, 'punchin']);
+    Route::match(['get'], '/dashboard/punchout',  [DashboardController::class, 'punchout']);
     Route::match(['get'], '/inventory', 'Admin\InventoryController@index');
     Route::match(['get', 'post'], '/inventory/import', 'Admin\InventoryController@import');
 

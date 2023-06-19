@@ -2,19 +2,19 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-  <h3 class="kt-subheader__title">Dashboard </h3>
-  <span class="kt-subheader__separator kt-hidden"></span>
-  <div class="kt-subheader__breadcrumbs">
-      <a href="#" class="kt-subheader__breadcrumbs-home"><i class="flaticon2-shelter"></i></a>
-      <span class="kt-subheader__breadcrumbs-separator"></span>
-      <a href="{{ url('admin/dashboard') }}" class="kt-subheader__breadcrumbs-link">Dashboard</a>
+<h3 class="kt-subheader__title">Dashboard </h3>
+<span class="kt-subheader__separator kt-hidden"></span>
+<div class="kt-subheader__breadcrumbs">
+  <a href="#" class="kt-subheader__breadcrumbs-home"><i class="flaticon2-shelter"></i></a>
+  <span class="kt-subheader__breadcrumbs-separator"></span>
+  <a href="{{ url('admin/dashboard') }}" class="kt-subheader__breadcrumbs-link">Dashboard</a>
 
-      <!-- <span class="kt-subheader__breadcrumbs-link kt-subheader__breadcrumbs-link--active">Active link</span> -->
-  </div>
+  <!-- <span class="kt-subheader__breadcrumbs-link kt-subheader__breadcrumbs-link--active">Active link</span> -->
+</div>
 @stop
 
 @section('content')
-<!-- Main content -->      
+<!-- Main content -->
 <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
 
   <!--Begin::Dashboard 1-->
@@ -96,10 +96,10 @@
                       </g>
                     </svg> </span>
                   <span class="kt-widget17__subtitle">
-                    Delivered
+                    Total Task
                   </span>
                   <span class="kt-widget17__desc">
-                    15 New Paskages
+                    {{ $task_all->count();}} Tasks
                   </span>
                 </div>
                 <div class="kt-widget17__item">
@@ -112,10 +112,10 @@
                       </g>
                     </svg> </span>
                   <span class="kt-widget17__subtitle">
-                    Ordered
+                    Total Project
                   </span>
                   <span class="kt-widget17__desc">
-                    72 New Items
+                    {{$projrct->count();}} Project
                   </span>
                 </div>
               </div>
@@ -167,57 +167,40 @@
         <div class="kt-portlet__head kt-portlet__space-x">
           <div class="kt-portlet__head-label">
             <h3 class="kt-portlet__head-title">
-              Inbound Bandwidth
+              Your Task
             </h3>
           </div>
-          <div class="kt-portlet__head-toolbar">
-            <a href="#" class="btn btn-label-success btn-sm btn-bold dropdown-toggle" data-toggle="dropdown">
-              Export
-            </a>
-            <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right">
-              <ul class="kt-nav">
-                <li class="kt-nav__item">
-                  <a href="#" class="kt-nav__link">
-                    <i class="kt-nav__link-icon flaticon2-line-chart"></i>
-                    <span class="kt-nav__link-text">Reports</span>
-                  </a>
-                </li>
-                <li class="kt-nav__item">
-                  <a href="#" class="kt-nav__link">
-                    <i class="kt-nav__link-icon flaticon2-send"></i>
-                    <span class="kt-nav__link-text">Messages</span>
-                  </a>
-                </li>
-                <li class="kt-nav__item">
-                  <a href="#" class="kt-nav__link">
-                    <i class="kt-nav__link-icon flaticon2-pie-chart-1"></i>
-                    <span class="kt-nav__link-text">Charts</span>
-                  </a>
-                </li>
-                <li class="kt-nav__item">
-                  <a href="#" class="kt-nav__link">
-                    <i class="kt-nav__link-icon flaticon2-avatar"></i>
-                    <span class="kt-nav__link-text">Members</span>
-                  </a>
-                </li>
-                <li class="kt-nav__item">
-                  <a href="#" class="kt-nav__link">
-                    <i class="kt-nav__link-icon flaticon2-settings"></i>
-                    <span class="kt-nav__link-text">Settings</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
         </div>
-        <div class="kt-portlet__body kt-portlet__body--fluid">
+        <div class="kt-portlet__body kt-portlet__body--fluid p-0">
           <div class="kt-widget20">
-            <div class="kt-widget20__content kt-portlet__space-x">
-              <span class="kt-widget20__number kt-font-brand">670+</span>
-              <span class="kt-widget20__desc">Successful transactions</span>
-            </div>
-            <div class="kt-widget20__chart" style="height:130px;">
-              <canvas id="kt_chart_bandwidth1"></canvas>
+            <div class="kt-widget20__content kt-portlet__space-x p-0">
+              <div class="task_name" style="height: 205px;">
+                <table class="table mb-0">
+                  <thead>
+                    <tr>
+                      <th>Task Name</th>
+                      <th>Priority</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach ($task as $value)
+                    <tr>
+                      <td>
+                        {{ucfirst($value->task)}}
+                      </td>
+                      <td>
+                        {{$value->priority}}
+                      </td>
+                    </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
+              <div class="row d-flex">
+                <div class="col-lg-12" style="display: flex; justify-content: end; align-items: center; text-align: center;">
+                  {!! $task->links() !!}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -291,8 +274,39 @@
     </div>
     <div class="col-lg-6 col-xl-4 order-lg-1 order-xl-1">
 
-      <!--Begin::Portlet-->
-      <div class="kt-portlet kt-portlet--height-fluid">
+      <!--begin:: Widgets/Inbound Bandwidth-->
+      <div class="kt-portlet kt-portlet--fit kt-portlet--head-noborder kt-portlet--height-fluid-half">
+        <div class="kt-portlet__head kt-portlet__space-x">
+          <div class="kt-portlet__head-label">
+            <h3 class="kt-portlet__head-title">
+              Punching
+            </h3>
+          </div>
+        </div>
+        <div class="kt-portlet__body kt-portlet__body--fluid">
+          <div class="kt-widget20">
+            <div class="kt-widget20__content kt-portlet__space-x">
+              @if(session()->get('pinchin'))
+              <p class="my-2 mx-4"> Your Punch in Time is {{session()->get('pinchin_time')}}</p>
+              <button class='btn btn-success btn-md  btn-bold punchOut_btn'>
+                Punch Out
+              </button>
+              <div class="punchOut"></div>
+              @else
+              <div class="punchIn mb-2 kt-portlet__head-title"></div>
+              <button class="btn btn-danger btn-md  btn-bold punchIn_btn">
+                Punch In
+              </button>
+              @endif
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--end:: Widgets/Inbound Bandwidth-->
+      <div class="kt-space-20"></div>
+
+      <div class="kt-portlet kt-portlet--height-fluid-half">
         <div class="kt-portlet__head">
           <div class="kt-portlet__head-label">
             <h3 class="kt-portlet__head-title">
@@ -360,15 +374,13 @@
             </div>
           </div>
         </div>
-        
-      </div>
 
-      <!--End::Portlet-->
+      </div>
     </div>
-   
-  </div>  
-  
-  
+
+  </div>
+
+
 
   <!--End::Row-->
 
@@ -378,8 +390,43 @@
 
   <!--End::Dashboard 1-->
 </div>
-    <!-- /.content -->
+<!-- /.content -->
 @stop
 @section('metronic_js')
 <script src="{{ asset('admin/assets/js/pages/dashboard.js') }}" type="text/javascript"></script>
+<!-- <script src="{{ asset('admin/assets/js/pages/custom/dashboard-ajex.js') }}" type="text/javascript"></script> -->
+<script>
+  $(document).ready(function() {
+    let punchOut = "<?php echo session()->has('pinchout')?>";
+    if (punchOut != false) {
+           $('.punchOut_btn').removeClass('btn-success');
+           $('.punchOut_btn').addClass('btn-secondary');
+       }
+    $(document).on('click', '.punchIn_btn', function() {
+      $(this).hide();
+      $(this).prop('disabled', true);
+      $.ajax({
+        url: 'dashboard/punchin',
+        type: 'get',
+        success: function(data) {
+          $('.punchIn').html('<p class="my-2 mx-4"> Your Punch in Time is ' + data + '</p> <div class="kt-widget20__content p-0"> <button class="btn btn-success btn-md  btn-bold punchOut_btn">  Punch Out </button> </div>')
+          console.log(data);
+        }
+      });
+    })
+    $(document).on('click', '.punchOut_btn', function() {
+      $(this).prop('disabled', true);
+      $.ajax({
+        url: 'dashboard/punchout',
+        type: 'get',
+        success: function(data) {
+          $('.punchOut').html('<p class="my-2 mx-4"> Your Punch out Time is ' + data + '</p>')
+        }
+      });
+      $(this).removeClass('btn-success');
+      $(this).addClass('btn-secondary');
+    })
+
+  });
+</script>
 @stop

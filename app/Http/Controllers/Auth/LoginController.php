@@ -70,6 +70,8 @@ class LoginController extends Controller
             if (auth()->attempt($credentials)) {
                 $arrSettings = $Setting->getSettingByName('ALLOWED_IP');
                 $arrSettingscheck = $Setting->getSettingByName('ALLOWED_IP_ENABLE');
+                Session::put('pinchin', false);
+                Session::put('pinchout', false);
                 
                 if ($arrSettingscheck['value']!='1' || ($arrSettingscheck['value']=='1' && isset($arrSettings['name']) && !empty($arrSettings['name']) && in_array($request->ip(), explode(",", $arrSettings['value'])))) 
                 {
@@ -80,7 +82,16 @@ class LoginController extends Controller
                     Session::put('lastname', $userDetails->lastName);
                     Session::put('name', $userDetails->name);
                     Session::put('profile_photo', asset('admin/assets/media/users/50x50/'.$userDetails->profile_photo));
-                
+                    
+                    if(!empty($userDetails->punch_in && date('Y-m-d'))){
+                        Session::put('pinchin', true);
+                        Session::put('pinchout', false);
+                    }
+
+                    if(!empty($userDetails->punch_out)){
+                        Session::put('pinchout', true);
+                        Session::put('pinchin', false);
+                    }
                     $roleDetails = Role::where(['id' => $userDetails->role_id])->first();
                     Session::put('rights', explode(",", $roleDetails->rights));
                     $rightDetails = Rights::whereIn('id', explode(",", $roleDetails->rights))->get();
