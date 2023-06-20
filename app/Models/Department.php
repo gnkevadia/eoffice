@@ -25,13 +25,12 @@ class Department extends Model
     {
         // $data = Department::join('business_unit', 'department.business_id', '=', 'business_unit.id')->where('department.deleted', 0)->select('department.*', 'business_unit.name as business_name')->get();
         $query = Department::query();
-        if(!empty($where)){
-            $query->where(['department.deleted'=> 0,'company_id' => $where]);
-        }else{
-            $query->where(['department.deleted'=> 0]);
+        if (!empty($where)) {
+            $query->where(['deleted' => 0, 'company_id' => $where]);
+        } else {
+            $query->where(['deleted' => 0]);
         }
         $data = $query->get();
-        echo '<pre>'; print_r($data); echo '</pre>'; die();
         return $data;
     }
 
