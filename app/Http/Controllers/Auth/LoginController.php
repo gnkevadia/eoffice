@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Library\Common;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
@@ -81,12 +82,15 @@ class LoginController extends Controller
                     Session::put('firstname', $userDetails->firstName);
                     Session::put('lastname', $userDetails->lastName);
                     Session::put('name', $userDetails->name);
+                    Session::put('company_id', $userDetails->company_id);
                     Session::put('profile_photo', asset('admin/assets/media/users/50x50/'.$userDetails->profile_photo));
                     
+                    Common::getSettings();
                     if(!empty($userDetails->punch_in && date('Y-m-d'))){
                         Session::put('pinchin', true);
                         Session::put('pinchout', false);
                     }
+
 
                     if(!empty($userDetails->punch_out)){
                         Session::put('pinchout', true);
