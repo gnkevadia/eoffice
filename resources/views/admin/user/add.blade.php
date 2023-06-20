@@ -147,6 +147,19 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label>Business<span class="required"><code>*</code></span></label>
+                                <div>
+                                    <select name="business" id="business" class="form-control">
+                                        <option value="">-Select Business-</option>
+                                            @foreach ($arrBusiness as $business)
+                                                <option value="{{ $business->id }}">{{ $business->name }}
+                                                </option>
+                                            @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            @endif
+                            <div class="form-group">
                                 <label>Department<span class="required"><code>*</code></span></label>
                                 <div>
                                     <select name="department_id" id="department" class="form-control">
@@ -154,7 +167,6 @@
                                     </select>
                                 </div>
                             </div>
-                            @endif
                             <div class="form-group">
                                 <label>Role<span class="required"><code>*</code></span></label>
                                 <div>
@@ -235,7 +247,7 @@
 @stop
 
 @section('metronic_js')
-    <script src="{{ asset('admin/assets/js/pages/custom/user.js') }}"></script>
+    <script src="{{ asset('admin/assets/jsp/pages/custom/user.js') }}"></script>
     <script src="{{ asset('admin/assets/js/pages/crud/file-upload/dropzonejs.js') }}" type="text/javascript"></script>
     <script>
       
@@ -275,7 +287,7 @@
                     data:{'id':id},
                     dataType: 'JSON',
                     success: function( data){
-                        // console.log('data',data);
+                        console.log('data',data);
                         var html = '<option value="">-Select Department-</option>';
                         $.each(data, function (i) {
                             console.log(data[i]);

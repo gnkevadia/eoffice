@@ -185,15 +185,15 @@ var KTFormControls = function () {
                 postal_code: {
                     required: true
                 },
-                country_id: {
-                    required: true
-                },
-                state_id: {
-                    required: true
-                },
-                city_id: {
-                    required: true
-                },
+                // country_id: {
+                //     required: true
+                // },
+                // state_id: {
+                //     required: true
+                // },
+                // city_id: {
+                //     required: true
+                // },
                 role_id: {
                     required: true
                 },
@@ -235,9 +235,9 @@ var KTFormControls = function () {
                 'state_id': {
                     required: "Please select state",
                 },
-                'city_id': {
-                    required: "Please select city",
-                },
+                // 'city_id': {
+                //     required: "Please select city",
+                // },
                 'role_id': {
                     required: "Please select role",
                 },

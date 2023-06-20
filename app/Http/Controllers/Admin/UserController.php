@@ -20,6 +20,7 @@ use App\Models\City;
 use App\Models\AgencyType;
 use App\Models\AccountType;
 use App\Library\Common;
+use App\Models\BusinessUnit;
 use App\Models\Company;
 use App\Models\Department;
 use Excel;
@@ -57,6 +58,9 @@ class UserController extends Controller
         $arrCountry = $dbcountry->getAll();
         $dbState = new States();
         $arrState = $dbState->getAll();
+        $arrCountry = $dbcountry->getAll();
+        $dbBusiness = new BusinessUnit();
+        $arrBusiness = $dbBusiness->getAll();
         $dbcity = new City();
         $arrCity = $dbcity->getAll();
         $messages = [
@@ -74,12 +78,15 @@ class UserController extends Controller
             if(is_array($request->role_id)){
                 $request->merge(["role_id"=>join(',',$request->role_id)]);
             }
+            if(Session::get('role') == '2'){
+                $request->merge(["company_id"=>Session::get('company_id')]);
+            }
             return Common::commanAddPage($this->objModel, $request, $messages, $regxvalidator, $arrFile);
         }
         if(session()->has('superAdmin')){
             $companys = new Company();
             $companyData = $companys->getAll();
-            return view(RENDER_URL.'.add', compact('arrRole', 'arrCountry','arrState','arrCity','companyData'));
+            return view(RENDER_URL.'.add', compact('arrRole', 'arrCountry','arrState','arrCity','companyData','arrBusiness'));
         }
         return view(RENDER_URL.'.add', compact('arrRole', 'arrCountry','arrState','arrCity'));
     }
@@ -88,7 +95,7 @@ class UserController extends Controller
         if ($request->ajax()) {
             $id = $request['id'];
             $getDepartment = new Department();
-            $departments = $getDepartment->getAll();
+            $departments = $getDepartment->getAll(null ,$id);
             return json_encode($departments); 
         }
     }

@@ -99,7 +99,7 @@ License: You must have a valid license purchased only from themeforest(the above
 		<!--begin::Layout Skins(used by all pages) -->
 
 		<!--end::Layout Skins -->
-		<link rel="shortcut icon" href="{{ asset('admin/assets/media/logos/favicon.ico') }}" />
+		<!-- <link rel="shortcut icon" href="{{ asset('admin/assets/media/logos/favicon.ico') }}" /> -->
 	</head>
 
 	<!-- end::Head -->

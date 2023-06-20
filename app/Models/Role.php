@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 // use DB;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 
 class Role extends Model
@@ -29,14 +30,18 @@ class Role extends Model
         if (!empty($where)) {
             $query->where($where);
         }
+        $data = Session::get('settings');
         
+        if(!Session::get('superAdmin')){
+            $query->whereNotIn('id', [$data['SUB_ADMIN'],$data['ADMIN']]);
+        }
+
         if (!empty($orderby)) {
             $query->orderBy($orderby);
         } else {
             $query->orderBy('id', 'desc');
         }
-
-        return $query->where(['deleted' => 0])
+        return $query->where($where)
             ->select('*', DB::raw('CASE WHEN status = 1 THEN "Active" ELSE "Inactive" END as status'))
             ->whereRaw($dynamicWhere)
             ->get();

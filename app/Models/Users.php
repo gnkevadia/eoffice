@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Session;
 class Users extends Model
 {
     protected $table = 'users';
@@ -25,9 +25,16 @@ class Users extends Model
         if (!empty($where)) {
             $query->where($where);
         }
-
-        return $query->join('roles', 'roles.id', '=', 'users.role_id')->where(['users.deleted' => 0])
-                    ->select('*','roles.name as roleName', DB::raw('CASE WHEN users.status = 1 THEN "Active" ELSE "Inactive" END as status'))
+        if(Session::get('superAdmin')){
+            $where = ['users.deleted' => 0];
+        }else{
+            // echo '<pre>++'; print_r(Session::get('company_id')); echo '</pre>'; 
+            // echo '<pre>'; print_r(Session::all()); echo '</pre>'; die();
+            $role_id = Session::get('settings');
+            $where = ['users.deleted' => 0,'users.company_id' => Session::get('company_id'),'users.role_id' => $role_id['USER']];
+        }
+        return $query->join('roles', 'roles.id', '=', 'users.role_id')->where($where)
+                    ->select('users.*','roles.name as roleName', DB::raw('CASE WHEN users.status = 1 THEN "Active" ELSE "Inactive" END as status'))
                     ->whereRaw($dynamicWhere)
                     ->get();
     }

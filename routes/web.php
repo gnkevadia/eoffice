@@ -44,7 +44,7 @@ Route::match(['get', 'post'], '/', '\App\Http\Controllers\HomeController@index')
 Route::get('/set-city', '\App\Http\Controllers\HomeController@setCity');
 Route::match(['get', 'post'], '/contact-us', '\App\Http\Controllers\HomeController@contact');
 
-Route::match(['post'], '/corporate-booking', '\App\Http\Controllers\HomeController@corporateBooking');
+// Route::match(['post'], '/corporate-booking', '\App\Http\Controllers\HomeController@corporateBooking');
 
 Route::get('/clear-cache', function () {
     Artisan::call('cache:clear');

@@ -20,7 +20,7 @@ use Config;
 use Illuminate\Support\Facades\Auth;
 use Mail;
 use App\Models\User;
-// use App\Library\Common;
+use App\Library\Common;
 use App\Models\City;
 
 use App\Models\EmailTemplates;
@@ -83,19 +83,20 @@ class LoginController extends Controller
                     Session::put('firstname', $userDetails->firstName);
                     Session::put('lastname', $userDetails->lastName);
                     Session::put('name', $userDetails->name);
+                    Session::put('company_id', $userDetails->company_id);
                     Session::put('profile_photo', asset('admin/assets/media/users/50x50/' . $userDetails->profile_photo));
-
+                    Common::getSettings();
                     if (!empty($Users_Punching && date('Y-m-d'))) {
                         Session::put('punchIn', true);
                         Session::put('punchout', false);
-                        $punch_in = date('g:i A j F, Y',strtotime($Users_Punching['punch_in']));
+                        $punch_in = date('g:i A j F, Y', strtotime($Users_Punching['punch_in']));
                         Session::put('punchIn_time', $punch_in);
                     }
 
                     if (!empty($Users_Punching['punch_out'])) {
                         Session::put('punchout', true);
                         Session::put('punchIn', false);
-                        $punch_out = date('g:i A j F, Y',strtotime($Users_Punching['punch_out']));
+                        $punch_out = date('g:i A j F, Y', strtotime($Users_Punching['punch_out']));
                         Session::put('punchOut_time', $punch_out);
                     }
                     $roleDetails = Role::where(['id' => $userDetails->role_id])->first();
