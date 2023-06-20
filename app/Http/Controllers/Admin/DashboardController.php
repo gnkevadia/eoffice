@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Setting;
 use App\Models\Package;
 use App\Models\Users;
+use App\Models\Users_Punching;
 use App\Models\Task;
 use App\Models\ProjectMaster;
 use App\Library\Common;
@@ -37,26 +38,32 @@ class DashboardController extends Controller
         return view('admin.user.dashboard', compact('task','task_all','projrct'));
     }
     public function punchin(){
-        $pinch_in  = Carbon::now('Asia/Kolkata')->format('Y-m-d H:i:s');
-        $punchin = array('punch_in' => $pinch_in);
-        $pinch_in = date('g:i A j F, Y',strtotime($pinch_in));
-        $getUser = new Users();
-        $id = session()->get('id');
-        $time = $getUser->updateOne($id, $punchin);
-        session()->put('pinchin', true);
-        session()->put('pinchin_time', $pinch_in);
-        return  $pinch_in;  
+        $getUser = new Users_Punching();
+        $punch_in  = Carbon::now('Asia/Kolkata')->format('Y-m-d H:i:s');
+        $getUser->user_id =  session()->get('id');
+        $getUser->punch_in =  $punch_in;
+        // $punchin = array('punch_in' => $pinch_in, 'user_id' => session()->get('id'));
+        $punch_in = date('g:i A j F, Y',strtotime($punch_in));
+        // $id = session()->get('id');
+        // $time = $getUser->updateOne($id, $punchin);
+        $getUser->save();
+        session()->put('punchin', true);
+        session()->put('punchIn_time', $punch_in);
+
+        return  $punch_in;  
+        die('x');
     }
     public function punchout(){
+        $getUser = new Users_Punching();
         $punch_out  = Carbon::now('Asia/Kolkata')->format('Y-m-d H:i:s');
-        $punchout = array('punch_out' => $punch_out);
+        $punchout = array( 'user_id' => session()->get('id'),'punch_out' => $punch_out);
         $punch_out = date('g:i A j F, Y',strtotime($punch_out));
-        $getUser = new Users();
         $id = session()->get('id');
         $time = $getUser->updateOne($id, $punchout);
-        session()->put('pinchin', false);
-        session()->put('pinchout_time', $punch_out);
-        session()->put('pinchout', true);
+        session()->put('punchin', false);
+        session()->put('punchOut_time', $punch_out);
+        session()->put('punchout', true);
+        // $getUser->save();
         return  $punch_out;  
     }
 }

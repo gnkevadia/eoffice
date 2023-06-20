@@ -286,12 +286,16 @@
         <div class="kt-portlet__body kt-portlet__body--fluid">
           <div class="kt-widget20">
             <div class="kt-widget20__content kt-portlet__space-x">
-              @if(session()->get('pinchin'))
-              <p class="my-2 mx-4"> Your Punch in Time is {{session()->get('pinchin_time')}}</p>
+              @if(session()->has('punchIn_time'))
+              <p class="my-2 mx-4"> Your Punch in Time is {{session()->get('punchIn_time')}}</p>
+              @if(session()->has('punchOut_time'))
+              <p class="my-2 mx-4"> Your Punch Out Time is {{session()->get('punchOut_time')}}</p>
+              @endif
               <button class='btn btn-success btn-md  btn-bold punchOut_btn'>
                 Punch Out
               </button>
               <div class="punchOut"></div>
+
               @else
               <div class="punchIn mb-2 kt-portlet__head-title"></div>
               <button class="btn btn-danger btn-md  btn-bold punchIn_btn">
@@ -397,11 +401,12 @@
 <!-- <script src="{{ asset('admin/assets/js/pages/custom/dashboard-ajex.js') }}" type="text/javascript"></script> -->
 <script>
   $(document).ready(function() {
-    let punchOut = "<?php echo session()->has('pinchout')?>";
+    let punchOut = "<?php echo session()->has('punchOut_time') ?>";
     if (punchOut != false) {
-           $('.punchOut_btn').removeClass('btn-success');
-           $('.punchOut_btn').addClass('btn-secondary');
-       }
+      $('.punchOut_btn').removeClass('btn-success');
+      $('.punchOut_btn').addClass('btn-secondary');
+      $('.punchOut_btn').prop('disabled', true);
+    }
     $(document).on('click', '.punchIn_btn', function() {
       $(this).hide();
       $(this).prop('disabled', true);
@@ -415,12 +420,12 @@
       });
     })
     $(document).on('click', '.punchOut_btn', function() {
-      $(this).prop('disabled', true);
+      $(this).remove();
       $.ajax({
         url: 'dashboard/punchout',
         type: 'get',
         success: function(data) {
-          $('.punchOut').html('<p class="my-2 mx-4"> Your Punch out Time is ' + data + '</p>')
+          $('.punchOut').html('<p class="my-2 mx-4"> Your Punch out Time is ' + data + '</p> <div class="kt-widget20__content p-0"> <button class="btn btn-secondary btn-md  btn-bold punchOut_btn" disabled>  Punch Out </button> </div>')
         }
       });
       $(this).removeClass('btn-success');
