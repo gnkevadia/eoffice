@@ -352,7 +352,7 @@ class Common extends Eloquent
             Session::flash('flash_error', $msg);
             return redirect(URL . '/add')->withInput();
         } else {
-            if (isset($arrFile) && array_key_exists("multiple_file",$arrFile)) {
+            if (isset($arrFile) && array_key_exists("multiple_file", $arrFile)) {
                 $task = new Task();
                 $task->project = $request['Project'];
                 $task->features = $request['features'];
@@ -1321,47 +1321,47 @@ class Common extends Eloquent
             @unlink(public_path($arrFile['path'] . '/' . $arrFile['existing']));
             @unlink(public_path($arrFile['path'] . '/' . str_replace(pathinfo($arrFile['existing'], PATHINFO_EXTENSION), 'png', $arrFile['existing'])));
         }
-        $file_count = count($request->file);
-        if ($file_count > 1) {
-            $files = $request->file;
-            // die('x');
-            foreach ($files as $file) {
-                // echo '<pre>'; print_r(str_replace('_exist','',$arrFile['except'])); echo '</pre>'; die();
-                $image = $file;
-                $extension = $image->getClientOriginalExtension();
-                $img_name  = $arrFile['predefine'] ? $arrFile['predefine'] : rand() . time() . '.' . $extension;
-                $file->move(public_path($arrFile['path']), $img_name);
-            }
-        } else {
-            $image     = $request->file(str_replace('_exist', '', $arrFile['except']));
-            $extension = $image->getClientOriginalExtension();
-            $img_name  = $arrFile['predefine'] ? $arrFile['predefine'] : rand() . time() . '.' . $extension;
+        // $file_count = count($request->file);
+        // if ($file_count > 1) {
+        //     $files = $request->file;
+        //     // die('x');
+        //     foreach ($files as $file) {
+        //         // echo '<pre>'; print_r(str_replace('_exist','',$arrFile['except'])); echo '</pre>'; die();
+        //         $image = $file;
+        //         $extension = $image->getClientOriginalExtension();
+        //         $img_name  = $arrFile['predefine'] ? $arrFile['predefine'] : rand() . time() . '.' . $extension;
+        //         $file->move(public_path($arrFile['path']), $img_name);
+        //     }
+        // } else {
+        $image     = $request->file(str_replace('_exist', '', $arrFile['except']));
+        $extension = $image->getClientOriginalExtension();
+        $img_name  = $arrFile['predefine'] ? $arrFile['predefine'] : rand() . time() . '.' . $extension;
 
-            if (in_array($extension, array('png', 'jpg', 'jpeg', 'bmp'))) {
-                $image_resize = Image::make($image->getRealPath());
-                if (isset($arrFile['resize']) && !empty($arrFile['resize'])) {
-                    $image_resize->save(public_path($arrFile['path'] . $img_name));
-                    $image_resize->fit($arrFile['resize'], $arrFile['resize']);
-                    $image_resize->save(public_path($arrFile['path'] . $arrFile['resize'] . 'x' . $arrFile['resize'] . '/' . $img_name));
-                } else {
-                    $image_resize->save(public_path($arrFile['path'] . '/' . $img_name));
-                }
-            } else if (in_array($extension, array('mp4'))) {
-                //$image->move(public_path($arrFile['path'].'/' .$img_name), $img_name);
-                if (isset($arrFile['resize']) && !empty($arrFile['resize'])) {
-                    $image->move(public_path($arrFile['path'] . $arrFile['resize'] . 'x' . $arrFile['resize']), $img_name);
-                } else {
-                    $image->move(public_path($arrFile['path']), $img_name);
-                }
-                exec("ffmpeg -i " . public_path($arrFile['path'] . $arrFile['resize'] . 'x' . $arrFile['resize'] . '/' . $img_name) . " -r 1 -ss 00:00:05 -t 00:00:01 -s " . $arrFile['resize'] . 'x' . $arrFile['resize'] . " -f image2 " . public_path($arrFile['path'] . $arrFile['resize'] . 'x' . $arrFile['resize'] . '/' . str_replace($extension, 'png', $img_name)));
+        if (in_array($extension, array('png', 'jpg', 'jpeg', 'bmp'))) {
+            $image_resize = Image::make($image->getRealPath());
+            if (isset($arrFile['resize']) && !empty($arrFile['resize'])) {
+                $image_resize->save(public_path($arrFile['path'] . $img_name));
+                $image_resize->fit($arrFile['resize'], $arrFile['resize']);
+                $image_resize->save(public_path($arrFile['path'] . $arrFile['resize'] . 'x' . $arrFile['resize'] . '/' . $img_name));
             } else {
-                if (isset($arrFile['resize']) && !empty($arrFile['resize'])) {
-                    $image->move(public_path($arrFile['path'] . $arrFile['resize'] . 'x' . $arrFile['resize']), $img_name);
-                } else {
-                    $image->move(public_path($arrFile['path'] . '/' . $img_name));
-                }
+                $image_resize->save(public_path($arrFile['path'] . '/' . $img_name));
+            }
+        } else if (in_array($extension, array('mp4'))) {
+            //$image->move(public_path($arrFile['path'].'/' .$img_name), $img_name);
+            if (isset($arrFile['resize']) && !empty($arrFile['resize'])) {
+                $image->move(public_path($arrFile['path'] . $arrFile['resize'] . 'x' . $arrFile['resize']), $img_name);
+            } else {
+                $image->move(public_path($arrFile['path']), $img_name);
+            }
+            exec("ffmpeg -i " . public_path($arrFile['path'] . $arrFile['resize'] . 'x' . $arrFile['resize'] . '/' . $img_name) . " -r 1 -ss 00:00:05 -t 00:00:01 -s " . $arrFile['resize'] . 'x' . $arrFile['resize'] . " -f image2 " . public_path($arrFile['path'] . $arrFile['resize'] . 'x' . $arrFile['resize'] . '/' . str_replace($extension, 'png', $img_name)));
+        } else {
+            if (isset($arrFile['resize']) && !empty($arrFile['resize'])) {
+                $image->move(public_path($arrFile['path'] . $arrFile['resize'] . 'x' . $arrFile['resize']), $img_name);
+            } else {
+                $image->move(public_path($arrFile['path'] . '/' . $img_name));
             }
         }
+        // }
 
 
         return $img_name;

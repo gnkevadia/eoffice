@@ -7,7 +7,7 @@ var KTFormControls = function () {
     // Private functions
 
     var validateform = function () {
-        $( "#frmAddEdit" ).validate({
+        $("#frmAddEdit").validate({
             // define validation rules
             rules: {
                 name: {
@@ -49,6 +49,24 @@ var KTFormControls = function () {
                 status: {
                     required: true
                 },
+                country_id: {
+                    required: true
+                },
+                state_id: {
+                    required: true
+                },
+                city_id: {
+                    required: true
+                },
+                company_id: {
+                    required: true
+                },
+                business_id: {
+                    required: true
+                },
+                file: {
+                    required: true
+                },
             },
             messages: {
                 'name': {
@@ -87,10 +105,28 @@ var KTFormControls = function () {
                 'status': {
                     required: "Please select status",
                 },
+                'country_id': {
+                    required: "Please select Country",
+                },
+                'state_id': {
+                    required: "Please select State",
+                },
+                'city_id': {
+                    required: "Please select City",
+                },
+                'company_id': {
+                    required: "Please select Company",
+                },
+                'business_id': {
+                    required: "Please select Business",
+                },
+                'file': {
+                    required: "Please select File",
+                },
 
             },
 
-            errorPlacement: function(error, element) {
+            errorPlacement: function (error, element) {
                 var group = element.closest('.input-group');
                 if (group.length) {
                     group.after(error.addClass('invalid-feedback'));
@@ -100,7 +136,7 @@ var KTFormControls = function () {
             },
 
             //display error alert on form submit
-            invalidHandler: function(event, validator) {
+            invalidHandler: function (event, validator) {
                 var alert = $('#kt_form_1_msg');
                 alert.removeClass('kt--hide').show();
                 KTUtil.scrollTop();
@@ -113,7 +149,7 @@ var KTFormControls = function () {
     }
 
     var validateform1 = function () {
-        $( "#frmchngpsw" ).validate({
+        $("#frmchngpsw").validate({
             // define validation rules
             rules: {
                 current_password: {
@@ -127,7 +163,7 @@ var KTFormControls = function () {
                 }
             },
             messages: {
-                
+
                 'current_password': {
                     required: "Please enter current password",
                 },
@@ -139,7 +175,7 @@ var KTFormControls = function () {
                 }
             },
 
-            errorPlacement: function(error, element) {
+            errorPlacement: function (error, element) {
                 var group = element.closest('.input-group');
                 if (group.length) {
                     group.after(error.addClass('invalid-feedback'));
@@ -149,7 +185,7 @@ var KTFormControls = function () {
             },
 
             //display error alert on form submit
-            invalidHandler: function(event, validator) {
+            invalidHandler: function (event, validator) {
                 var alert = $('#kt_form_1_msg');
                 alert.removeClass('kt--hide').show();
                 KTUtil.scrollTop();
@@ -161,7 +197,7 @@ var KTFormControls = function () {
         });
     }
     var validateform2 = function () {
-        $( "#frmmyprofile" ).validate({
+        $("#frmmyprofile").validate({
             // define validation rules
             rules: {
                 name: {
@@ -256,7 +292,7 @@ var KTFormControls = function () {
 
             },
 
-            errorPlacement: function(error, element) {
+            errorPlacement: function (error, element) {
                 var group = element.closest('.input-group');
                 if (group.length) {
                     group.after(error.addClass('invalid-feedback'));
@@ -266,7 +302,7 @@ var KTFormControls = function () {
             },
 
             //display error alert on form submit
-            invalidHandler: function(event, validator) {
+            invalidHandler: function (event, validator) {
                 var alert = $('#kt_form_1_msg');
                 alert.removeClass('kt--hide').show();
                 KTUtil.scrollTop();
@@ -280,7 +316,7 @@ var KTFormControls = function () {
 
     return {
         // public functions
-        init: function() {
+        init: function () {
             validateform();
             validateform1();
             validateform2();
@@ -288,7 +324,7 @@ var KTFormControls = function () {
     };
 }();
 
-jQuery(document).ready(function() {
+jQuery(document).ready(function () {
     KTFormControls.init();
     $("#reset").click(function () {
         $(':input', '#frmAddEdit').not(':button, :submit, :reset, :hidden').val('').prop('checked', false).prop('selected', false);
@@ -296,125 +332,124 @@ jQuery(document).ready(function() {
     });
 
     $('#role_id').select2();
-	$("#role_id").change(function(){
+    $("#role_id").change(function () {
         var roleId = $("#role_id").val();
         var id = $("#id").val();
-		$.ajax({
-			type: 'POST',
-			url: '/admin/user/get-rights',
-			dataType: 'json',
-			data: {role_id:roleId,id:id,_token : $('meta[name="csrf-token"]').attr('content')},
-			success: function(response){
+        $.ajax({
+            type: 'POST',
+            url: '/admin/user/get-rights',
+            dataType: 'json',
+            data: { role_id: roleId, id: id, _token: $('meta[name="csrf-token"]').attr('content') },
+            success: function (response) {
                 console.log('response', response);
-				if(response.result != ""){
-					$(".rights").html(response.result);
-				}else{
-					$(".rights").html("<p class='text-danger'>Something went wrong.</p>");
-				}
-			}
+                if (response.result != "") {
+                    $(".rights").html(response.result);
+                } else {
+                    $(".rights").html("<p class='text-danger'>Something went wrong.</p>");
+                }
+            }
         });
-        
-	});
-   
-    $('#role_id').trigger('change');
-	
-	$('body').on('click', '#checkAll', function () {
-        
-		if ($(this).prop('checked')) {
-			$('.checkbox').prop('checked', true);
-			$('.checkAllByModule').prop('checked', true);
-		}
-		else {
-			$('.checkbox').prop('checked', false);
-			$('.checkAllByModule').prop('checked', false);
-		}
-	});
-	$('#checkAll').trigger('change');
-	$('body').on('click', '.checkAllByModule', function () {
-		var id = this.id;
-		$('input:checkbox.'+id+'').each(function () {
-			if ($('#'+id).prop('checked')) {
-				$(this).prop('checked', true);
-			}
-			else {
-				$(this).prop('checked', false);
-			}
-		});
-		$(this).trigger('change');
-	});
-	$('body').on('click', '.checkbox', function () {
-		var myClass = $(this).attr("class");
-		var split = myClass.split(" ");
-		var dynamicClass = split[split.length-1];
-        // if ($('.'+dynamicClass).prop('checked') == true) {
-		// 	$('#'+dynamicClass).prop('checked', false);
-		// }
-		if($('.'+dynamicClass).not(':checked').length){
-			$('#'+dynamicClass).prop('checked', false);
-		}else{
-			$('#'+dynamicClass).prop('checked', true);
-		} 
+
     });
 
-	$( ".checkAllByModule" ).each(function(){
-		Id = this.id;
-		if($('.'+Id).not(':checked').length){
-			$('#'+Id).prop('checked', false);
-		}else{
-			$('#'+Id).prop('checked', true);
-		} 
-	});
+    $('#role_id').trigger('change');
+
+    $('body').on('click', '#checkAll', function () {
+
+        if ($(this).prop('checked')) {
+            $('.checkbox').prop('checked', true);
+            $('.checkAllByModule').prop('checked', true);
+        }
+        else {
+            $('.checkbox').prop('checked', false);
+            $('.checkAllByModule').prop('checked', false);
+        }
+    });
+    $('#checkAll').trigger('change');
+    $('body').on('click', '.checkAllByModule', function () {
+        var id = this.id;
+        $('input:checkbox.' + id + '').each(function () {
+            if ($('#' + id).prop('checked')) {
+                $(this).prop('checked', true);
+            }
+            else {
+                $(this).prop('checked', false);
+            }
+        });
+        $(this).trigger('change');
+    });
+    $('body').on('click', '.checkbox', function () {
+        var myClass = $(this).attr("class");
+        var split = myClass.split(" ");
+        var dynamicClass = split[split.length - 1];
+        // if ($('.'+dynamicClass).prop('checked') == true) {
+        // 	$('#'+dynamicClass).prop('checked', false);
+        // }
+        if ($('.' + dynamicClass).not(':checked').length) {
+            $('#' + dynamicClass).prop('checked', false);
+        } else {
+            $('#' + dynamicClass).prop('checked', true);
+        }
+    });
+
+    $(".checkAllByModule").each(function () {
+        Id = this.id;
+        if ($('.' + Id).not(':checked').length) {
+            $('#' + Id).prop('checked', false);
+        } else {
+            $('#' + Id).prop('checked', true);
+        }
+    });
 });
 
-$('#country_id').change(function(){
+$('#country_id').change(function () {
     var countryId = $(this).val();
-    if(countryId){
+    if (countryId) {
         $.ajax({
-            type:"GET",
-            url:"/admin/user/state?countryId="+countryId,
+            type: "GET",
+            url: "/admin/user/state?countryId=" + countryId,
             dataType: "json",
-            success:function(res){
-                if(res){
+            success: function (res) {
+                if (res) {
                     $("#state_id").empty();
                     $("#state_id").append('<option>--Select State--</option>');
-                    $.each(res,function(key,value)
-                    {
-                        $("#state_id").append('<option value="'+value.id+'">'+value.name+'</option>');
+                    $.each(res, function (key, value) {
+                        $("#state_id").append('<option value="' + value.id + '">' + value.name + '</option>');
                     });
                 }
-                else{
+                else {
                     $("#state_id").empty();
                 }
             }
         });
     }
-    else{   
+    else {
         $("#state_id").empty();
         $("#city_id").empty();
     }
 });
 
 
-$('#state_id').on('change',function(){
-    var stateID = $(this).val();    
-    if(stateID){
+$('#state_id').on('change', function () {
+    var stateID = $(this).val();
+    if (stateID) {
         $.ajax({
-        type:"GET",
-        url:"/admin/user/cities?stateID="+stateID,
-        success:function(res){               
-            if(res){
-                $("#city_id").empty();
-                $.each(res,function(key,value){
-                        $("#city_id").append('<option value="'+value.id+'">'+value.name+'</option>');                  
-                });
-        
-            }else{
-            $("#city_id").empty();
+            type: "GET",
+            url: "/admin/user/cities?stateID=" + stateID,
+            success: function (res) {
+                if (res) {
+                    $("#city_id").empty();
+                    $.each(res, function (key, value) {
+                        $("#city_id").append('<option value="' + value.id + '">' + value.name + '</option>');
+                    });
+
+                } else {
+                    $("#city_id").empty();
+                }
             }
-        }
         });
-    }else{
+    } else {
         $("#city_id").empty();
     }
-    
+
 });
