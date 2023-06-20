@@ -35,7 +35,7 @@ License: You must have a valid license purchased only from themeforest(the above
 		<link href="{{ asset('admin/assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
 
 		<!--end::Layout Skins -->
-		<link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
+		<!-- <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" /> -->
 	</head>
 
 	<!-- end::Head -->

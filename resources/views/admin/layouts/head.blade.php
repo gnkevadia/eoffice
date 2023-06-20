@@ -81,5 +81,5 @@
 <!--begin::Layout Skins(used by all pages) -->
 
 <!--end::Layout Skins -->
-<link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
+<!-- <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" /> -->
 	
