@@ -72,7 +72,7 @@ class UserController extends Controller
             'name.unique' => 'Name already exists',
             'name.regex' => 'Name cannot have character other than a-z AND A-Z',
             'email.required' => 'Please specify Email',
-            'Password.required' => 'Please specify Passsword',
+            'password.required' => 'Please specify Passsword',
             'address1.required' => 'Please specify Address',
             'address2.required' => 'Please specify Address',
             'postal_code.required' => 'Please specify Postcode',
@@ -90,7 +90,7 @@ class UserController extends Controller
         $regxvalidator = [
             'name' => 'required | regex:/^[a-zA-Z ]*$/ | unique:modules,name,1,deleted',
             'email' => 'required | email',
-            'Password' => 'required',
+            'password' => 'required',
             'address1' => 'required',
             'address2' => 'required',
             'postal_code' => 'required | integer',

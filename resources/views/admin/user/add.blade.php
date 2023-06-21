@@ -57,11 +57,7 @@
                             <label>Password<span class="required">*</span></label>
                             <input type="password" id="password" name="password" data-toggle="tooltip" title="Password" class="form-control" placeholder="Password" value="{{ old('password') }}">
                         </div>
-                        <!-- <div class="form-group">
-                                        <label>Re-Password<span class="required">*</span></label>
-                                        <input type="text" id="re_password" name="re_password" data-toggle="tooltip" title="Re-Password"
-                                                class="form-control" placeholder="Re-Password" value="{{ old('re_password') }}">
-                                    </div> -->
+
 
                         <div class="form-group">
                             <label>Address1<span class="required">*</span></label>
@@ -238,7 +234,7 @@
 @stop
 
 @section('metronic_js')
-<!-- <script src="{{ asset('admin/assets/js/pages/custom/user.js') }}"></script> -->
+<script src="{{ asset('admin/assets/js/pages/custom/user.js') }}"></script>
 <script src="{{ asset('admin/assets/js/pages/crud/file-upload/dropzonejs.js') }}" type="text/javascript"></script>
 <script>
     $(document).ready(function() {
