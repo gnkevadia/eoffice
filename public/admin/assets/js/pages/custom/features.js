@@ -64,7 +64,6 @@ var KTDatatableDataLocalDemo = function () {
                             field: 'status',
                             title: 'Status',
                             template: function (row) {
-                                // console.log(row.status);
                                 let statuss = '';
                                 if (row.status == 1) {
                                     statuss = 'Active';

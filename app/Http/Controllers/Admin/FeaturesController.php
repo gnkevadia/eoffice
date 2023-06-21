@@ -8,6 +8,8 @@ use App\Models\Features;
 use App\Library\Common;
 use App\Models\ProjectMaster;
 use App\Models\Priority;
+use App\Models\Company;
+use Illuminate\Support\Facades\Session;
 
 class FeaturesController extends Controller
 {
@@ -25,7 +27,8 @@ class FeaturesController extends Controller
 
     public function add(Request $request)
     {
-        $project =  ProjectMaster::where('deleted', 0)->get();
+        $project = new ProjectMaster();
+        $arrproject = $project->getAll();
         $priority =  Priority::get();
         $messages = [
             'Project.required' => 'Please select Module Name',
@@ -40,20 +43,26 @@ class FeaturesController extends Controller
             'description' => 'required',
         ];
         if ($request->isMethod('post')) {
+            $request->merge(["company_id" => Session::get('company_id')]);
             $arrExpect = [
                 'packageId', 'cmsId', 'open_in_new_tabs'
             ];
             return Common::commanAddPage($this->objModel, $request, $messages, $regxvalidator, null, null, $arrExpect);
         } else {
-            // return view('admin.Features.add', compact('project'));
-            return view(RENDER_URL . '.add', compact('project', 'priority'));
+            if (session()->has('superAdmin')) {
+                $companys = new Company();
+                $companyData = $companys->getAll();
+                return view(RENDER_URL . '.add', compact('arrproject', 'priority', 'companyData'));
+            }
+            return view(RENDER_URL . '.add', compact('arrproject', 'priority'));
         }
     }
 
     public function edit(Request $request, $id = null)
     {
         $data = $this->objModel->getOne($id);
-        $project =  ProjectMaster::where('deleted', 0)->get();
+        $project = new ProjectMaster();
+        $arrproject = $project->getAll();
         $priority =  Priority::get();
         $messages = [
             'Project.required' => 'Please select Module Name',
@@ -75,7 +84,12 @@ class FeaturesController extends Controller
             ];
             return Common::commanEditPage($this->objModel, $request, $messages, $regxvalidator, $id, null, null, $arrExpect);
         } else {
-            return view(RENDER_URL . '.edit', compact('data', 'project', 'priority'));
+            if (session()->has('superAdmin')) {
+                $companys = new Company();
+                $companyData = $companys->getAll();
+                return view(RENDER_URL . '.edit', compact('data', 'arrproject', 'priority', 'companyData'));
+            }
+            return view(RENDER_URL . '.edit', compact('data', 'arrproject', 'priority'));
         }
     }
 

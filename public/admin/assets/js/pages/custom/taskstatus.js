@@ -9,7 +9,7 @@ var KTDatatableDataLocalDemo = function () {
     var init = function () {
         var dataJSONArray;
         $.ajax({
-            url: 'task',
+            url: 'task-status',
             dataType: 'json',
             type: 'get',
             contentType: 'application/json',
@@ -52,46 +52,11 @@ var KTDatatableDataLocalDemo = function () {
                             selector: { class: 'kt-checkbox--solid' },
                             textAlign: 'center',
                         }, {
-                            field: 'task',
-                            title: 'Task',
-                        }, {
-                            field: 'project',
-                            title: 'Project',
-                        }, {
-                            field: 'features',
-                            title: 'Features',
-                        }, {
-                            field: 'description',
-                            title: 'Description',
-                        }, {
-                            field: 'assignee',
-                            title: 'Assignee',
-                        },
-                        {
-                            field: 'start_date',
-                            title: 'Start Date',
+                            field: 'name',
+                            title: 'Name',
                             template: function (row) {
-                                var date = new Date(row.start_date);
-                                var month = ("0" + (date.getMonth() + 1)).slice(-2)
-                                var dates = ("0" + (date.getDate())).slice(-2);
-                                var year = date.getFullYear();
-                                return dates + "-" + month + "-" + year;
+                                console.log("jaaa",row);
                             }
-
-                        }, {
-                            field: 'end_date',
-                            title: 'End Date',
-                            template: function (row) {
-                                var date = new Date(row.end_date);
-                                var month = ("0" + (date.getMonth() + 1)).slice(-2)
-                                var dates = ("0" + (date.getDate())).slice(-2);
-                                var year = date.getFullYear();
-                                return dates + "-" + month + "-" + year;
-                            }
-                        },
-                        {
-                            field: 'status',
-                            title: 'Status',
                         }, {
                             field: 'Actions',
                             title: 'Actions',
@@ -105,7 +70,7 @@ var KTDatatableDataLocalDemo = function () {
                                 // 	roleBasedAction += '<a href="'+viewURL+'/'+row.id+'" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Edit details"><i class="flaticon-eye"></i></a>'
                                 // }
                                 // if(isUpdateStatus == true){
-                                roleBasedAction += '<a href="task/edit/' + row.id + '" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Edit details"><i class="la la-edit"></i></a>'
+                                roleBasedAction += '<a href="task-status/edit/' + row.id + '" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Edit details"><i class="la la-edit"></i></a>'
                                 // }
                                 // if(isDeleteStatus == true){
                                 roleBasedAction += '<a href="javascript:;" data-toggle="modal" data-target="#delete_modules" data-id="' + row.id + '"  class="btn btn-sm btn-clean btn-icon btn-icon-md delete_row" title="Delete details"><i class="flaticon-delete"></i></a>'

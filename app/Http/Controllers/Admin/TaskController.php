@@ -9,6 +9,7 @@ use App\Models\Task;
 use App\Models\Features;
 use App\Models\Priority;
 use App\Models\ProjectMaster;
+use App\Models\Task_Status;
 use App\Models\Users;
 
 use App\Library\Common;
@@ -30,11 +31,13 @@ class TaskController extends Controller
 
     public function add(Request $request)
     {
-
-        $data =  Features::where('deleted', 0)->get();
+        $features = new features();
+        $arrfeatures = $features->getAll();
         $project =  ProjectMaster::where('deleted', 0)->get();
         $priority =  Priority::get();
-        $users =  Users::where('deleted', 0)->get();
+        $taskstatus =  Task_Status::where('deleted', 0)->get();
+        $users = new Users();
+        $arrusers = $users->getAll();
         $messages = [
             'Project.required' => 'Please select Module Name',
             'task.required' => 'Please specify Task',
@@ -45,6 +48,7 @@ class TaskController extends Controller
             'features.required' => 'Please specify Features',
             'start_date.required' => 'Please specify Start Date',
             'end_date.required' => 'Please specify End Date',
+            'hour_task.required' => 'Please specify Hour of Task',
         ];
         $regxvalidator = [
             'Project' => 'required',
@@ -53,6 +57,7 @@ class TaskController extends Controller
             'description' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
+            'hour_task' => 'required',
         ];
         $arrFile = array('name' => 'file', 'type' => 'image', 'path' => 'images/task/', 'predefine' => '', 'except' => 'file_exist', 'multiple_file' => true);
         if ($request->isMethod('post')) {
@@ -63,17 +68,20 @@ class TaskController extends Controller
             $request['end_date'] = date('Y-m-d H:i:s');
             return Common::commanAddPage($this->objModel, $request, $messages, $regxvalidator, $arrFile, null, $arrExpect);
         } else {
-            return view(RENDER_URL . '.add', compact('data', 'project', 'priority', 'users'));
+            return view(RENDER_URL . '.add', compact('arrfeatures', 'project', 'priority', 'arrusers','taskstatus'));
         }
     }
 
     public function edit(Request $request, $id = null)
     {
         $data = $this->objModel->getOne($id);
-        $features =  Features::where('deleted', 0)->get();
+        $features = new features();
+        $arrfeatures = $features->getAll();
         $project =  ProjectMaster::where('deleted', 0)->get();
         $priority =  Priority::get();
-        $users =  Users::where('deleted', 0)->get();
+        $taskstatus =  Task_Status::where('deleted', 0)->get();
+        $users = new Users();
+        $arrusers = $users->getAll();
         $messages = [
             'Project.required' => 'Please select Module Name',
             'task.required' => 'Please specify Task',
@@ -102,7 +110,7 @@ class TaskController extends Controller
             $request->merge(['path' => 'images/task/']);
             return Common::commanEditPage($this->objModel, $request, $messages, $regxvalidator, $id, null, null, $arrExpect);
         } else {
-            return view(RENDER_URL . '.edit', compact('data', 'features', 'project', 'priority', 'users'));
+            return view(RENDER_URL . '.edit', compact('data', 'arrfeatures', 'project', 'priority', 'arrusers','taskstatus'));
         }
     }
     public function delete(Request $request)

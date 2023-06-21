@@ -41,7 +41,7 @@ class Role extends Model
         } else {
             $query->orderBy('id', 'desc');
         }
-        return $query->where($where)
+        return $query
             ->select('*', DB::raw('CASE WHEN status = 1 THEN "Active" ELSE "Inactive" END as status'))
             ->whereRaw($dynamicWhere)
             ->get();

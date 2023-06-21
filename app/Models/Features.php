@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ProjectMaster;
+use Illuminate\Support\Facades\Session;
 
 class Features extends Model
 {
@@ -23,7 +24,13 @@ class Features extends Model
 
     public function getAll($orderby = null, $where = array(), $dynamicWhere = '')
     {
-        $data =  ProjectMaster::join('features_master', 'projectmaster.id', '=', 'features_master.project')->where('features_master.deleted' , 0)->select('features_master.*', 'projectmaster.name as project')->get();
+        if (Session::get('superAdmin')) {
+            $where = ['features_master.deleted' => 0];
+        } else {
+            $role_id = Session::get('settings');
+            $where = ['features_master.deleted' => 0, 'features_master.company_id' => Session::get('company_id')];
+        }
+        $data =  ProjectMaster::join('features_master', 'projectmaster.id', '=', 'features_master.project')->where($where)->select('features_master.*', 'projectmaster.name as project')->get();
         return $data;
     }
 

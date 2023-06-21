@@ -360,6 +360,7 @@ class Common extends Eloquent
                 $task->description = $request['description'];
                 $task->priority = $request['priority'];
                 $task->assignee = $request['assignee'];
+                $task->hour_task = $request['hour_task'];
                 $task->start_date = $request['start_date'];
                 $task->end_date = $request['end_date'];
                 $task->cycle = $request['cycle'];

@@ -81,7 +81,7 @@
                             <label for="exampleSelect1">Features<span class="required">*</span></label>
                             <select class="form-control" id="features" name="features">
                                 <option value="" data-id="0">-Select Features-</option>
-                                @foreach ($data as $value)
+                                @foreach ($arrfeatures as $value)
                                 <option value="{{$value->id}}">{{$value->name}}</option>
                                 @endforeach
                             </select>
@@ -116,16 +116,19 @@
                             <label for="exampleSelect1">Assignee<span class="required">*</span></label>
                             <select class="form-control" id="assignee" name="assignee">
                                 <option value="" data-id="0">-Select Assignee-</option>
-                                @foreach ($users as $value)
+                                @foreach ($arrusers as $value)
                                 <option value="{{$value->id}}">{{$value->name}}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group">
+                            <label>Hour of Task<span class="required">*</span></label>
+                            <input type="text" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" id="hour_task" name="hour_task" data-toggle="tooltip" title="Enter Hour of Task" class="form-control" placeholder="Enter Hour of Task" value="{{ old('hour_task') }}">
+                        </div>
+                        <div class="form-group">
                             <label>Start Date<span class="required">*</span></label>
                             <input type="date" id="start_date" name="start_date" data-toggle="tooltip" title="Enter Start Date" class="form-control" placeholder="Enter Start Date" value="{{ old('start_date') }}">
                         </div>
-
                         <div class="form-group">
                             <label>End Date<span class="required">*</span></label>
                             <input type="date" id="end_date" name="end_date" data-toggle="tooltip" title="Enter End Date" class="form-control" placeholder="Enter End Date" value="{{ old('end_date') }}">
@@ -145,8 +148,10 @@
                         <div class="form-group">
                             <label for="exampleSelect1">Status<span class="required">*</span></label>
                             <select class="form-control" id="status" name="status">
-                                <option value="1" selected>Active</option>
-                                <option value="0">Inactive</option>
+                                <option value="" data-id="0">-Select Status-</option>
+                                @foreach ($taskstatus as $value)
+                                <option value="{{$value->id}}">{{$value->name}}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="kt-portlet__foot">

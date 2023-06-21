@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use APP\Models\Task_image;
 use Illuminate\Support\Facades\File;
 use Monolog\Handler\ElasticaHandler;
+use Illuminate\Support\Facades\Session;
 
 class Task extends Model
 {
@@ -46,6 +47,7 @@ class Task extends Model
         $task->description = $request['description'];
         $task->priority = $request['priority'];
         $task->assignee = $request['assignee'];
+        $task->hour_task = $request['hour_task'];
         $task->start_date = $request['start_date'];
         $task->end_date = $request['end_date'];
         $task->cycle = $request['cycle'];
@@ -71,7 +73,13 @@ class Task extends Model
     }
     public function getAll($orderby = null, $where = array(), $dynamicWhere = '')
     {
-        $data =  Task::join('users', 'task_master.assignee', '=', 'users.id')->join('features_master', 'task_master.features', '=', 'features_master.id')->join('projectmaster', 'task_master.project', '=', 'projectmaster.id')->where('task_master.deleted', 0)->select('task_master.*', 'features_master.name as features', 'projectmaster.name as project', 'users.name as assignee')->get();
+        if(Session::get('superAdmin')){
+            $where = ['users.deleted' => 0];
+        }else{
+            $role_id = Session::get('settings');
+            $where = ['task_master.deleted' => 0,'users.company_id' => Session::get('company_id'),'users.role_id' => $role_id['USER']];
+        }
+        $data =  Task::join('task_status', 'task_master.status', '=', 'task_status.id')->join('users', 'task_master.assignee', '=', 'users.id')->join('features_master', 'task_master.features', '=', 'features_master.id')->join('projectmaster', 'task_master.project', '=', 'projectmaster.id')->where($where)->select('task_master.*', 'features_master.name as features', 'projectmaster.name as project', 'users.name as assignee','task_status.name as status')->get();
         return $data;
     }
     public function deleteOne($id, $arrUpdate)

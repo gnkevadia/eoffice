@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Session;
 
 class ProjectMaster extends Model
 {
@@ -17,9 +18,17 @@ class ProjectMaster extends Model
     {
         return ProjectMaster::where('id', $id)->update($arrUpdate);
     }
-    public function getAll($orderby=null, $where=array(), $dynamicWhere='')
+    public function getAll($orderby = null, $where = array(), $dynamicWhere = '')
     {
-        return ProjectMaster::join('users','users.id','=','projectmaster.manager')->where('projectmaster.deleted' , 0)->select('projectmaster.*','users.name as manager')->get();
+        if (Session::get('superAdmin')) {
+            $where = ['projectmaster.deleted' => 0];
+        } else {
+            // $role_id = Session::get('settings');
+            $where = ['projectmaster.deleted' => 0, 'projectmaster.company_id' => Session::get('company_id')];
+        }
+        $data =  ProjectMaster::join('users', 'users.id', '=', 'projectmaster.manager')->where($where)->select('projectmaster.*', 'users.name as manager')->get();
+        return $data;
+
     }
     public function deleteOne($id, $arrUpdate)
     {
@@ -34,5 +43,4 @@ class ProjectMaster extends Model
         $allids = ltrim($ids, 'on,');
         return ProjectMaster::whereIn('id', explode(',', $allids))->update($arrUpdate);
     }
-   
 }

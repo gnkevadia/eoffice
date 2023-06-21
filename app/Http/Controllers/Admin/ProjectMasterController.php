@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\ProjectMaster;
 use App\Models\Users;
 use App\Library\Common;
-
+use Illuminate\Support\Facades\Session;
 
 class ProjectMasterController extends Controller
 {
@@ -23,6 +23,11 @@ class ProjectMasterController extends Controller
    
    public function add(Request $request){
     if($request->isMethod('post')) {
+        if (Session::get('superAdmin')) {
+            $request->merge(["company_id" => Session::get('company_id')]);
+        } else {
+            $request->merge(["company_id" => Session::get('company_id')]);
+        }
         $messages = [
             'name.required' => 'Please Enter Name',
             'name.regex' => 'Name cannot have character other than a-z AND A-Z',

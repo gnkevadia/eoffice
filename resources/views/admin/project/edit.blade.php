@@ -50,8 +50,16 @@
                             <input type="text" id="name" name="name" data-toggle="tooltip" title="Enter Name" class="form-control" placeholder="Enter Name" value="{{ $data->name }}" />
                         </div>
                         <div class="form-group">
-                            <label>Manager<span class="required">*</span></label>
-                            <input type="text" id="manager" name="manager" data-toggle="tooltip" title="Enter Manager Name" class="form-control" placeholder="Enter Manager Name" value="{{ $data->manager }}" />
+                            <label>Manager<span class="required"><code>*</code></span></label>
+                            <div>
+                                <select name="department_id" id="department" class="form-control">
+                                    <option value="">-Select Manager-</option>
+                                    @foreach ($arrDepartment as $department)
+                                    <option value="{{ $department->id }}" {{($department->id == $data->department_id ? 'selected' : '')}}>{{ $department->name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
 
                         <div class="form-group">

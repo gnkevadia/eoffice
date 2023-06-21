@@ -37,16 +37,19 @@
         font-weight: 900;
     }
 
-    .childImage{
+    .childImage {
         width: 154px;
         border: solid black 1px;
         text-align: center;
         height: 89px;
-    }.ImagesPdfCss{
+    }
+
+    .ImagesPdfCss {
         display: flex;
         justify-content: center;
     }
-    .childImage{
+
+    .childImage {
         position: relative;
     }
 </style>
@@ -131,7 +134,7 @@
                             <?php
                             $ext = pathinfo($image->images, PATHINFO_EXTENSION);
                             if ($ext == 'pdf') { ?>
-                                <div class="col-lg-2 col-md-4 my-3 ml-3 mb-4 ImagesPdfCss" >
+                                <div class="col-lg-2 col-md-4 my-3 ml-3 mb-4 ImagesPdfCss">
                                     <div class="childImage">
                                         <img src="{{url('images/profile_image')}}/pdf.jpg" height="80" alt="" onclick="window.open('{{url('images/task')}}/{{$image->images}}','_blank')" style="padding-top: 4px;">
                                         <input id="dltImg" type="text" name="remainimg[]" value="{{$image->id}}">
@@ -163,10 +166,14 @@
                             <label for="exampleSelect1">Assignee<span class="required">*</span></label>
                             <select class="form-control" id="assignee" name="assignee">
                                 <option value="" data-id="0">-Select Assignee-</option>
-                                @foreach ($users as $value)
+                                @foreach ($arrusers as $value)
                                 <option value="{{$value->id}}" {{($value->id == $data->assignee ? 'selected' : '')}}>{{$value->name}}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Hour of Task<span class="required">*</span></label>
+                            <input type="text" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" id="hour_task" name="hour_task" data-toggle="tooltip" title="Enter Hour of Task" class="form-control" placeholder="Enter Hour of Task" value="{{$data->hour_task}}">
                         </div>
                         <div class="form-group">
                             <label>Start Date<span class="required">*</span></label>
@@ -200,8 +207,10 @@
                         <div class="form-group">
                             <label for="exampleSelect1">Status<span class="required">*</span></label>
                             <select class="form-control" id="status" name="status">
-                                <option {{($data->status == 1 ? 'selected' : '')}} value="1">Active</option>
-                                <option {{($data->status == 0 ? 'selected' : '')}} value="0">Inactive</option>
+                                <option value="" data-id="0">-Select Status-</option>
+                                @foreach ($taskstatus as $value)
+                                <option value="{{$value->id}}" {{($value->id == $data->status ? 'selected' : '')}}>{{$value->name}}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="kt-portlet__foot">

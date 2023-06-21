@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\TaskController;
 use App\Http\Controllers\Admin\ProjectMasterController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\BusinessUnitController;
+use App\Http\Controllers\Admin\TaskStatusController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Auth;
@@ -125,6 +126,13 @@ Route::group(['prefix' => 'admin', 'namespace' => '\App\Http\Controllers'], func
     Route::match(['get', 'post'], '/department/edit/{id}', [DepartmentController::class, 'edit']); //my
     Route::match(['get', 'post'], '/department/delete', [DepartmentController::class, 'delete']); //my
     Route::match(['get', 'post'], '/department/toggle', [DepartmentController::class, 'toggleStatus']);
+
+    /** Task Status Routes (Admin) */
+    Route::match(['get', 'post'], '/task-status', [TaskStatusController::class, 'index']); //my
+    Route::match(['get', 'post'], '/task-status/add', [TaskStatusController::class, 'add']); //my
+    Route::match(['get', 'post'], '/task-status/edit/{id}', [TaskStatusController::class, 'edit']); //my
+    Route::match(['get', 'post'], '/task-status/delete', [TaskStatusController::class, 'delete']); //my
+    Route::match(['get', 'post'], '/task-status/toggle', [TaskStatusController::class, 'toggleStatus']);
 
     /** Menu-type Management Routes (Admin) */
     Route::match(['get', 'post'], '/menu-types', 'Admin\MenuTypesController@index');

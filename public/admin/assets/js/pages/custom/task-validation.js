@@ -40,6 +40,9 @@ var KTFormControls = function () {
                 cycle: {
                     required: true
                 },
+                hour_task: {
+                    required: true
+                },
             },
             messages: {
                 'task': {
@@ -71,6 +74,9 @@ var KTFormControls = function () {
                 },
                 'cycle': {
                     required: "Please enter Cycle"
+                },
+                'hour_task': {
+                    required: "Please enter Hour of Task"
                 },
             },
 
