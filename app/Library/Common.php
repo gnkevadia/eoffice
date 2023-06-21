@@ -1322,18 +1322,18 @@ class Common extends Eloquent
             @unlink(public_path($arrFile['path'] . '/' . $arrFile['existing']));
             @unlink(public_path($arrFile['path'] . '/' . str_replace(pathinfo($arrFile['existing'], PATHINFO_EXTENSION), 'png', $arrFile['existing'])));
         }
-        // $file_count = count($request->file);
-        // if ($file_count > 1) {
-        //     $files = $request->file;
-        //     // die('x');
-        //     foreach ($files as $file) {
-        //         // echo '<pre>'; print_r(str_replace('_exist','',$arrFile['except'])); echo '</pre>'; die();
-        //         $image = $file;
-        //         $extension = $image->getClientOriginalExtension();
-        //         $img_name  = $arrFile['predefine'] ? $arrFile['predefine'] : rand() . time() . '.' . $extension;
-        //         $file->move(public_path($arrFile['path']), $img_name);
-        //     }
-        // } else {
+        /*      $file_count = count($request->file);
+        if ($file_count > 1) {
+            $files = $request->file;
+            // die('x');
+            foreach ($files as $file) {
+                // echo '<pre>'; print_r(str_replace('_exist','',$arrFile['except'])); echo '</pre>'; die();
+                $image = $file;
+                $extension = $image->getClientOriginalExtension();
+                $img_name  = $arrFile['predefine'] ? $arrFile['predefine'] : rand() . time() . '.' . $extension;
+                $file->move(public_path($arrFile['path']), $img_name);
+            }
+        } else { */
         $image     = $request->file(str_replace('_exist', '', $arrFile['except']));
         $extension = $image->getClientOriginalExtension();
         $img_name  = $arrFile['predefine'] ? $arrFile['predefine'] : rand() . time() . '.' . $extension;

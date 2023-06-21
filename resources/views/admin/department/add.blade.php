@@ -52,15 +52,17 @@
                             </div>
                         </div>
                         @include('admin.includes.errormessage')
+                        @if(Session::get('superAdmin'))
                         <div class="form-group">
-                            <label for="exampleSelect1">Business Name<span class="required">*</span></label>
-                            <select class="form-control" id="business" name="business_id">
-                                <option value="" data-id="0">-Select Business Name-</option>
-                                @foreach ($data as $value)
-                                <option value="{{$value->id}}">{{$value->name}}</option>
+                            <label for="exampleSelect1">Company Name<span class="required">*</span></label>
+                            <select class="form-control" id="company" name="company_id">
+                                <option value="" data-id="0">-Select Company Name-</option>
+                                @foreach ($companyData as $company)
+                                <option value="{{$company->id}}">{{$company->name}}</option>
                                 @endforeach
                             </select>
                         </div>
+                        @endif
                         <div class="form-group">
                             <label>Name<span class="required">*</span></label>
                             <input type="text" id="name" name="name" data-toggle="tooltip" title="Enter Name" class="form-control" placeholder="Enter Name" value="{{ old('name') }}">

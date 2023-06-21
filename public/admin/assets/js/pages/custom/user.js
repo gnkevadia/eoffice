@@ -64,9 +64,7 @@ var KTFormControls = function () {
                 business_id: {
                     required: true
                 },
-                file: {
-                    required: true
-                },
+
             },
             messages: {
                 'name': {
@@ -120,9 +118,7 @@ var KTFormControls = function () {
                 'business_id': {
                     required: "Please select Business",
                 },
-                'file': {
-                    required: "Please select File",
-                },
+
 
             },
 

@@ -65,14 +65,42 @@ class UserController extends Controller
         $arrBusiness = $dbBusiness->getAll();
         $dbcity = new City();
         $arrCity = $dbcity->getAll();
+        $dbDepartment = new Department();
+        $arrDepartment = $dbDepartment->getAll();
         $messages = [
             'name.required' => 'Please specify Name',
             'name.unique' => 'Name already exists',
             'name.regex' => 'Name cannot have character other than a-z AND A-Z',
+            'email.required' => 'Please specify Email',
+            'Password.required' => 'Please specify Passsword',
+            'address1.required' => 'Please specify Address',
+            'address2.required' => 'Please specify Address',
+            'postal_code.required' => 'Please specify Postcode',
+            'postal_code.integer' => 'Please specify Postcode in Digits',
+            'country_id.required' => 'Please specify Country',
+            'state_id.required' => 'Please specify State',
+            'city_id.required' => 'Please specify City',
+            'company_id.required' => 'Please specify Company',
+            'department_id.required' => 'Please specify Department',
+            'business_id.required' => 'Please specify Business',
+            'role_id.required' => 'Please specify Role',
+
         ];
 
         $regxvalidator = [
             'name' => 'required | regex:/^[a-zA-Z ]*$/ | unique:modules,name,1,deleted',
+            'email' => 'required | email',
+            'Password' => 'required',
+            'address1' => 'required',
+            'address2' => 'required',
+            'postal_code' => 'required | integer',
+            'country_id' => 'required ',
+            'state_id' => 'required ',
+            'city_id' => 'required ',
+            'company_id' => 'required ',
+            'department_id' => 'required ',
+            'business_id' => 'required ',
+            'role_id' => 'required ',
         ];
         $arrFile = array('name' => 'profile_photo', 'type' => 'image', 'resize' => '50', 'path' => 'images/users/', 'predefine' => '', 'except' => 'file_exist');
         if ($request->isMethod('post')) {
@@ -80,7 +108,8 @@ class UserController extends Controller
             if (is_array($request->role_id)) {
                 $request->merge(["role_id" => join(',', $request->role_id)]);
             }
-            if (Session::get('role') == '2') {
+            $role = Session::get('settings');
+            if (Session::get('role') == $role['SUB_ADMIN']) {
                 $request->merge(["company_id" => Session::get('company_id')]);
             }
             if (Session::get('superAdmin')) {
@@ -93,7 +122,7 @@ class UserController extends Controller
             $companyData = $companys->getAll();
             return view(RENDER_URL . '.add', compact('arrRole', 'arrCountry', 'arrState', 'arrCity', 'companyData', 'arrBusiness'));
         }
-        return view(RENDER_URL . '.add', compact('arrRole', 'arrCountry', 'arrState', 'arrCity'));
+        return view(RENDER_URL . '.add', compact('arrRole', 'arrCountry', 'arrState', 'arrCity', 'arrDepartment'));
     }
 
     public function getDepartment(Request $request)
@@ -101,7 +130,7 @@ class UserController extends Controller
         if ($request->ajax()) {
             $id = $request['id'];
             $getDepartment = new Department();
-            $departments = $getDepartment->getAll(null, $id);
+            $departments = $getDepartment->getById($id);
             return json_encode($departments);
         }
     }
@@ -111,17 +140,22 @@ class UserController extends Controller
         $dbrole = new Role();
         $arrRole = $dbrole->getAll();
         $dbcountry = new Country();
-        $arrCountry = $dbcountry->get('nicename');
+        $arrCountry = $dbcountry->get();
         $dbState = new States();
-        $arrState = $dbState->get('states_name');
+        $arrState = $dbState->get();
         $dbcity = new City();
         $arrCity = $dbcity->getAll();
+        $dbDepartment = new Department();
+        $arrDepartment = $dbDepartment->getAll();
+        $dbBusiness = new BusinessUnit();
+        $arrBusiness = $dbBusiness->getAll();
         $data = $this->objModel->getOne($id);
         if (isset($data) && !empty($data)) {
             $messages = [
                 'name.required' => 'Please specify Name',
                 'name.unique' => 'Name already exists',
                 'name.regex' => 'Name cannot have character other than a-z AND A-Z',
+
             ];
 
             $regxvalidator = [
@@ -129,10 +163,25 @@ class UserController extends Controller
             ];
             $arrFile = array('name' => 'profile_photo', 'type' => 'image', 'resize' => '50', 'path' => 'images/users/', 'predefine' => '', 'except' => 'file_exist', 'existing' => $data->profile_photo);
             if ($request->isMethod('post') && isset($id) && !empty($id)) {
-                // $request->merge(["role_id"=>join(',',$request->role_id)]);
+                $request->merge(["role_id" => join(',', $request->role_id)]);
+                $role = Session::get('settings');
+                if (Session::get('role') == $role['SUB_ADMIN']) {
+                    $request->merge(["company_id" => Session::get('company_id')]);
+                }
+                if (Session::get('superAdmin')) {
+                    $request->merge(["business_id" => $request['business_id']]);
+                }
                 return Common::commanEditPage($this->objModel, $request, $messages, $regxvalidator, $id, $arrFile);
             }
-            return view(RENDER_URL . '.edit', compact('data', 'arrCountry', 'arrRole', 'arrState', 'arrCity', 'arrFile'));
+            if (session()->has('superAdmin')) {
+                $companys = new Company();
+                $companyData = $companys->getAll();
+                if (empty($data['department_id'])) {
+                    $data['department_id'] = '0';
+                }
+                return view(RENDER_URL . '.edit', compact('data', 'arrCountry', 'arrRole', 'arrState', 'arrCity', 'arrFile', 'companyData', 'arrBusiness'));
+            }
+            return view(RENDER_URL . '.edit', compact('data', 'arrCountry', 'arrRole', 'arrState', 'arrCity', 'arrFile', 'arrDepartment'));
         } else {
             return redirect(URL)->with(FLASH_MESSAGE_ERROR, Lang::get(COMMON_MSG_INVALID_ARGUE));
         }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Session;
 
 class Department extends Model
 {
@@ -20,6 +21,16 @@ class Department extends Model
     {
         return Department::where('id', $id)->update($arrUpdate);
     }
+    public function getById($id)
+    {
+        $query = Department::query();
+        if (!empty($id)) {
+            $data =  $query->where(['company_id' => $id, 'deleted' => 0])->get();
+        } else {
+            $data = [];
+        }
+        return $data;
+    }
 
     public function getAll($orderby = null, $where = array(), $dynamicWhere = '')
     {
@@ -29,6 +40,17 @@ class Department extends Model
             $query->where(['deleted' => 0, 'company_id' => $where]);
         } else {
             $query->where(['deleted' => 0]);
+        }
+        if (Session::get('superAdmin')) {
+            if (!empty($where)) {
+                $query->where(['deleted' => 0, 'company_id' => $where]);
+            } else {
+                $query->where(['deleted' => 0]);
+            }
+        }
+        $sessionRole = Session::get('settings');
+        if ($sessionRole['SUB_ADMIN'] == Session::get('role')) {
+            $query->where(['deleted' => 0, 'company_id' => $sessionRole['SUB_ADMIN']]);
         }
         $data = $query->get();
         return $data;

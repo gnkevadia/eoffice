@@ -128,6 +128,14 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label>Department<span class="required"><code>*</code></span></label>
+                            <div>
+                                <select name="department_id" id="department" class="form-control">
+                                    <option value="">-Select Department-</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label>Business<span class="required"><code>*</code></span></label>
                             <div>
                                 <select name="business_id" id="business" class="form-control">
@@ -139,15 +147,21 @@
                                 </select>
                             </div>
                         </div>
-                        @endif
+                        @else
                         <div class="form-group">
                             <label>Department<span class="required"><code>*</code></span></label>
                             <div>
                                 <select name="department_id" id="department" class="form-control">
                                     <option value="">-Select Department-</option>
+                                    @foreach ($arrDepartment as $department)
+                                    <option value="{{ $department->id }}">{{ $department->name }}
+                                    </option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
+                        @endif
+
                         <div class="form-group">
                             <label>Role<span class="required"><code>*</code></span></label>
                             <div>
@@ -224,7 +238,7 @@
 @stop
 
 @section('metronic_js')
-<script src="{{ asset('admin/assets/js/pages/custom/user.js') }}"></script>
+<!-- <script src="{{ asset('admin/assets/js/pages/custom/user.js') }}"></script> -->
 <script src="{{ asset('admin/assets/js/pages/crud/file-upload/dropzonejs.js') }}" type="text/javascript"></script>
 <script>
     $(document).ready(function() {
@@ -232,7 +246,9 @@
         $("#company").change(function() {
             let id = $(this).val();
             let url = '{{url("getDepartments")}}';
-            console.log('url', url);
+            if (id == null) {
+                id = '0';
+            }
             $.ajax({
                 headers: {
                     'X-CSRF-Token': '{{ csrf_token() }}',

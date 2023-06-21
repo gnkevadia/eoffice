@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Department;
 use App\Models\BusinessUnit;
 use App\Library\Common;
+use Illuminate\Support\Facades\Session;
 
 class DepartmentController extends Controller
 {
@@ -24,7 +25,8 @@ class DepartmentController extends Controller
 
     public function add(Request $request)
     {
-        $data =  BusinessUnit::where('deleted', 0)->get();
+        $data = new Department();
+        $companyData = $data->getAll();
         $messages = [
             'name.regex' => 'Name cannot have character other than a-z AND A-Z',
             'description.required' => 'Please specify Description',
@@ -38,9 +40,13 @@ class DepartmentController extends Controller
             $arrExpect = [
                 'packageId', 'cmsId', 'open_in_new_tabs'
             ];
+            $role = Session::get('settings');
+            if (Session('role') == $role['SUB_ADMIN']) {
+                $request->merge(["company_id" => Session::get('company_id')]);
+            }
             return Common::commanAddPage($this->objModel, $request,  $messages, $regxvalidator, null, null, $arrExpect);
         } else {
-            return view(RENDER_URL . '.add', compact('data'));
+            return view(RENDER_URL . '.add', compact('companyData'));
         }
     }
 
