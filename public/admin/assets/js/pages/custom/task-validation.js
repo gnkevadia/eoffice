@@ -43,6 +43,12 @@ var KTFormControls = function () {
                 hour_task: {
                     required: true
                 },
+                company_id: {
+                    required: true
+                },
+                status: {
+                    required: true
+                },
             },
             messages: {
                 'task': {
@@ -77,6 +83,12 @@ var KTFormControls = function () {
                 },
                 'hour_task': {
                     required: "Please enter Hour of Task"
+                },
+                'company_id': {
+                    required: "Please enter Company Name"
+                },
+                'status': {
+                    required: "Please enter Status"
                 },
             },
 
@@ -114,11 +126,12 @@ jQuery(document).ready(function() {
     KTFormControls.init();
     $("#reset").click(function () {
         $(':input', '#frmAddEdit').not(':button, :submit, :reset, :hidden').val('').prop('checked', false).prop('selected', false);
-        $("#status").val('1').trigger('change');
+        $("#status").attr('data-id',0).trigger('change');
         $("#priority").attr('data-id',0).trigger('change');
         $("#Project").attr('data-id',0).trigger('change');
         $("#assignee").attr('data-id',0).trigger('change');
         $("#cycle").attr('data-id',0).trigger('change');
         $("#features").attr('data-id',0).trigger('change');
+        $("#company").attr('data-id',0).trigger('change');
     });
 });

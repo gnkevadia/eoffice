@@ -74,10 +74,10 @@ class Task extends Model
     public function getAll($orderby = null, $where = array(), $dynamicWhere = '')
     {
         if(Session::get('superAdmin')){
-            $where = ['users.deleted' => 0];
+            $where = ['task_master.deleted' => 0];
         }else{
             $role_id = Session::get('settings');
-            $where = ['task_master.deleted' => 0,'users.company_id' => Session::get('company_id'),'users.role_id' => $role_id['USER']];
+            $where = ['task_master.deleted' => 0,'task_master.company_id' => Session::get('company_id')];
         }
         $data =  Task::join('task_status', 'task_master.status', '=', 'task_status.id')->join('users', 'task_master.assignee', '=', 'users.id')->join('features_master', 'task_master.features', '=', 'features_master.id')->join('projectmaster', 'task_master.project', '=', 'projectmaster.id')->where($where)->select('task_master.*', 'features_master.name as features', 'projectmaster.name as project', 'users.name as assignee','task_status.name as status')->get();
         return $data;

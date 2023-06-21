@@ -367,6 +367,11 @@ class Common extends Eloquent
                 $task->status = $request['status'];
                 $task->created_by = Session::get('id');
                 $task->updated_by = Session::get('id');
+                if (Session::get('superAdmin')) {
+                    $task->company_id = $request['company_id'];
+                } else {
+                    $task->company_id = Session::get('company_id');
+                }
                 $task->save();
                 $insertId = $task->id;
                 if (empty($request->file)) {

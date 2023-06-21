@@ -22,6 +22,9 @@ var KTFormControls = function () {
                 priority: {
                     required: true
                 },
+                company_id: {
+                    required: true
+                },
             },
             messages: {
                 'name': {
@@ -35,6 +38,9 @@ var KTFormControls = function () {
                 },
                 'priority': {
                     required: "Please Select Priority",
+                },
+                'company_id': {
+                    required: "Please Select Company Name",
                 },
             },
 
@@ -75,5 +81,6 @@ jQuery(document).ready(function() {
         $("#status").val('1').trigger('change');
         $("#Project").attr('data-id',0).trigger('change');
         $("#priority").attr('data-id',0).trigger('change');
+        $("#company").attr('data-id',0).trigger('change');
     });
 });

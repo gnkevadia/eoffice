@@ -43,7 +43,10 @@ class FeaturesController extends Controller
             'description' => 'required',
         ];
         if ($request->isMethod('post')) {
-            $request->merge(["company_id" => Session::get('company_id')]);
+            if(Session::get('superAdmin')){
+            }else{
+                $request->merge(["company_id" => Session::get('company_id')]);
+            }
             $arrExpect = [
                 'packageId', 'cmsId', 'open_in_new_tabs'
             ];

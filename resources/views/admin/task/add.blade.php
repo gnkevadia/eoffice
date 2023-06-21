@@ -68,11 +68,25 @@
                             </div>
                         </div>
                         @include('admin.includes.errormessage')
+                        @if (session()->get('superAdmin'))
+                        <div class="form-group">
+                            <label>Company<span class="required"><code>*</code></span></label>
+                            <div>
+                                <select name="company_id" id="company" class="form-control">
+                                    <option value="">-Select Company-</option>
+                                    @foreach ($companyData as $company)
+                                    <option value="{{ $company->id }}">{{ $company->name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        @endif
                         <div class="form-group">
                             <label for="exampleSelect1">Project<span class="required">*</span></label>
                             <select class="form-control" id="Project" name="Project">
                                 <option value="" data-id="0">-Select Project-</option>
-                                @foreach ($project as $value)
+                                @foreach ($arrproject as $value)
                                 <option value="{{$value->id}}">{{$value->name}}</option>
                                 @endforeach
                             </select>

@@ -57,9 +57,9 @@
                             <label>Company<span class="required"><code>*</code></span></label>
                             <div>
                                 <select name="company_id" id="company" class="form-control">
-                                    <option value="">-Select Company-</option>
+                                    <option value="" data-id="0">-Select Company-</option>
                                     @foreach ($companyData as $company)
-                                    <option value="{{ $company->id }}" {{($company->id == $data->project ? 'selected' : '')}}>{{ $company->name }}
+                                    <option value="{{ $company->id }}" {{($company->id == $data->company_id ? 'selected' : '')}}>{{ $company->name }}
                                     </option>
                                     @endforeach
                                 </select>

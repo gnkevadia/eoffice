@@ -11,9 +11,10 @@ use App\Models\Priority;
 use App\Models\ProjectMaster;
 use App\Models\Task_Status;
 use App\Models\Users;
-
+use Illuminate\Support\Facades\Session;
 use App\Library\Common;
 use Illuminate\Support\Facades\DB;
+use App\Models\Company;
 
 class TaskController extends Controller
 {
@@ -33,7 +34,8 @@ class TaskController extends Controller
     {
         $features = new features();
         $arrfeatures = $features->getAll();
-        $project =  ProjectMaster::where('deleted', 0)->get();
+        $project = new ProjectMaster();
+        $arrproject = $project->getAll();
         $priority =  Priority::get();
         $taskstatus =  Task_Status::where('deleted', 0)->get();
         $users = new Users();
@@ -61,6 +63,10 @@ class TaskController extends Controller
         ];
         $arrFile = array('name' => 'file', 'type' => 'image', 'path' => 'images/task/', 'predefine' => '', 'except' => 'file_exist', 'multiple_file' => true);
         if ($request->isMethod('post')) {
+            if(Session::get('superAdmin')){
+            }else{
+                $request->merge(["company_id" => Session::get('company_id')]);
+            }
             $arrExpect = [
                 'packageId', 'cmsId', 'open_in_new_tabs'
             ];
@@ -68,7 +74,12 @@ class TaskController extends Controller
             $request['end_date'] = date('Y-m-d H:i:s');
             return Common::commanAddPage($this->objModel, $request, $messages, $regxvalidator, $arrFile, null, $arrExpect);
         } else {
-            return view(RENDER_URL . '.add', compact('arrfeatures', 'project', 'priority', 'arrusers','taskstatus'));
+            if (session()->has('superAdmin')) {
+                $companys = new Company();
+                $companyData = $companys->getAll();
+                return view(RENDER_URL . '.add', compact('arrfeatures', 'arrproject', 'priority', 'arrusers', 'taskstatus','companyData'));
+            }
+            return view(RENDER_URL . '.add', compact('arrfeatures', 'arrproject', 'priority', 'arrusers', 'taskstatus'));
         }
     }
 
@@ -77,7 +88,8 @@ class TaskController extends Controller
         $data = $this->objModel->getOne($id);
         $features = new features();
         $arrfeatures = $features->getAll();
-        $project =  ProjectMaster::where('deleted', 0)->get();
+        $project = new ProjectMaster();
+        $arrproject = $project->getAll();
         $priority =  Priority::get();
         $taskstatus =  Task_Status::where('deleted', 0)->get();
         $users = new Users();
@@ -110,7 +122,12 @@ class TaskController extends Controller
             $request->merge(['path' => 'images/task/']);
             return Common::commanEditPage($this->objModel, $request, $messages, $regxvalidator, $id, null, null, $arrExpect);
         } else {
-            return view(RENDER_URL . '.edit', compact('data', 'arrfeatures', 'project', 'priority', 'arrusers','taskstatus'));
+            if (session()->has('superAdmin')) {
+                $companys = new Company();
+                $companyData = $companys->getAll();
+                return view(RENDER_URL . '.edit', compact('data', 'arrfeatures', 'arrproject', 'priority', 'arrusers', 'taskstatus', 'companyData'));
+            }
+            return view(RENDER_URL . '.edit', compact('data', 'arrfeatures', 'arrproject', 'priority', 'arrusers', 'taskstatus'));
         }
     }
     public function delete(Request $request)
