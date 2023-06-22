@@ -46,7 +46,7 @@ class ProjectMaster extends Model
     {
         $query = ProjectMaster::query();
         if (!empty($id)) {
-            $data =  $query->where(['company_id' => $companyId, 'manager' => $id , 'deleted' => 0])->get();
+            $data =  $query->where(['company_id' => $companyId, 'manager' => $id, 'deleted' => 0])->get();
         } else {
             $data = [];
         }

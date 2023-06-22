@@ -51,7 +51,7 @@ class FeaturesController extends Controller
             } else {
                 $request->merge(["company_id" => Session::get('company_id')]);
             }
-            if(Session::get('manager')){
+            if (Session::get('manager')) {
                 $request->merge(["department_id" => Session::get('department_id')]);
                 $request->merge(["manager" => Session::get('id')]);
             }
@@ -65,7 +65,7 @@ class FeaturesController extends Controller
                 $companyData = $companys->getAll();
                 return view(RENDER_URL . '.add', compact('arrproject', 'priority', 'companyData'));
             }
-            return view(RENDER_URL . '.add', compact('arrproject', 'priority','arrDepartment'));
+            return view(RENDER_URL . '.add', compact('arrproject', 'priority', 'arrDepartment'));
         }
     }
 
@@ -104,9 +104,12 @@ class FeaturesController extends Controller
                 if (empty($data['department_id'])) {
                     $data['department_id'] = '0';
                 }
+                if (empty($data['manager'])) {
+                    $data['manager'] = '0';
+                }
                 return view(RENDER_URL . '.edit', compact('data', 'arrproject', 'priority', 'companyData'));
             }
-            return view(RENDER_URL . '.edit', compact('data', 'arrproject', 'priority','arrDepartment'));
+            return view(RENDER_URL . '.edit', compact('data', 'arrproject', 'priority', 'arrDepartment'));
         }
     }
 

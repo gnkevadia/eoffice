@@ -95,7 +95,7 @@ class ProjectMasterController extends Controller
 
             $regxvalidator = [
                 'name' => 'required|regex:/^[a-zA-Z ]*$/',
-                'manager' => 'required|regex:/^[a-zA-Z ]*$/',
+                'manager' => 'required',
                 'start_date' => 'required',
                 'end_date' => 'required',
             ];

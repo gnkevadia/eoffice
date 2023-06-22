@@ -90,7 +90,7 @@ class Users extends Model
         $query = Users::query();
         if (!empty($id)) {
             $rolesId = Session::get('settings');
-            $data =  $query->where(['company_id' => $companyId , 'role_id' => $rolesId['MANAGER'], 'deleted' => 0])->get();
+            $data =  $query->where(['company_id' => $companyId, 'role_id' => $rolesId['MANAGER'], 'deleted' => 0])->get();
         } else {
             $data = [];
         }

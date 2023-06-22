@@ -131,13 +131,13 @@ class UserController extends Controller
         if ($request->ajax()) {
             $id = $request['id'];
             $companyId = $request['company_id'];
-            if(!empty($companyId)){
+            if (!empty($companyId)) {
                 $companyId = $request['company_id'];
-            }else{
+            } else {
                 $companyId = Session::get('company_id');
             }
             $getManager = new Users();
-            $managers = $getManager->getById($id,$companyId);
+            $managers = $getManager->getById($id, $companyId);
             return json_encode($managers);
         }
     }

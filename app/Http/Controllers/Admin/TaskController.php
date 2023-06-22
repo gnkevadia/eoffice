@@ -63,8 +63,8 @@ class TaskController extends Controller
         ];
         $arrFile = array('name' => 'file', 'type' => 'image', 'path' => 'images/task/', 'predefine' => '', 'except' => 'file_exist', 'multiple_file' => true);
         if ($request->isMethod('post')) {
-            if(Session::get('superAdmin')){
-            }else{
+            if (Session::get('superAdmin')) {
+            } else {
                 $request->merge(["company_id" => Session::get('company_id')]);
             }
             $arrExpect = [
@@ -77,7 +77,7 @@ class TaskController extends Controller
             if (session()->has('superAdmin')) {
                 $companys = new Company();
                 $companyData = $companys->getAll();
-                return view(RENDER_URL . '.add', compact('arrfeatures', 'arrproject', 'priority', 'arrusers', 'taskstatus','companyData'));
+                return view(RENDER_URL . '.add', compact('arrfeatures', 'arrproject', 'priority', 'arrusers', 'taskstatus', 'companyData'));
             }
             return view(RENDER_URL . '.add', compact('arrfeatures', 'arrproject', 'priority', 'arrusers', 'taskstatus'));
         }

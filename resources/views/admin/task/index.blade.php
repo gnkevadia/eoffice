@@ -12,55 +12,55 @@
 
     <!-- <span class="kt-subheader__breadcrumbs-link kt-subheader__breadcrumbs-link--active">Active link</span> -->
 </div>
-@stop 
+@stop
 
 @section('content')
 
 <!-- begin:: Content -->
 <form id="list-form" name="list-form" action="{{ url( VIEW_INFO['url'] ) }}" class="" method="post">
-{{ csrf_field() }}
-<input type="hidden" name="is_globle" id="is_globle" value="1">    
-<div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
-            <div class="alert alert-light alert-elevate" role="alert">
-                <div class="alert-icon"><i class="flaticon-warning kt-font-brand"></i></div>
-                <div class="alert-text">
-                The {{ VIEW_INFO['title'] }} is useful to define {{ VIEW_INFO['title'] }} available in the application which is managed by SA.  
-                </div>
-            </div>
-            <div class="kt-portlet kt-portlet--mobile">
-                <div class="kt-portlet__head kt-portlet__head--lg">
-                    <div class="kt-portlet__head-label">
-                        <span class="kt-portlet__head-icon">
-                            <i class="kt-font-brand flaticon2-line-chart"></i>
-                        </span>
-                        <h3 class="kt-portlet__head-title">
-                            {{VIEW_INFO['title']}} List
-                        </h3>
-                    </div>
-                    <div class="kt-portlet__head-toolbar">
-						<div class="kt-portlet__head-wrapper">
-							<div class="dropdown dropdown-inline">
-								@include('admin.includes.datatablesdropdown',['action_url' => VIEW_INFO['url']])
-							</div>
-						</div>
-					</div>
-                </div>
-                <div class="kt-portlet__body">
-					@include('admin.includes.errormessage')
-					<!-- begin:: Aside -->
-					@include('admin.layouts.filteraction')
-					<!-- end:: Aside Menu -->									
-				</div>
-                <?php $data?>
-                <div class="kt-portlet__body kt-portlet__body--fit">
-
-                    <!--begin: Datatable -->
-                    <div class="kt-datatable" id="local_data"></div>
-
-                    <!--end: Datatable -->
-                </div>
+    {{ csrf_field() }}
+    <input type="hidden" name="is_globle" id="is_globle" value="1">
+    <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+        <div class="alert alert-light alert-elevate" role="alert">
+            <div class="alert-icon"><i class="flaticon-warning kt-font-brand"></i></div>
+            <div class="alert-text">
+                The {{ VIEW_INFO['title'] }} is useful to define {{ VIEW_INFO['title'] }} available in the application which is managed by SA.
             </div>
         </div>
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__head kt-portlet__head--lg">
+                <div class="kt-portlet__head-label">
+                    <span class="kt-portlet__head-icon">
+                        <i class="kt-font-brand flaticon2-line-chart"></i>
+                    </span>
+                    <h3 class="kt-portlet__head-title">
+                        {{VIEW_INFO['title']}} List
+                    </h3>
+                </div>
+                <div class="kt-portlet__head-toolbar">
+                    <div class="kt-portlet__head-wrapper">
+                        <div class="dropdown dropdown-inline">
+                            @include('admin.includes.datatablesdropdown',['action_url' => VIEW_INFO['url']])
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="kt-portlet__body">
+                @include('admin.includes.errormessage')
+                <!-- begin:: Aside -->
+                @include('admin.layouts.filteraction')
+                <!-- end:: Aside Menu -->
+            </div>
+            <?php $data ?>
+            <div class="kt-portlet__body kt-portlet__body--fit">
+
+                <!--begin: Datatable -->
+                <div class="kt-datatable" id="local_data"></div>
+
+                <!--end: Datatable -->
+            </div>
+        </div>
+    </div>
 </form>
 <!-- Main content -->
 

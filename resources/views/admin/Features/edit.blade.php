@@ -178,7 +178,6 @@
     $(document).ready(function() {
 
         $("#company").change(function() {
-            alert('hey')
             let id = $(this).val();
             let url = '{{url("getDepartments")}}';
             if (id == null) {
