@@ -15,6 +15,7 @@ use App\Library\Common;
 use App\Models\BusinessUnit;
 use App\Models\Company;
 use App\Models\Department;
+use App\Models\User;
 use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
@@ -122,6 +123,22 @@ class UserController extends Controller
             $getDepartment = new Department();
             $departments = $getDepartment->getById($id);
             return json_encode($departments);
+        }
+    }
+
+    public function getManager(Request $request)
+    {
+        if ($request->ajax()) {
+            $id = $request['id'];
+            $companyId = $request['company_id'];
+            if(!empty($companyId)){
+                $companyId = $request['company_id'];
+            }else{
+                $companyId = Session::get('company_id');
+            }
+            $getManager = new Users();
+            $managers = $getManager->getById($id,$companyId);
+            return json_encode($managers);
         }
     }
 

@@ -59,22 +59,69 @@
                                 <select name="company_id" id="company" class="form-control">
                                     <option value="">-Select Company-</option>
                                     @foreach ($companyData as $company)
-                                    <option value="{{ $company->id }}">{{ $company->name }}
+                                    <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Department<span class="required"><code>*</code></span></label>
+                            <div>
+                                <select name="department_id" id="department" class="form-control department">
+                                    <option value="">-Select Department-</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleSelect1">Manager<span class="required">*</span></label>
+                            <select class="form-control manager" id="manager" name="manager">
+                                <option value="" selected>-Select Manager-</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleSelect1">Project<span class="required">*</span></label>
+                            <select class="form-control project" id="Project" name="Project">
+                                <option value="" data-id="0">-Select Project-</option>
+                            </select>
+                        </div>
+                        @endif
+                        @if (session()->get('sub_admin'))
+                        <div class="form-group">
+                            <label>Department<span class="required"><code>*</code></span></label>
+                            <div>
+                                <select name="department_id" id="department" class="form-control department">
+                                    <option value="">-Select Department-</option>
+                                    @foreach ($arrDepartment as $department)
+                                    <option value="{{ $department->id }}">{{ $department->name }}
                                     </option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
-                        @endif
                         <div class="form-group">
-                            <label for="exampleSelect1">Project<span class="required">*</span></label>
-                            <select class="form-control" id="Project" name="Project">
-                                <option value="" data-id="0">-Select Project-</option>
-                                    @foreach ($arrproject as $value)
-                                    <option value="{{$value->id}}">{{$value->name}}</option>
-                                    @endforeach
+                            <label for="exampleSelect1">Manager<span class="required">*</span></label>
+                            <select class="form-control manager" id="manager" name="manager">
+                                <option value="" selected>-Select Manager-</option>
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label for="exampleSelect1">Project<span class="required">*</span></label>
+                            <select class="form-control project" id="Project" name="Project">
+                                <option value="" data-id="0">-Select Project-</option>
+                            </select>
+                        </div>
+                        @endif
+                        @if (session()->get('manager'))
+                        <div class="form-group">
+                            <label for="exampleSelect1">Project<span class="required">*</span></label>
+                            <select class="form-control project" id="Project" name="Project">
+                                <option value="" data-id="0">-Select Project-</option>
+                                @foreach ($arrproject as $value)
+                                <option value="{{$value->id}}">{{$value->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @endif
                         <div class="form-group">
                             <label>Name<span class="required">*</span></label>
                             <input type="text" id="name" name="name" data-toggle="tooltip" title="Enter Name" class="form-control" placeholder="Enter Name" value="{{ old('name') }}">
@@ -121,4 +168,92 @@
 
 @section('metronic_js')
 <script src="{{ asset('admin/assets/js/pages/custom/features-validation.js') }}"></script>
+<script>
+    $(document).ready(function() {
+
+        $("#company").change(function() {
+            let id = $(this).val();
+            let url = '{{url("getDepartments")}}';
+            if (id == null) {
+                id = '0';
+            }
+            $.ajax({
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                url: url,
+                type: 'post',
+                data: {
+                    'id': id
+                },
+                dataType: 'JSON',
+                success: function(data) {
+                    console.log('data', data);
+                    var html = '<option value="">-Select Department-</option>';
+                    $.each(data, function(i) {
+                        html += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+                    });
+                    $("#department").html(html);
+                }
+            });
+        });
+
+        $(".department").change(function() {
+            let id = $(this).val();
+            let companyId = $('#company').val();
+            let url = '{{url("getManager")}}';
+            if (id == null) {
+                id = '0';
+            }
+            $.ajax({
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                url: url,
+                type: 'post',
+                data: {
+                    'id': id,
+                    'company_id': companyId
+                },
+                dataType: 'JSON',
+                success: function(data) {
+                    var html = '<option value="">-Select Manager-</option>';
+                    $.each(data, function(i) {
+                        html += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+                    });
+                    $(".manager").html(html);
+                }
+            });
+        });
+
+        $(".manager").change(function() {
+            let id = $(this).val();
+            console.log('manager', id);
+            let companyId = $('#company').val();
+            let url = '{{url("getProject")}}';
+            if (id == null) {
+                id = '0';
+            }
+            $.ajax({
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                url: url,
+                type: 'post',
+                data: {
+                    'id': id,
+                    'company_id': companyId
+                },
+                dataType: 'JSON',
+                success: function(data) {
+                    var html = '<option value="">-Select Project-</option>';
+                    $.each(data, function(i) {
+                        html += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+                    });
+                    $(".project").html(html);
+                }
+            });
+        });
+    });
+</script>
 @stop

@@ -9,6 +9,7 @@ use App\Library\Common;
 use App\Models\ProjectMaster;
 use App\Models\Priority;
 use App\Models\Company;
+use App\Models\Department;
 use Illuminate\Support\Facades\Session;
 
 class FeaturesController extends Controller
@@ -30,6 +31,9 @@ class FeaturesController extends Controller
         $project = new ProjectMaster();
         $arrproject = $project->getAll();
         $priority =  Priority::get();
+        $dbDepartment = new Department();
+        $id  = Session::get('company_id');
+        $arrDepartment = $dbDepartment->getAll(null, $id);
         $messages = [
             'Project.required' => 'Please select Module Name',
             'name.required' => 'Please specify Rights',
@@ -43,9 +47,13 @@ class FeaturesController extends Controller
             'description' => 'required',
         ];
         if ($request->isMethod('post')) {
-            if(Session::get('superAdmin')){
-            }else{
+            if (Session::get('superAdmin')) {
+            } else {
                 $request->merge(["company_id" => Session::get('company_id')]);
+            }
+            if(Session::get('manager')){
+                $request->merge(["department_id" => Session::get('department_id')]);
+                $request->merge(["manager" => Session::get('id')]);
             }
             $arrExpect = [
                 'packageId', 'cmsId', 'open_in_new_tabs'
@@ -57,7 +65,7 @@ class FeaturesController extends Controller
                 $companyData = $companys->getAll();
                 return view(RENDER_URL . '.add', compact('arrproject', 'priority', 'companyData'));
             }
-            return view(RENDER_URL . '.add', compact('arrproject', 'priority'));
+            return view(RENDER_URL . '.add', compact('arrproject', 'priority','arrDepartment'));
         }
     }
 
@@ -67,6 +75,9 @@ class FeaturesController extends Controller
         $project = new ProjectMaster();
         $arrproject = $project->getAll();
         $priority =  Priority::get();
+        $dbDepartment = new Department();
+        $departmentid  = Session::get('company_id');
+        $arrDepartment = $dbDepartment->getAll(null, $departmentid);
         $messages = [
             'Project.required' => 'Please select Module Name',
             'name.required' => 'Please specify Name',
@@ -90,9 +101,12 @@ class FeaturesController extends Controller
             if (session()->has('superAdmin')) {
                 $companys = new Company();
                 $companyData = $companys->getAll();
+                if (empty($data['department_id'])) {
+                    $data['department_id'] = '0';
+                }
                 return view(RENDER_URL . '.edit', compact('data', 'arrproject', 'priority', 'companyData'));
             }
-            return view(RENDER_URL . '.edit', compact('data', 'arrproject', 'priority'));
+            return view(RENDER_URL . '.edit', compact('data', 'arrproject', 'priority','arrDepartment'));
         }
     }
 

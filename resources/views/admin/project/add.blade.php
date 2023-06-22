@@ -45,21 +45,58 @@
                             </div>
                         </div>
                         @include('admin.includes.errormessage')
+                        @if (session()->get('superAdmin'))
+                        <div class="form-group">
+                            <label>Company<span class="required"><code>*</code></span></label>
+                            <div>
+                                <select name="company_id" id="company" class="form-control">
+                                    <option value="">-Select Company-</option>
+                                    @foreach ($companyData as $company)
+                                    <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Department<span class="required"><code>*</code></span></label>
+                            <div>
+                                <select name="department_id" id="department" class="form-control department">
+                                    <option value="">-Select Department-</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleSelect1">Manager<span class="required">*</span></label>
+                            <select class="form-control manager" id="manager" name="manager">
+                                <option value="" selected>-Select Manager-</option>
+                            </select>
+                        </div>
+                        @endif
+                        @if (session()->get('sub_admin'))
+                        <div class="form-group">
+                            <label>Department<span class="required"><code>*</code></span></label>
+                            <div>
+                                <select name="department_id" id="department" class="form-control department">
+                                    <option value="">-Select Department-</option>
+                                    @foreach ($arrDepartment as $department)
+                                    <option value="{{ $department->id }}">{{ $department->name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleSelect1">Manager<span class="required">*</span></label>
+                            <select class="form-control manager" id="manager" name="manager">
+                                <option value="" selected>-Select Manager-</option>
+                            </select>
+                        </div>
+                        @endif
+
                         <div class="form-group">
                             <label>Name<span class="required">*</span></label>
                             <input type="text" id="name" name="name" data-toggle="tooltip" title="Enter Project Name" class="form-control" placeholder="Enter Project Name" value="{{ old('name') }}" />
                         </div>
-                        @if(Session::get('sub_admin'))
-                        <div class="form-group">
-                            <label for="exampleSelect1">Manager<span class="required">*</span></label>
-                            <select class="form-control" id="manager" name="manager">
-                                <option value="" selected>-Select Manager-</option>
-                                @foreach($managerData as $manager)
-                                <option value="{{$manager->id}}">{{$manager->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        @endif
                         <div class="form-group">
                             <label>Start Date<span class="required">*</span></label>
                             <input type="date" id="start_date" name="start_date" data-toggle="tooltip" title="Enter Start Date" class="form-control" placeholder="Enter Start Date" value="{{ old('start_date') }}">
@@ -101,4 +138,63 @@
 
 @section('metronic_js')
 <script src="{{ asset('admin/assets/js/pages/custom/project-master-validation.js') }}"></script>
+<script>
+    $(document).ready(function() {
+
+        $("#company").change(function() {
+            let id = $(this).val();
+            let url = '{{url("getDepartments")}}';
+            if (id == null) {
+                id = '0';
+            }
+            $.ajax({
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                url: url,
+                type: 'post',
+                data: {
+                    'id': id
+                },
+                dataType: 'JSON',
+                success: function(data) {
+                    console.log('data', data);
+                    var html = '<option value="">-Select Department-</option>';
+                    $.each(data, function(i) {
+                        html += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+                    });
+                    $("#department").html(html);
+                }
+            });
+        });
+
+        $(".department").change(function() {
+            let id = $(this).val();
+            let companyId = $('#company').val();
+            let url = '{{url("getManager")}}';
+            if (id == null) {
+                id = '0';
+            }
+            $.ajax({
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                url: url,
+                type: 'post',
+                data: {
+                    'id': id,
+                    'company_id': companyId
+                },
+                dataType: 'JSON',
+                success: function(data) {
+                    var html = '<option value="">-Select Manager-</option>';
+                    $.each(data, function(i) {
+                        html += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+                    });
+                    $(".manager").html(html);
+                }
+            });
+        });
+    });
+</script>
 @stop

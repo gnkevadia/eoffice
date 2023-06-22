@@ -28,7 +28,6 @@ class ProjectMaster extends Model
         }
         $data =  ProjectMaster::join('users', 'users.id', '=', 'projectmaster.manager')->where($where)->select('projectmaster.*', 'users.name as manager')->get();
         return $data;
-
     }
     public function deleteOne($id, $arrUpdate)
     {
@@ -42,5 +41,15 @@ class ProjectMaster extends Model
     {
         $allids = ltrim($ids, 'on,');
         return ProjectMaster::whereIn('id', explode(',', $allids))->update($arrUpdate);
+    }
+    public function getById($id, $companyId)
+    {
+        $query = ProjectMaster::query();
+        if (!empty($id)) {
+            $data =  $query->where(['company_id' => $companyId, 'manager' => $id , 'deleted' => 0])->get();
+        } else {
+            $data = [];
+        }
+        return $data;
     }
 }

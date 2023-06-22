@@ -85,6 +85,18 @@ class Users extends Model
         }
     }
 
+    public function getById($id, $companyId)
+    {
+        $query = Users::query();
+        if (!empty($id)) {
+            $rolesId = Session::get('settings');
+            $data =  $query->where(['company_id' => $companyId , 'role_id' => $rolesId['MANAGER'], 'deleted' => 0])->get();
+        } else {
+            $data = [];
+        }
+        return $data;
+    }
+
 
     // public function getModules(){
     //     $data = Module::where('deleted',0)->get();
