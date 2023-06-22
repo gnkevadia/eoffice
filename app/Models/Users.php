@@ -17,7 +17,7 @@ class Users extends Model
         }
 
         $query = Users::query();
-
+        $role_id = Session::get('settings');
         if (!empty($orderby)) {
             $query->orderBy($orderby);
         } else {
@@ -25,10 +25,24 @@ class Users extends Model
         }
         if (!empty($where)) {
             $query->where($where);
-        } elseif (Session::get('superAdmin')) {
+        }
+        //  elseif (Session::get('superAdmin')) {
+        //     $where = ['users.deleted' => 0];
+        // } elseif ($role_id['SUB_ADMIN'] == Session::get('role')) {
+        //     $query->whereIn('role_id', [$role_id['MANAGER'], $role_id['USER']]);
+        //     $where = ['users.deleted' => 0, 'users.company_id' => Session::get('company_id')];
+        // } else {
+        //     die('x');
+        //     $where = ['users.deleted' => 0, 'users.company_id' => Session::get('company_id'), 'users.role_id' => $role_id['USER']];
+        // }
+        if (Session::get('superAdmin')) {
             $where = ['users.deleted' => 0];
-        } else {
-            $role_id = Session::get('settings');
+        }
+        if (Session::get('sub_admin')) {
+            $query->whereIn('role_id', [$role_id['MANAGER'], $role_id['USER']]);
+            $where = ['users.deleted' => 0, 'users.company_id' => Session::get('company_id')];
+        }
+        if (Session::get('manager')) {
             $where = ['users.deleted' => 0, 'users.company_id' => Session::get('company_id'), 'users.role_id' => $role_id['USER']];
         }
         return $query->join('roles', 'roles.id', '=', 'users.role_id')->where($where)

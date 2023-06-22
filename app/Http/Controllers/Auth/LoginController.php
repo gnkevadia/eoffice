@@ -7,21 +7,16 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Facades\Input;
-// use App\User;
 use App\Models\Role;
 use App\Models\Users_Punching;
 use App\Models\Rights;
 use App\Models\Setting;
 use Redirect;
-// use Session;
 use Illuminate\Support\Facades\Session;
-use Config;
-// use Auth;
 use Illuminate\Support\Facades\Auth;
 use Mail;
 use App\Models\User;
 use App\Library\Common;
-use App\Models\City;
 
 use App\Models\EmailTemplates;
 
@@ -71,7 +66,6 @@ class LoginController extends Controller
         if (isset($userDetails) && !empty($userDetails)) {
             if (auth()->attempt($credentials)) {
                 $Users_Punching = Users_Punching::where(['user_id' => $userDetails->id])->orderBy('updated_at', 'desc')->first();
-                // echo '<pre>'; print_r($Users_Punching['punch_in']); echo '</pre>'; die();
                 $arrSettings = $Setting->getSettingByName('ALLOWED_IP');
                 $arrSettingscheck = $Setting->getSettingByName('ALLOWED_IP_ENABLE');
 
@@ -107,8 +101,21 @@ class LoginController extends Controller
                         $arrRights[$valRights->id] = $valRights->routes;
                     }
                     Session::put('routes', $arrRights);
-                    if ($roleDetails->id == '1') {
+
+                    $rolesId = Session::get('settings');
+
+                    if ($roleDetails->id == $rolesId['ADMIN']) {
                         Session::put('superAdmin', true);
+                    }
+                    if ($roleDetails->id == $rolesId['MANAGER']) {
+                        Session::put('manager', true);
+                        Session::put('department_id', $userDetails->department_id);
+                    }
+                    if ($roleDetails->id == $rolesId['SUB_ADMIN']) {
+                        Session::put('sub_admin', true);
+                    }
+                    if ($roleDetails->id == $rolesId['USER']) {
+                        Session::put('user', true);
                     }
                     return json_encode(array("status" => 1, "msg" => "Login Successful.", "action" => "/admin/dashboard", "data" => $userDetails));
                 } else {
@@ -208,13 +215,7 @@ class LoginController extends Controller
         }
         return view('admin.auth.login', compact('data', 'userDetails'));
     }
-    /**
-     * Back End Set New Password
-     * User will redirect if they requested for forgot password, Using this method user can set their new password
-     *
-     * @author ATL
-     * @since Jan 2020
-     */
+
     public function forgotPassword(Request $request, $id)
     {
         $id = base64_decode($id);

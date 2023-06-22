@@ -1,12 +1,12 @@
 'use strict';
 // Class definition
 
-var KTDatatableDataLocalDemo = function() {
+var KTDatatableDataLocalDemo = function () {
 	// Private functions
 	// variables
 	var datatable;
 	// demo initializer
-	var init = function() {
+	var init = function () {
 		var dataJSONArray;
 		$.ajax({
 			url: 'company',
@@ -14,7 +14,7 @@ var KTDatatableDataLocalDemo = function() {
 			type: 'get',
 			contentType: 'application/json',
 			data: $("#list-form").serialize(),
-			success: function( data, textStatus, jQxhr ){
+			success: function (data, textStatus, jQxhr) {
 				dataJSONArray = JSON.parse(JSON.stringify(data.data));
 				datatable = $('.kt-datatable').KTDatatable({
 					// datasource definition
@@ -23,23 +23,23 @@ var KTDatatableDataLocalDemo = function() {
 						source: dataJSONArray,
 						pageSize: 10,
 					},
-		
+
 					// layout definition
 					layout: {
 						scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
 						// height: 450, // datatable's body's fixed height
 						footer: false, // display/hide footer
 					},
-		
+
 					// column sorting
 					sortable: true,
-		
+
 					pagination: true,
-		
+
 					search: {
 						input: $('#generalSearch'),
 					},
-		
+
 					// columns definition
 					columns: [
 						{
@@ -48,31 +48,33 @@ var KTDatatableDataLocalDemo = function() {
 							sortable: false,
 							width: 20,
 							type: 'number',
-							selector: {class: 'kt-checkbox--solid'},
+							selector: { class: 'kt-checkbox--solid' },
 							textAlign: 'center',
 						}, {
 							field: 'name',
 							title: 'Name',
-						}, {
-							field: 'department_name',
-							title: 'Department',
-						}, {
+						},
+						// {
+						// 	field: 'department_name',
+						// 	title: 'Department',
+						// },
+						{
 							field: 'description',
 							title: 'Description',
 						}, {
 							field: 'status',
 							title: 'Status',
-							template: function(row) {
+							template: function (row) {
 								let statuss = '';
-								if(row.status == 1){
-									 statuss = 'Active';
-								}else{
+								if (row.status == 1) {
+									statuss = 'Active';
+								} else {
 									statuss = 'Inactive';
 
 								}
 								var status = {
-									'Active': {'title': 'Active', 'class': ' kt-badge--success'},
-									'Inactive': {'title': 'Inactive', 'class': ' kt-badge--danger'},
+									'Active': { 'title': 'Active', 'class': ' kt-badge--success' },
+									'Inactive': { 'title': 'Inactive', 'class': ' kt-badge--danger' },
 								};
 								return '<span class="kt-badge ' + status[statuss].class + ' kt-badge--inline kt-badge--pill">' + status[statuss].title + '</span>';
 							},
@@ -83,35 +85,35 @@ var KTDatatableDataLocalDemo = function() {
 							width: 110,
 							overflow: 'visible',
 							autoHide: false,
-							template: function(row) {
+							template: function (row) {
 								var roleBasedAction = '';
 								// if(isViewStatus == true){
 								// 	roleBasedAction += '<a href="'+viewURL+'/'+row.id+'" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Edit details"><i class="flaticon-eye"></i></a>'
 								// }
 								// if(isUpdateStatus == true){
-									roleBasedAction += '<a href="company/edit/'+row.id+'" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Edit details"><i class="la la-edit"></i></a>'
+								roleBasedAction += '<a href="company/edit/' + row.id + '" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Edit details"><i class="la la-edit"></i></a>'
 								// }
 								// if(isDeleteStatus == true){
-									roleBasedAction += '<a href="javascript:;" data-toggle="modal" data-target="#delete_modules" data-id="'+row.id+'"  class="btn btn-sm btn-clean btn-icon btn-icon-md delete_row" title="Edit details"><i class="flaticon-delete"></i></a>'
+								roleBasedAction += '<a href="javascript:;" data-toggle="modal" data-target="#delete_modules" data-id="' + row.id + '"  class="btn btn-sm btn-clean btn-icon btn-icon-md delete_row" title="Edit details"><i class="flaticon-delete"></i></a>'
 								// }
 								return roleBasedAction;
 							},
 						}],
 				});
-		
-				$('#kt_form_status').on('change', function() {
+
+				$('#kt_form_status').on('change', function () {
 					datatable.search($(this).val().toLowerCase(), 'Status');
 				});
-		
-				$('#kt_form_type').on('change', function() {
+
+				$('#kt_form_type').on('change', function () {
 					datatable.search($(this).val().toLowerCase(), 'Type');
 				});
-		
+
 				$('#kt_form_status,#kt_form_type').selectpicker();
 
 				datatable.on(
 					'kt-datatable--on-check kt-datatable--on-uncheck kt-datatable--on-layout-updated',
-					function(e) {
+					function (e) {
 						var checkedNodes = datatable.rows('.kt-datatable__row--active').nodes();
 						var count = checkedNodes.length;
 						$('#kt_datatable_selected_number').html(count);
@@ -121,14 +123,14 @@ var KTDatatableDataLocalDemo = function() {
 							$('#kt_datatable_group_action_form').collapse('hide');
 						}
 					});
-		
-				$('#kt_modal_fetch_id').on('show.bs.modal', function(e) {
+
+				$('#kt_modal_fetch_id').on('show.bs.modal', function (e) {
 					var ids = datatable.rows('.kt-datatable__row--active').
-					nodes().
-					find('.kt-checkbox--single > [type="checkbox"]').
-					map(function(i, chk) {
-						return $(chk).val();
-					});
+						nodes().
+						find('.kt-checkbox--single > [type="checkbox"]').
+						map(function (i, chk) {
+							return $(chk).val();
+						});
 					var c = document.createDocumentFragment();
 					for (var i = 0; i < ids.length; i++) {
 						var li = document.createElement('li');
@@ -137,29 +139,29 @@ var KTDatatableDataLocalDemo = function() {
 						c.appendChild(li);
 					}
 					$(e.target).find('.kt-datatable_selected_ids').append(c);
-				}).on('hide.bs.modal', function(e) {
+				}).on('hide.bs.modal', function (e) {
 					$(e.target).find('.kt-datatable_selected_ids').empty();
 				});
-				
+
 			},
-			error: function( jqXhr, textStatus, errorThrown ){
-				console.log( errorThrown );
+			error: function (jqXhr, textStatus, errorThrown) {
+				console.log(errorThrown);
 			}
 		});
 	};
 
 	// selection
-	var selection = function() {
+	var selection = function () {
 		// init form controls
 		//$('#kt_form_status, #kt_form_type').selectpicker();
-		
+
 		// event handler on check and uncheck on records
-		datatable.on('kt-datatable--on-check kt-datatable--on-uncheck kt-datatable--on-layout-updated',	function(e) {
+		datatable.on('kt-datatable--on-check kt-datatable--on-uncheck kt-datatable--on-layout-updated', function (e) {
 			var checkedNodes = datatable.rows('.kt-datatable__row--active').nodes(); // get selected records
 			var count = checkedNodes.length; // selected records count
 
 			$('#kt_subheader_group_selected_rows').html(count);
-				
+
 			if (count > 0) {
 				$('#kt_subheader_search').addClass('kt-hidden');
 				$('#kt_subheader_group_actions').removeClass('kt-hidden');
@@ -171,25 +173,25 @@ var KTDatatableDataLocalDemo = function() {
 	}
 
 	// admin.layouts.toggle
-	var selectedFetch = function() {
+	var selectedFetch = function () {
 		// event handler on selected records fetch modal launch
-		$('#kt_datatable_records_fetch_modal').on('show.bs.modal', function(e) {
+		$('#kt_datatable_records_fetch_modal').on('show.bs.modal', function (e) {
 			// show loading dialog
-			var loading = new KTDialog({'type': 'loader', 'placement': 'top center', 'message': 'Loading ...'});
+			var loading = new KTDialog({ 'type': 'loader', 'placement': 'top center', 'message': 'Loading ...' });
 			loading.show();
 
-			setTimeout(function() {
+			setTimeout(function () {
 				loading.hide();
 			}, 1000);
-			
+
 			// fetch selected IDs
-			var ids = datatable.rows('.kt-datatable__row--active').nodes().find('.kt-checkbox--single > [type="checkbox"]').map(function(i, chk) {
+			var ids = datatable.rows('.kt-datatable__row--active').nodes().find('.kt-checkbox--single > [type="checkbox"]').map(function (i, chk) {
 				return $(chk).val();
 			});
 
 			// populate selected IDs
 			var c = document.createDocumentFragment();
-				
+
 			for (var i = 0; i < ids.length; i++) {
 				var li = document.createElement('li');
 				li.setAttribute('data-id', ids[i]);
@@ -198,18 +200,18 @@ var KTDatatableDataLocalDemo = function() {
 			}
 
 			$(e.target).find('#kt_apps_user_fetch_records_selected').append(c);
-		}).on('hide.bs.modal', function(e) {
+		}).on('hide.bs.modal', function (e) {
 			$(e.target).find('#kt_apps_user_fetch_records_selected').empty();
 		});
 	};
 
 	// selected records status update
-	var selectedStatusUpdate = function() {
-		$('#kt_subheader_group_actions_status_change').on('click', "[data-toggle='status-change']", function() {
+	var selectedStatusUpdate = function () {
+		$('#kt_subheader_group_actions_status_change').on('click', "[data-toggle='status-change']", function () {
 			var status = $(this).find(".kt-nav__link-text").html();
 
 			// fetch selected IDs
-			var ids = datatable.rows('.kt-datatable__row--active').nodes().find('.kt-checkbox--single > [type="checkbox"]').map(function(i, chk) {
+			var ids = datatable.rows('.kt-datatable__row--active').nodes().find('.kt-checkbox--single > [type="checkbox"]').map(function (i, chk) {
 				return $(chk).val();
 			});
 
@@ -227,7 +229,7 @@ var KTDatatableDataLocalDemo = function() {
 					showCancelButton: true,
 					cancelButtonText: "No, cancel",
 					cancelButtonClass: "btn btn-sm btn-bold btn-default"
-				}).then(function(result) {
+				}).then(function (result) {
 					if (result.value) {
 						swal.fire({
 							title: 'Deleted!',
@@ -255,10 +257,10 @@ var KTDatatableDataLocalDemo = function() {
 	}
 
 	// selected records delete
-	var selectedDelete = function() {
-		$('#kt_subheader_group_actions_delete_all').on('click', function() {
+	var selectedDelete = function () {
+		$('#kt_subheader_group_actions_delete_all').on('click', function () {
 			// fetch selected IDs
-			var ids = datatable.rows('.kt-datatable__row--active').nodes().find('.kt-checkbox--single > [type="checkbox"]').map(function(i, chk) {
+			var ids = datatable.rows('.kt-datatable__row--active').nodes().find('.kt-checkbox--single > [type="checkbox"]').map(function (i, chk) {
 				return $(chk).val();
 			});
 
@@ -276,7 +278,7 @@ var KTDatatableDataLocalDemo = function() {
 					showCancelButton: true,
 					cancelButtonText: "No, cancel",
 					cancelButtonClass: "btn btn-sm btn-bold btn-brand"
-				}).then(function(result) {
+				}).then(function (result) {
 					if (result.value) {
 						swal.fire({
 							title: 'Deleted!',
@@ -300,12 +302,12 @@ var KTDatatableDataLocalDemo = function() {
 					}
 				});
 			}
-		});		
+		});
 	}
 
 	return {
 		// Public functions
-		init: function() {
+		init: function () {
 			// init dmeo
 			init();
 			//search();
@@ -318,6 +320,6 @@ var KTDatatableDataLocalDemo = function() {
 	};
 }();
 
-jQuery(document).ready(function() {
+jQuery(document).ready(function () {
 	KTDatatableDataLocalDemo.init();
 });

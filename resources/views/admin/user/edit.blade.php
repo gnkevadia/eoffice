@@ -64,7 +64,7 @@
                         </div>
                         <div class="form-group">
                             <label>Postal Code<span class="required">*</span></label>
-                            <input type="text" id="postal_code" name="postal_code" data-toggle="tooltip" title="Postal Code" class="form-control" placeholder="Postal Code" value="{{ $data['postal_code'] }}">
+                            <input type="text" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" id="postal_code" name="postal_code" data-toggle="tooltip" title="Postal Code" class="form-control" placeholder="Postal Code" value="{{ $data['postal_code'] }}">
                         </div>
                         <div class="form-group">
                             <label>Country<span class="required"><code>*</code></span></label>
@@ -139,6 +139,7 @@
                             </div>
                         </div>
                         @else
+                        @if(Session::get('sub_admin'))
                         <div class="form-group">
                             <label>Department<span class="required"><code>*</code></span></label>
                             <div>
@@ -151,6 +152,7 @@
                                 </select>
                             </div>
                         </div>
+                        @endif
                         @endif
                         <div class="form-group">
                             <label>Role<span class="required"><code>*</code></span></label>

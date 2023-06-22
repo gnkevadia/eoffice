@@ -28,15 +28,15 @@ class CompanyController extends Controller
             $messages = [
                 'name.required' => 'Please Enter Name',
                 'name.regex' => 'Name cannot have character other than a-z AND A-Z',
-                'department_id.required' => 'Please Select Department',
+                // 'department_id.required' => 'Please Select Department',
                 'description.required' => 'Please Select Department',
-                
+
             ];
 
             $regxvalidator = [
                 'name' => 'required|regex:/^[a-zA-Z ]*$/',
                 'description' => 'required|regex:/^[a-zA-Z ]*$/',
-                'department_id' => 'required',
+                // 'department_id' => 'required',
             ];
             $arrExpect = [
                 'packageId', 'cmsId', 'open_in_new_tabs'
@@ -52,7 +52,6 @@ class CompanyController extends Controller
     public function edit(Request $request, $id = null)
     {
         $data = $this->objModel->getOne($id);
-        // $data->start_date =  
         if ($request->isMethod('post') && isset($id) && !empty($id)) {
 
             $messages = [
@@ -60,7 +59,7 @@ class CompanyController extends Controller
                 'name.regex' => 'Name cannot have character other than a-z AND A-Z',
                 'department_id.required' => 'Please Select Department',
                 'description.required' => 'Please Select Department',
-                
+
             ];
 
             $regxvalidator = [

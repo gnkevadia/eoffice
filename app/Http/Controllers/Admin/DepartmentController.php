@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Department;
-use App\Models\BusinessUnit;
 use App\Library\Common;
+use App\Models\Company;
 use Illuminate\Support\Facades\Session;
 
 class DepartmentController extends Controller
@@ -25,7 +25,7 @@ class DepartmentController extends Controller
 
     public function add(Request $request)
     {
-        $data = new Department();
+        $data = new Company();
         $companyData = $data->getAll();
         $messages = [
             'name.regex' => 'Name cannot have character other than a-z AND A-Z',
@@ -53,7 +53,8 @@ class DepartmentController extends Controller
     public function edit(Request $request, $id = null)
     {
         $data = $this->objModel->getOne($id);
-        $business  =  BusinessUnit::where('deleted', 0)->get();
+        $dataCompany = new Company();
+        $companyData = $dataCompany->getAll();
         $messages = [
             'name.regex' => 'Name cannot have character other than a-z AND A-Z',
             'description.required' => 'Please specify Description',
@@ -69,8 +70,7 @@ class DepartmentController extends Controller
             ];
             return Common::commanEditPage($this->objModel, $request, $messages, $regxvalidator, $id, null, null, $arrExpect);
         } else {
-            return view(RENDER_URL . '.edit', compact('data', 'business'));
-            // return view('admin.Features.edit', compact('data', 'project'));
+            return view(RENDER_URL . '.edit', compact('data', 'companyData'));
         }
     }
 

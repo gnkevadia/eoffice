@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Module Master Module
- * Manage CRUD for the Module
- *
- * @author ATL
- * @since Jan 2020
- */
 
 namespace App\Http\Controllers\Admin;
 
@@ -14,29 +7,21 @@ use App\Exports\MainExport;
 use App\Http\Controllers\Controller;
 // use App\User;
 use App\Models\Users;
-use App\Models\Agency;
 use App\Models\Role;
 use App\Models\Country;
 use App\Models\States;
 use App\Models\City;
-use App\Models\AgencyType;
-use App\Models\AccountType;
 use App\Library\Common;
 use App\Models\BusinessUnit;
 use App\Models\Company;
 use App\Models\Department;
 use Excel;
 use Illuminate\Http\Request;
-// use Lang;
 use Illuminate\Support\Facades\Lang;
-// use Session;
 use Illuminate\Support\Facades\Session;
-// use Validator;
 use Illuminate\Support\Facades\Validator;
-// use Hash;
 use Illuminate\Support\Facades\Hash;
 use Auth;
-use App\Rules\Numberoffiles;
 
 class UserController extends Controller
 {
@@ -66,7 +51,12 @@ class UserController extends Controller
         $dbcity = new City();
         $arrCity = $dbcity->getAll();
         $dbDepartment = new Department();
-        $arrDepartment = $dbDepartment->getAll();
+        $id  = Session::get('company_id');
+        $arrDepartment = $dbDepartment->getAll(null, $id);
+        if (Session::get('manager')) {
+            $request->merge(["company_id" => Session::get('company_id')]);
+            $request->merge(["department_id" => Session::get('department_id')]);
+        }
         $messages = [
             'name.required' => 'Please specify Name',
             'name.unique' => 'Name already exists',
@@ -82,7 +72,7 @@ class UserController extends Controller
             'city_id.required' => 'Please specify City',
             'company_id.required' => 'Please specify Company',
             'department_id.required' => 'Please specify Department',
-            'business_id.required' => 'Please specify Business',
+            // 'business_id.required' => 'Please specify Business',
             'role_id.required' => 'Please specify Role',
 
         ];
@@ -99,7 +89,7 @@ class UserController extends Controller
             'city_id' => 'required ',
             'company_id' => 'required ',
             'department_id' => 'required ',
-            'business_id' => 'required ',
+            // 'business_id' => 'required ',
             'role_id' => 'required ',
         ];
         $arrFile = array('name' => 'profile_photo', 'type' => 'image', 'resize' => '50', 'path' => 'images/users/', 'predefine' => '', 'except' => 'file_exist');
@@ -146,7 +136,8 @@ class UserController extends Controller
         $dbcity = new City();
         $arrCity = $dbcity->getAll();
         $dbDepartment = new Department();
-        $arrDepartment = $dbDepartment->getAll();
+        $companyId  = Session::get('company_id');
+        $arrDepartment = $dbDepartment->getAll(null, $companyId);
         $dbBusiness = new BusinessUnit();
         $arrBusiness = $dbBusiness->getAll();
         $data = $this->objModel->getOne($id);
@@ -155,12 +146,12 @@ class UserController extends Controller
                 'name.required' => 'Please specify Name',
                 'name.unique' => 'Name already exists',
                 'name.regex' => 'Name cannot have character other than a-z AND A-Z',
-
             ];
 
             $regxvalidator = [
                 'name' => 'required | regex:/^[a-zA-Z ]*$/ | unique:users,name,' . $request->id . ',id,deleted,0',
             ];
+
             $arrFile = array('name' => 'profile_photo', 'type' => 'image', 'resize' => '50', 'path' => 'images/users/', 'predefine' => '', 'except' => 'file_exist', 'existing' => $data->profile_photo);
             if ($request->isMethod('post') && isset($id) && !empty($id)) {
                 $request->merge(["role_id" => join(',', $request->role_id)]);
@@ -181,6 +172,7 @@ class UserController extends Controller
                 }
                 return view(RENDER_URL . '.edit', compact('data', 'arrCountry', 'arrRole', 'arrState', 'arrCity', 'arrFile', 'companyData', 'arrBusiness'));
             }
+
             return view(RENDER_URL . '.edit', compact('data', 'arrCountry', 'arrRole', 'arrState', 'arrCity', 'arrFile', 'arrDepartment'));
         } else {
             return redirect(URL)->with(FLASH_MESSAGE_ERROR, Lang::get(COMMON_MSG_INVALID_ARGUE));

@@ -25,22 +25,29 @@ class ProjectMasterController extends Controller
     public function add(Request $request)
     {
         if ($request->isMethod('post')) {
+
             if (Session::get('superAdmin')) {
                 $request->merge(["company_id" => Session::get('company_id')]);
-            } else {
+            }
+            if (Session::get('manager')) {
+                $request->merge(["manager" => Session::get('id')]);
+                $request->merge(["company_id" => Session::get('company_id')]);
+            }
+            if (Session::get('sub_admin')) {
+                $request->merge(["manager" => Session::get('id')]);
                 $request->merge(["company_id" => Session::get('company_id')]);
             }
             $messages = [
                 'name.required' => 'Please Enter Name',
                 'name.regex' => 'Name cannot have character other than a-z AND A-Z',
-                'manager.required' => 'Please Enter Manager Name',
+                // 'manager.required' => 'Please Enter Manager Name',
                 'start_date.required' => 'Please Enter Start Date',
                 'end_date.required' => 'Please Enter End Date',
             ];
 
             $regxvalidator = [
                 'name' => 'required|regex:/^[a-zA-Z ]*$/',
-                'manager' => 'required',
+                // 'manager' => 'required',
                 'start_date' => 'required',
                 'end_date' => 'required',
             ];

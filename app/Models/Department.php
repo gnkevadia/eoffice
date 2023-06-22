@@ -49,9 +49,9 @@ class Department extends Model
             }
         }
         $sessionRole = Session::get('settings');
-        if ($sessionRole['SUB_ADMIN'] == Session::get('role')) {
-            $query->where(['deleted' => 0, 'company_id' => $sessionRole['SUB_ADMIN']]);
-        }
+        // if ($sessionRole['SUB_ADMIN'] == Session::get('role')) {
+        //     $query->where(['deleted' => 0, 'company_id' => $sessionRole['SUB_ADMIN']]);
+        // }
         $data = $query->get();
         return $data;
     }

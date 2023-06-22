@@ -49,7 +49,7 @@
                             <label>Name<span class="required">*</span></label>
                             <input type="text" id="name" name="name" data-toggle="tooltip" title="Enter Project Name" class="form-control" placeholder="Enter Project Name" value="{{ old('name') }}" />
                         </div>
-
+                        @if(Session::get('sub_admin'))
                         <div class="form-group">
                             <label for="exampleSelect1">Manager<span class="required">*</span></label>
                             <select class="form-control" id="manager" name="manager">
@@ -59,6 +59,7 @@
                                 @endforeach
                             </select>
                         </div>
+                        @endif
                         <div class="form-group">
                             <label>Start Date<span class="required">*</span></label>
                             <input type="date" id="start_date" name="start_date" data-toggle="tooltip" title="Enter Start Date" class="form-control" placeholder="Enter Start Date" value="{{ old('start_date') }}">

@@ -53,11 +53,11 @@
                         </div>
                         @include('admin.includes.errormessage')
                         <div class="form-group">
-                            <label for="exampleSelect1">Business Name<span class="required">*</span></label>
-                            <select class="form-control" id="business" name="business_id">
-                                <option value="" data-id="0">-Select Business Name-</option>
-                                @foreach ($business as $value)
-                                <option value="{{$value->id}}" {{($value->id == $data->business_id ? 'selected' : '')}}>{{$value->name}}</option>
+                            <label for="exampleSelect1">Company Name<span class="required">*</span></label>
+                            <select class="form-control" id="company" name="company">
+                                <option value="" data-id="0">-Select Company Name-</option>
+                                @foreach ($companyData as $company)
+                                <option value="{{$company->id}}" {{($company->id == $data->company_id ? 'selected' : '')}}>{{$company->name}}</option>
                                 @endforeach
                             </select>
                         </div>

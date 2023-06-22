@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 class Role extends Model
 {
-    
     public function getRole()
     {
         return Role::where(['deleted' => 0])->get();
@@ -20,21 +19,27 @@ class Role extends Model
         return Role::where(['id' => $roleId])->first();
     }
 
-    public function getAll($orderby=null, $where=array(), $dynamicWhere='')
+    public function getAll($orderby = null, $where = array(), $dynamicWhere = '')
     {
         if (empty($dynamicWhere)) {
             $dynamicWhere = " 1 = 1";
         }
-        
         $query = Role::query();
         if (!empty($where)) {
             $query->where($where);
         }
-        $data = Session::get('settings');
-        
-        if(!Session::get('superAdmin')){
-            $query->whereNotIn('id', [$data['SUB_ADMIN'],$data['ADMIN']]);
+        $roleId = Session::get('settings');
+
+        if (Session::get('superAdmin')) {
+            // $query->whereIn('id', [$roleId['SUB_ADMIN'], $roleId['ADMIN']]);
         }
+        if (Session::get('sub_admin')) {
+            $query->whereIn('id', [$roleId['MANAGER'], $roleId['USER']]);
+        }
+        if (Session::get('manager')) {
+            $query->where('id', $roleId['USER']);
+        }
+
 
         if (!empty($orderby)) {
             $query->orderBy($orderby);
@@ -46,7 +51,6 @@ class Role extends Model
             ->whereRaw($dynamicWhere)
             ->get();
     }
-   
     public function getOne($id)
     {
         return Role::where(['id' => $id])->first();

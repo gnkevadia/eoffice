@@ -54,10 +54,12 @@ var KTDatatableDataLocalDemo = function () {
                         }, {
                             field: 'name',
                             title: 'Name',
-                        }, {
-                            field: 'business_name',
-                            title: 'Business Name',
-                        }, {
+                        },
+                        // {
+                        //     field: 'business_name',
+                        //     title: 'Business Name',
+                        // },
+                        {
                             field: 'description',
                             title: 'Description',
                         }, {
