@@ -53,16 +53,40 @@
                         </div>
                         @include('admin.includes.errormessage')
                         @if(Session::get('superAdmin'))
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="exampleSelect1">Company Name<span class="required">*</span></label>
+                                    <select class="form-control" id="company" name="company_id">
+                                        <option value="" data-id="0">-Select Company Name-</option>
+                                        @foreach ($companyData as $company)
+                                        <option value="{{$company->id}}">{{$company->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="exampleSelect1">Manager<span class="required">*</span></label>
+                                    <select class="form-control manager" id="manager" name="manager">
+                                        <option value="" selected>-Select Manager-</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+                        @if(Session::get('sub_admin'))
                         <div class="form-group">
-                            <label for="exampleSelect1">Company Name<span class="required">*</span></label>
-                            <select class="form-control" id="company" name="company_id">
-                                <option value="" data-id="0">-Select Company Name-</option>
-                                @foreach ($companyData as $company)
-                                <option value="{{$company->id}}">{{$company->name}}</option>
+                            <label for="exampleSelect1">Manager<span class="required">*</span></label>
+                            <select class="form-control manager" id="manager" name="manager">
+                                <option value="" selected>-Select Manager-</option>
+                                @foreach ($arrManager as $manager)
+                                <option value="{{$manager->id}}">{{$manager->name}}</option>
                                 @endforeach
                             </select>
                         </div>
                         @endif
+
                         <div class="form-group">
                             <label>Name<span class="required">*</span></label>
                             <input type="text" id="name" name="name" data-toggle="tooltip" title="Enter Name" class="form-control" placeholder="Enter Name" value="{{ old('name') }}">
@@ -100,4 +124,33 @@
 
 @section('metronic_js')
 <script src="{{ asset('admin/assets/js/pages/custom/department-validation.js') }}"></script>
-@stop
+<script>
+    $(document).ready(function() {
+        $("#company").change(function() {
+            let id = $(this).val();
+            let url = '{{url("Manager")}}';
+            if (id == null) {
+                id = '0';
+            }
+            $.ajax({
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                url: url,
+                type: 'post',
+                data: {
+                    'id': id,
+                },
+                dataType: 'JSON',
+                success: function(data) {
+                    var html = '<option value="">-Select Manager-</option>';
+                    $.each(data, function(i) {
+                        html += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+                    });
+                    $(".manager").html(html);
+                }
+            });
+        });
+    });
+</script>
+< @stop

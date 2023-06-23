@@ -40,7 +40,7 @@ class TaskController extends Controller
         $priority =  Priority::get();
         $taskstatus =  Task_Status::where('deleted', 0)->get();
         $users = new Users();
-        $arrusers = $users->getAll();
+        $arrUsers = $users->getUsersOnly();
         $messages = [
             'Project.required' => 'Please select Module Name',
             'task.required' => 'Please specify Task',
@@ -81,9 +81,9 @@ class TaskController extends Controller
             if (session()->has('superAdmin')) {
                 $companys = new Company();
                 $companyData = $companys->getAll();
-                return view(RENDER_URL . '.add', compact('arrfeatures', 'arrproject', 'priority', 'arrusers', 'taskstatus', 'companyData'));
+                return view(RENDER_URL . '.add', compact('arrfeatures', 'arrproject', 'priority', 'arrUsers', 'taskstatus', 'companyData'));
             }
-            return view(RENDER_URL . '.add', compact('arrfeatures', 'arrproject', 'priority', 'arrusers', 'taskstatus','arrDepartment'));
+            return view(RENDER_URL . '.add', compact('arrfeatures', 'arrproject', 'priority', 'arrUsers', 'taskstatus', 'arrDepartment'));
         }
     }
 
@@ -134,7 +134,7 @@ class TaskController extends Controller
                 $companyData = $companys->getAll();
                 return view(RENDER_URL . '.edit', compact('data', 'arrfeatures', 'arrproject', 'priority', 'arrusers', 'taskstatus', 'companyData'));
             }
-            return view(RENDER_URL . '.edit', compact('data', 'arrfeatures', 'arrproject', 'priority', 'arrusers', 'taskstatus','arrDepartment'));
+            return view(RENDER_URL . '.edit', compact('data', 'arrfeatures', 'arrproject', 'priority', 'arrusers', 'taskstatus', 'arrDepartment'));
         }
     }
     public function delete(Request $request)

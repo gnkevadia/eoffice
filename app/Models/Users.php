@@ -45,6 +45,9 @@ class Users extends Model
         if (Session::get('manager')) {
             $where = ['users.deleted' => 0, 'users.company_id' => Session::get('company_id'), 'users.role_id' => $role_id['USER']];
         }
+        // if (Session::get('user')) {
+        //     $where = ['users.deleted' => 0, 'users.company_id' => Session::get('company_id'), 'users.role_id' => $role_id['USER']];
+        // }
         return $query->join('roles', 'roles.id', '=', 'users.role_id')->where($where)
             ->select('users.*', 'roles.name as roleName', DB::raw('CASE WHEN users.status = 1 THEN "Active" ELSE "Inactive" END as status'))
             ->whereRaw($dynamicWhere)
@@ -88,18 +91,32 @@ class Users extends Model
     public function getById($id, $companyId)
     {
         $query = Users::query();
-        if (!empty($id)) {
-            $rolesId = Session::get('settings');
-            $data =  $query->where(['company_id' => $companyId, 'role_id' => $rolesId['MANAGER'], 'deleted' => 0])->get();
-        } else {
+
+        // if (!empty($id)) {
+        $rolesId = Session::get('settings');
+
+        if (Session::get('superAdmin')) {
+            $data =  $query->where(['company_id' => $id, 'role_id' => $rolesId['MANAGER'], 'deleted' => 0])->get();
+        }
+        if (Session::get('sub_admin')) {
+            $data =  $query->where(['company_id' => $companyId, 'department_id' => $id, 'role_id' => $rolesId['MANAGER'], 'deleted' => 0])->get();
+        }
+
+        if (empty($data)) {
             $data = [];
         }
         return $data;
     }
 
-
-    // public function getModules(){
-    //     $data = Module::where('deleted',0)->get();
-    //     return $data;
-    // }
+    public function getUsersOnly()
+    {
+        $role_id = Session::get('settings');
+        $query = Users::query();
+        if (Session::get('superAdmin')) {
+            $data =     $query->where(['deleted' => 0, 'role_id' => $role_id['USER']])->get();
+        } else {
+            $data =     $query->where(['deleted' => 0, 'company_id' => Session::get('company_id'), 'role_id' => $role_id['USER']])->get();
+        }
+        return $data;
+    }
 }

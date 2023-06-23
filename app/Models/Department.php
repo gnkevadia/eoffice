@@ -48,6 +48,9 @@ class Department extends Model
                 $query->where(['deleted' => 0]);
             }
         }
+        if (Session::get('sub_admin')) {
+            $query->where(['deleted' => 0, 'company_id' => Session::get('company_id')]);
+        }
         $sessionRole = Session::get('settings');
         // if ($sessionRole['SUB_ADMIN'] == Session::get('role')) {
         //     $query->where(['deleted' => 0, 'company_id' => $sessionRole['SUB_ADMIN']]);

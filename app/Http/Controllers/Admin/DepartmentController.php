@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Department;
+use App\Models\Users;
 use App\Library\Common;
 use App\Models\Company;
 use Illuminate\Support\Facades\Session;
@@ -46,7 +47,13 @@ class DepartmentController extends Controller
             }
             return Common::commanAddPage($this->objModel, $request,  $messages, $regxvalidator, null, null, $arrExpect);
         } else {
-            return view(RENDER_URL . '.add', compact('companyData'));
+            $dbManager = new Users();
+            $companyId = Session::get('company_id');
+            $arrManager = $dbManager->getById(null, $companyId);
+            if (Session::get('superAdmin')) {
+                return view(RENDER_URL . '.add', compact('companyData'));
+            }
+            return view(RENDER_URL . '.add', compact('companyData', 'arrManager'));
         }
     }
 
@@ -70,7 +77,14 @@ class DepartmentController extends Controller
             ];
             return Common::commanEditPage($this->objModel, $request, $messages, $regxvalidator, $id, null, null, $arrExpect);
         } else {
-            return view(RENDER_URL . '.edit', compact('data', 'companyData'));
+            $dbManager = new Users();
+            $companyId = Session::get('company_id');
+            $arrManager = $dbManager->getById(null, $companyId);
+            if (Session::get('superAdmin')) {
+                return view(RENDER_URL . '.add', compact('data', 'companyData'));
+            }
+            return view(RENDER_URL . '.edit', compact('data', 'companyData', 'arrManager'));
+            // return view(RENDER_URL . '.edit', compact('data', 'companyData'));
         }
     }
 
@@ -83,5 +97,21 @@ class DepartmentController extends Controller
     public function toggleStatus(Request $request)
     {
         return Common::commanTogglePage($this->objModel, $request);
+    }
+
+    public function Manager(Request $request)
+    {
+        if ($request->ajax()) {
+            $id = $request['id'];
+            $companyId = $request['company_id'];
+            if (!empty($companyId)) {
+                $companyId = $request['company_id'];
+            } else {
+                $companyId = Session::get('company_id');
+            }
+            $getManager = new Users();
+            $managers = $getManager->getById($id, $companyId);
+            return json_encode($managers);
+        }
     }
 }

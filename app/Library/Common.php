@@ -372,12 +372,12 @@ class Common extends Eloquent
                     $task->department_id = $request['department_id'];
                     $task->manager = $request['manager'];
                 }
-                if(Session::get('sub_admin')){
+                if (Session::get('sub_admin')) {
                     $task->company_id =  Session::get('company_id');
                     $task->department_id = $request['department_id'];
                     $task->manager = $request['manager'];
                 }
-                if(Session::get('manager')){
+                if (Session::get('manager')) {
                     $task->company_id =  Session::get('company_id');
                     $task->department_id = Session::get('department_id');
                     $task->manager = Session::get('id');

@@ -212,8 +212,8 @@
                                     <label for="exampleSelect1">Assignee<span class="required">*</span></label>
                                     <select class="form-control" id="assignee" name="assignee">
                                         <option value="" data-id="0">-Select Assignee-</option>
-                                        @foreach ($arrusers as $value)
-                                        <option value="{{$value->id}}">{{$value->name}}</option>
+                                        @foreach ($arrUsers as $user)
+                                        <option value="{{$user->id}}">{{$user->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>

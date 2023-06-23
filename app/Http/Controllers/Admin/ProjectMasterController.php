@@ -36,7 +36,6 @@ class ProjectMasterController extends Controller
                 $request->merge(["department_id" => Session::get('department_id')]);
             }
             if (Session::get('sub_admin')) {
-                $request->merge(["manager" => Session::get('id')]);
                 $request->merge(["company_id" => Session::get('company_id')]);
             }
             $messages = [

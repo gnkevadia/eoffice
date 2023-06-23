@@ -55,6 +55,7 @@ Route::match(['get', 'post'], 'getDepartments', [UserController::class, 'getDepa
 Route::match(['get', 'post'], 'getManager', [UserController::class, 'getManager']);
 Route::match(['get', 'post'], 'getProject', [ProjectMasterController::class, 'getProject']);
 Route::match(['get', 'post'], 'getfeatures', [ProjectMasterController::class, 'getfeatures']);
+Route::match(['get', 'post'], 'Manager', [DepartmentController::class, 'Manager']);
 Route::group(['prefix' => 'admin', 'namespace' => '\App\Http\Controllers'], function () {
 
     Route::match(['get'], '/dashboard', [DashboardController::class, 'index']);
@@ -273,7 +274,7 @@ Route::group(['prefix' => 'admin', 'namespace' => '\App\Http\Controllers'], func
     Route::match(['post'], '/news/update-slug', 'Admin\PackageController@updateSlug');
 });
 
-Route::any('{url}', function(){
+Route::any('{url}', function () {
     return redirect('/admin/dashboard');
 })->where('url', '.*');
 Route::match(['get', 'post'], '/{slug}', '\App\Http\Controllers\HomeController@cms');
