@@ -53,60 +53,80 @@
                         </div>
                         @include('admin.includes.errormessage')
                         @if (session()->get('superAdmin'))
-                        <div class="form-group">
-                            <label>Company<span class="required"><code>*</code></span></label>
-                            <div>
-                                <select name="company_id" id="company" class="form-control">
-                                    <option value="">-Select Company-</option>
-                                    @foreach ($companyData as $company)
-                                    <option value="{{ $company->id }}" {{($company->id == $data->company_id ? 'selected' : '')}}>{{ $company->name }}</option>
-                                    @endforeach
-                                </select>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Company<span class="required"><code>*</code></span></label>
+                                    <div>
+                                        <select name="company_id" id="company" class="form-control">
+                                            <option value="">-Select Company-</option>
+                                            @foreach ($companyData as $company)
+                                            <option value="{{ $company->id }}" {{($company->id == $data->company_id ? 'selected' : '')}}>{{ $company->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Department<span class="required"><code>*</code></span></label>
+                                    <div>
+                                        <select name="department_id" id="department" class="form-control department">
+                                            <option value="">-Select Department-</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>Department<span class="required"><code>*</code></span></label>
-                            <div>
-                                <select name="department_id" id="department" class="form-control department">
-                                    <option value="">-Select Department-</option>
-                                </select>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="exampleSelect1">Manager<span class="required">*</span></label>
+                                    <select class="form-control manager" id="manager" name="manager">
+                                        <option value="" selected>-Select Manager-</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleSelect1">Manager<span class="required">*</span></label>
-                            <select class="form-control manager" id="manager" name="manager">
-                                <option value="" selected>-Select Manager-</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleSelect1">Project<span class="required">*</span></label>
-                            <select class="form-control" id="Project" name="Project">
-                                <option value="" data-id="0">-Select Project-</option>
-                                @foreach ($arrproject as $value)
-                                <option value="{{$value->id}}" {{($value->id == $data->project ? 'selected' : '')}}>{{$value->name}}</option>
-                                @endforeach
-                            </select>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="exampleSelect1">Project<span class="required">*</span></label>
+                                    <select class="form-control" id="Project" name="Project">
+                                        <option value="" data-id="0">-Select Project-</option>
+                                        @foreach ($arrproject as $value)
+                                        <option value="{{$value->id}}" {{($value->id == $data->project ? 'selected' : '')}}>{{$value->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         @endif
                         @if (session()->get('sub_admin'))
-                        <div class="form-group">
-                            <label>Department<span class="required"><code>*</code></span></label>
-                            <div>
-                                <select name="department_id" id="department" class="form-control department">
-                                    <option value="">-Select Department-</option>
-                                    @foreach ($arrDepartment as $department)
-                                    <option value="{{ $department->id }}" {{($department->id == $data->department_id ? 'selected' : '')}}>{{ $department->name }}
-                                    </option>
-                                    @endforeach
-                                </select>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Department<span class="required"><code>*</code></span></label>
+                                    <div>
+                                        <select name="department_id" id="department" class="form-control department">
+                                            <option value="">-Select Department-</option>
+                                            @foreach ($arrDepartment as $department)
+                                            <option value="{{ $department->id }}" {{($department->id == $data->department_id ? 'selected' : '')}}>{{ $department->name }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="exampleSelect1">Manager<span class="required">*</span></label>
+                                    <select class="form-control manager" id="manager" name="manager">
+                                        <option value="" selected>-Select Manager-</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="exampleSelect1">Manager<span class="required">*</span></label>
-                            <select class="form-control manager" id="manager" name="manager">
-                                <option value="" selected>-Select Manager-</option>
-                            </select>
-                        </div>
+
+
                         <div class="form-group">
                             <label for="exampleSelect1">Project<span class="required">*</span></label>
                             <select class="form-control" id="Project" name="Project">
@@ -136,21 +156,27 @@
                             <label>Description<span class="required">*</span></label>
                             <textarea name="description" id="description" cols="30" rows="3" class="form-control" placeholder="Enter Description">{{$data->description}}</textarea>
                         </div>
-                        <div class="form-group">
-                            <label for="exampleSelect1">Priority<span class="required">*</span></label>
-                            <select class="form-control" id="priority" name="priority">
-                                <option value="" data-id="0">-Select Priority-</option>
-                                @foreach ($priority as $value)
-                                <option value="{{$value->id}}" {{($value->id == $data->priority ? 'selected' : '')}}>{{$value->priority}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleSelect1">Status<span class="required">*</span></label>
-                            <select class="form-control" id="status" name="status">
-                                <option {{($data->status == 1 ? 'selected' : '')}} value="1">Active</option>
-                                <option {{($data->status == 0 ? 'selected' : '')}} value="0">Inactive</option>
-                            </select>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="exampleSelect1">Priority<span class="required">*</span></label>
+                                    <select class="form-control" id="priority" name="priority">
+                                        <option value="" data-id="0">-Select Priority-</option>
+                                        @foreach ($priority as $value)
+                                        <option value="{{$value->id}}" {{($value->id == $data->priority ? 'selected' : '')}}>{{$value->priority}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="exampleSelect1">Status<span class="required">*</span></label>
+                                    <select class="form-control" id="status" name="status">
+                                        <option {{($data->status == 1 ? 'selected' : '')}} value="1">Active</option>
+                                        <option {{($data->status == 0 ? 'selected' : '')}} value="0">Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="kt-portlet__foot">
                             <div class="kt-form__actions">

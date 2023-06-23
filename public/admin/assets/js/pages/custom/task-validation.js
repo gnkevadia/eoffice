@@ -49,6 +49,12 @@ var KTFormControls = function () {
                 status: {
                     required: true
                 },
+                department_id: {
+                    required: true
+                },
+                manager: {
+                    required: true
+                },
             },
             messages: {
                 'task': {
@@ -89,6 +95,12 @@ var KTFormControls = function () {
                 },
                 'status': {
                     required: "Please enter Status"
+                },
+                'department_id': {
+                    required: "Please enter Department Name"
+                },
+                'manager': {
+                    required: "Please enter Manager Name"
                 },
             },
 

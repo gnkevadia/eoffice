@@ -22,6 +22,12 @@ var KTFormControls = function () {
                 end_date: {
                     required: true
                 },
+                company_id: {
+                    required: true
+                },
+                department_id: {
+                    required: true
+                },
             },
             messages: {
                 'name': {
@@ -35,6 +41,12 @@ var KTFormControls = function () {
                 },
                 'end_date': {
                     required: "Please select End Date",
+                },
+                'company_id': {
+                    required: "Please enter Company Name",
+                },
+                'department_id': {
+                    required: "Please enter Department Name",
                 },
             },
 

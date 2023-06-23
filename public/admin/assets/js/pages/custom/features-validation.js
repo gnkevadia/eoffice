@@ -25,6 +25,12 @@ var KTFormControls = function () {
                 company_id: {
                     required: true
                 },
+                department_id: {
+                    required: true
+                },
+                manager: {
+                    required: true
+                },
             },
             messages: {
                 'name': {
@@ -41,6 +47,12 @@ var KTFormControls = function () {
                 },
                 'company_id': {
                     required: "Please Select Company Name",
+                },
+                'department_id': {
+                    required: "Please Select Department Name",
+                },
+                'manager': {
+                    required: "Please Select Manager Name",
                 },
             },
 
@@ -82,5 +94,7 @@ jQuery(document).ready(function() {
         $("#Project").attr('data-id',0).trigger('change');
         $("#priority").attr('data-id',0).trigger('change');
         $("#company").attr('data-id',0).trigger('change');
+        $("#department").attr('data-id',0).trigger('change');
+        $("#manager").attr('data-id',0).trigger('change');
     });
 });

@@ -46,89 +46,104 @@
                         </div>
                         @include('admin.includes.errormessage')
                         @if (session()->get('superAdmin'))
-                        <div class="form-group">
-                            <label>Company<span class="required"><code>*</code></span></label>
-                            <div>
-                                <select name="company_id" id="company" class="form-control">
-                                    <option value="">-Select Company-</option>
-                                    @foreach ($companyData as $company)
-                                    <option value="{{ $company->id }}" {{($company->id == $data->company_id ? 'selected' : '')}}>{{ $company->name }}
-                                    </option>
-                                    @endforeach
-                                </select>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Company<span class="required"><code>*</code></span></label>
+                                    <div>
+                                        <select name="company_id" id="company" class="form-control">
+                                            <option value="">-Select Company-</option>
+                                            @foreach ($companyData as $company)
+                                            <option value="{{ $company->id }}" {{($company->id == $data->company_id ? 'selected' : '')}}>{{ $company->name }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Department<span class="required"><code>*</code></span></label>
+                                    <div>
+                                        <select name="department_id" id="department" class="form-control department">
+                                            <option value="">-Select Department-</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>Department<span class="required"><code>*</code></span></label>
-                            <div>
-                                <select name="department_id" id="department" class="form-control department">
-                                    <option value="">-Select Department-</option>
-                                </select>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="exampleSelect1">Manager<span class="required">*</span></label>
+                                    <select class="form-control manager" id="manager" name="manager">
+                                        <option value="" selected>-Select Manager-</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Name<span class="required">*</span></label>
+                                    <input type="text" id="name" name="name" data-toggle="tooltip" title="Enter Name" class="form-control" placeholder="Enter Name" value="{{ $data->name }}" />
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="exampleSelect1">Manager<span class="required">*</span></label>
-                            <select class="form-control manager" id="manager" name="manager">
-                                <option value="" selected>-Select Manager-</option>
-                            </select>
-                        </div>
+
                         @endif
                         @if (session()->get('sub_admin'))
-                        <div class="form-group">
-                            <label>Department<span class="required"><code>*</code></span></label>
-                            <div>
-                                <select name="department_id" id="department" class="form-control department">
-                                    <option value="">-Select Department-</option>
-                                    @foreach ($arrDepartment as $department)
-                                    <option value="{{ $department->id }}" {{($department->id == $data->department_id ? 'selected' : '')}}>{{ $department->name }}
-                                    </option>
-                                    @endforeach
-                                </select>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Department<span class="required"><code>*</code></span></label>
+                                    <div>
+                                        <select name="department_id" id="department" class="form-control department">
+                                            <option value="">-Select Department-</option>
+                                            @foreach ($arrDepartment as $department)
+                                            <option value="{{ $department->id }}" {{($department->id == $data->department_id ? 'selected' : '')}}>{{ $department->name }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="exampleSelect1">Manager<span class="required">*</span></label>
+                                    <select class="form-control manager" id="manager" name="manager">
+                                        <option value="" selected>-Select Manager-</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="exampleSelect1">Manager<span class="required">*</span></label>
-                            <select class="form-control manager" id="manager" name="manager">
-                                <option value="" selected>-Select Manager-</option>
-                            </select>
-                        </div>
                         @endif
+                        @if (!session()->get('superAdmin'))
                         <div class="form-group">
                             <label>Name<span class="required">*</span></label>
                             <input type="text" id="name" name="name" data-toggle="tooltip" title="Enter Name" class="form-control" placeholder="Enter Name" value="{{ $data->name }}" />
                         </div>
-                        @if(Session::get('sub_admin'))
-                        <div class="form-group">
-                            <label>Manager<span class="required"><code>*</code></span></label>
-                            <div>
-                                <select name="department_id" id="department" class="form-control">
-                                    <option value="">-Select Manager-</option>
-                                    @foreach ($arrDepartment as $department)
-                                    <option value="{{ $department->id }}" {{($department->id == $data->department_id ? 'selected' : '')}}>{{ $department->name }}
-                                    </option>
-                                    @endforeach
-                                </select>
+                        @endif
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Start Date<span class="required">*</span></label>
+                                    <input type="date" id="start_date" name="start_date" data-toggle="tooltip" title="Enter Start Date" class="form-control" placeholder="Enter Start Date" value="<?php if (isset($data->start_date)) {
+                                                                                                                                                                                                        echo date('Y-m-d', strtotime($data->start_date));
+                                                                                                                                                                                                    } else {
+                                                                                                                                                                                                        echo old('start_date');
+                                                                                                                                                                                                    } ?>">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>End Date<span class="required">*</span></label>
+                                    <input type="date" id="end_date" name="end_date" data-toggle="tooltip" title="Enter End Date" class="form-control" placeholder="Enter End Date" value="<?php if (isset($data->end_date)) {
+                                                                                                                                                                                                echo date('Y-m-d', strtotime($data->end_date));
+                                                                                                                                                                                            } else {
+                                                                                                                                                                                                echo old('end_date');
+                                                                                                                                                                                            } ?>">
+                                </div>
                             </div>
                         </div>
-                        @endif
-                        <div class="form-group">
-                            <label>Start Date<span class="required">*</span></label>
-                            <input type="date" id="start_date" name="start_date" data-toggle="tooltip" title="Enter Start Date" class="form-control" placeholder="Enter Start Date" value="<?php if (isset($data->start_date)) {
-                                                                                                                                                                                                echo date('Y-m-d', strtotime($data->start_date));
-                                                                                                                                                                                            } else {
-                                                                                                                                                                                                echo old('start_date');
-                                                                                                                                                                                            } ?>">
-                        </div>
-
-                        <div class="form-group">
-                            <label>End Date<span class="required">*</span></label>
-                            <input type="date" id="end_date" name="end_date" data-toggle="tooltip" title="Enter End Date" class="form-control" placeholder="Enter End Date" value="<?php if (isset($data->end_date)) {
-                                                                                                                                                                                        echo date('Y-m-d', strtotime($data->end_date));
-                                                                                                                                                                                    } else {
-                                                                                                                                                                                        echo old('end_date');
-                                                                                                                                                                                    } ?>">
-                        </div>
-
                         <div class="form-group">
                             <label for="exampleSelect1">Status<span class="required">*</span></label>
                             <select class="form-control" id="status" name="status">
