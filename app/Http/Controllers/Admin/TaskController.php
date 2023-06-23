@@ -13,6 +13,7 @@ use App\Models\Task_Status;
 use App\Models\Users;
 use Illuminate\Support\Facades\Session;
 use App\Library\Common;
+use App\Models\Department;
 use Illuminate\Support\Facades\DB;
 use App\Models\Company;
 
@@ -74,12 +75,15 @@ class TaskController extends Controller
             $request['end_date'] = date('Y-m-d H:i:s');
             return Common::commanAddPage($this->objModel, $request, $messages, $regxvalidator, $arrFile, null, $arrExpect);
         } else {
+            $dbDepartment = new Department();
+            $id  = Session::get('company_id');
+            $arrDepartment = $dbDepartment->getAll(null, $id);
             if (session()->has('superAdmin')) {
                 $companys = new Company();
                 $companyData = $companys->getAll();
                 return view(RENDER_URL . '.add', compact('arrfeatures', 'arrproject', 'priority', 'arrusers', 'taskstatus', 'companyData'));
             }
-            return view(RENDER_URL . '.add', compact('arrfeatures', 'arrproject', 'priority', 'arrusers', 'taskstatus'));
+            return view(RENDER_URL . '.add', compact('arrfeatures', 'arrproject', 'priority', 'arrusers', 'taskstatus','arrDepartment'));
         }
     }
 
@@ -122,12 +126,15 @@ class TaskController extends Controller
             $request->merge(['path' => 'images/task/']);
             return Common::commanEditPage($this->objModel, $request, $messages, $regxvalidator, $id, null, null, $arrExpect);
         } else {
+            $dbDepartment = new Department();
+            $id  = Session::get('company_id');
+            $arrDepartment = $dbDepartment->getAll(null, $id);
             if (session()->has('superAdmin')) {
                 $companys = new Company();
                 $companyData = $companys->getAll();
                 return view(RENDER_URL . '.edit', compact('data', 'arrfeatures', 'arrproject', 'priority', 'arrusers', 'taskstatus', 'companyData'));
             }
-            return view(RENDER_URL . '.edit', compact('data', 'arrfeatures', 'arrproject', 'priority', 'arrusers', 'taskstatus'));
+            return view(RENDER_URL . '.edit', compact('data', 'arrfeatures', 'arrproject', 'priority', 'arrusers', 'taskstatus','arrDepartment'));
         }
     }
     public function delete(Request $request)

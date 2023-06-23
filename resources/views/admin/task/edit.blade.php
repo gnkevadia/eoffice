@@ -100,18 +100,67 @@
                             <label>Company<span class="required"><code>*</code></span></label>
                             <div>
                                 <select name="company_id" id="company" class="form-control">
-                                    <option value="" data-id="0">-Select Company-</option>
+                                    <option value="">-Select Company-</option>
                                     @foreach ($companyData as $company)
-                                    <option value="{{ $company->id }}" {{($company->id == $data->company_id ? 'selected' : '')}}>{{ $company->name }}
+                                    <option value="{{ $company->id }}" {{($company->id == $data->company_id ? 'selected' : '')}}>{{ $company->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Department<span class="required"><code>*</code></span></label>
+                            <div>
+                                <select name="department_id" id="department" class="form-control department">
+                                    <option value="">-Select Department-</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleSelect1">Manager<span class="required">*</span></label>
+                            <select class="form-control manager" id="manager" name="manager">
+                                <option value="" selected>-Select Manager-</option>
+                            </select>
+                        </div>
+                        @endif
+                        @if (session()->get('sub_admin'))
+                        <div class="form-group">
+                            <label>Department<span class="required"><code>*</code></span></label>
+                            <div>
+                                <select name="department_id" id="department" class="form-control department">
+                                    <option value="">-Select Department-</option>
+                                    @foreach ($arrDepartment as $department)
+                                    <option value="{{ $department->id }}" {{($department->id == $data->department_id ? 'selected' : '')}}>{{ $department->name }}
                                     </option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label for="exampleSelect1">Manager<span class="required">*</span></label>
+                            <select class="form-control manager" id="manager" name="manager">
+                                <option value="" selected>-Select Manager-</option>
+                            </select>
+                        </div>
                         @endif
+                        @if (session()->get('sub_admin') || session()->get('superAdmin'))
                         <div class="form-group">
                             <label for="exampleSelect1">Project<span class="required">*</span></label>
-                            <select class="form-control" id="Project" name="Project">
+                            <select class="form-control project" id="Project" name="Project">
+                                <option value="" data-id="0">-Select Project-</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleSelect1">Features<span class="required">*</span></label>
+                            <select class="form-control features" id="features" name="features">
+                                <option value="" data-id="0">-Select Features-</option>
+                                
+                            </select>
+                        </div>
+                        @endif
+                        @if (session()->get('manager'))
+                        <div class="form-group">
+                            <label for="exampleSelect1">Project<span class="required">*</span></label>
+                            <select class="form-control project" id="Project" name="Project">
                                 <option value="" data-id="0">-Select Project-</option>
                                 @foreach ($arrproject as $value)
                                 <option value="{{$value->id}}" {{($value->id == $data->project ? 'selected' : '')}}>{{$value->name}}</option>
@@ -120,13 +169,12 @@
                         </div>
                         <div class="form-group">
                             <label for="exampleSelect1">Features<span class="required">*</span></label>
-                            <select class="form-control" id="features" name="features">
+                            <select class="form-control features" id="features" name="features">
                                 <option value="" data-id="0">-Select Features-</option>
-                                @foreach ($arrfeatures as $value)
-                                <option value="{{$value->id}}" {{($value->id == $data->features ? 'selected' : '')}}>{{$value->name}}</option>
-                                @endforeach
+
                             </select>
                         </div>
+                        @endif
                         <div class="form-group">
                             <label>Task<span class="required">*</span></label>
                             <input type="text" id="task" name="task" data-toggle="tooltip" title="Enter Task" class="form-control" placeholder="Enter task" value="{{$data->task}}">
@@ -252,12 +300,6 @@
 <script type="text/javascript">
     $(document).ready(function() {
         var counter = 1;
-        // $("#btnadd").on("click", function() {
-        //     counter++;
-        //     // alert('111');
-        //     // $("#addfield").append('<div id="file' + counter + '"><input type="file" class="form-control mt-2" name="License_image[]" multiple> <div class="text-right">   <button type="button" class="mt-2 btn btn-danger remove_btn"  id=' + counter + '>-</button></div></div>');
-        //     $("#addfield").append('<div id="file' + counter + '"><div class="row"><div class="col-lg-11 col-sm-10 col-10"><input type="file" class="form-control mt-2" name="file[]" ></div> <div class="col-lg-1 col-sm-1 col-1">   <button type="button" class="mt-2 btn btn-danger float-right mr-3 remove_btn"  id=' + counter + '>-</button></div></div></div>');
-        // });
         $(".addMultipleImages").click(function() {
             console.log(counter);
             if (counter >= 2) {
@@ -276,7 +318,6 @@
                 }
             } else {
                 $("#addfield").prepend(' <div class="col-lg-3 inputadd multipleImage ml-2 mt-2"><input id="attachment' + counter + '" type="file" class="form-control testing attachment' + counter + '" name="file[]" /> <button type="button" class="btn btn-danger ml-2 delete_input" style="text-align:center">x</button></div>');
-                // $('#attachment' + counter).trigger('click');
                 $(this).parent().siblings('.inputadd').children('#attachment' + counter).trigger('click');
                 counter++;
             }
@@ -291,6 +332,142 @@
         $(document).on("click", ".delete_input", function() {
             $(this).parent().remove();
         });
+
+        $("#company").change(function() {
+            let id = $(this).val();
+            let url = '{{url("getDepartments")}}';
+            if (id == null) {
+                id = '0';
+            }
+            $.ajax({
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                url: url,
+                type: 'post',
+                data: {
+                    'id': id
+                },
+                dataType: 'JSON',
+                success: function(data) {
+                    let departId = <?php echo $data->department_id; ?>;
+                    console.log('department', departId);
+                    var html = '<option value="">-Select Department-</option>';
+                    $.each(data, function(i) {
+                        if (departId == data[i].id) {
+                            html += '<option value="' + data[i].id + '" selected>' + data[i].name + '</option>';
+                        } else {
+                            html += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+                        }
+                    });
+                    $("#department").html(html);
+                    $('.department').trigger('change');
+                }
+            });
+        }).change();
+
+        $(".department").change(function() {
+            let id = $(this).val();
+            let companyId = $('#company').val();
+            let url = '{{url("getManager")}}';
+            if (id == null) {
+                id = '0';
+            }
+            $.ajax({
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                url: url,
+                type: 'post',
+                data: {
+                    'id': id,
+                    'company_id': companyId
+                },
+                dataType: 'JSON',
+                success: function(data) {
+                    let managerid = <?php echo $data->manager; ?>;
+                    console.log(managerid);
+                    var html = '<option value="">-Select Manager-</option>';
+                    $.each(data, function(i) {
+                        if (managerid == data[i].id) {
+                            html += '<option value="' + data[i].id + '" selected>' + data[i].name + '</option>';
+                        } else {
+                            html += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+                        }
+                    });
+                    $(".manager").html(html);
+                    $('.manager').trigger('change');
+                }
+            });
+        }).change();
+
+        $(".manager").change(function() {
+            let id = $(this).val();
+            console.log('manager', id);
+            let companyId = $('#company').val();
+            let url = '{{url("getProject")}}';
+            if (id == null) {
+                id = '0';
+            }
+            $.ajax({
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                url: url,
+                type: 'post',
+                data: {
+                    'id': id,
+                    'company_id': companyId
+                },
+                dataType: 'JSON',
+                success: function(data) {
+                    let projectid = <?php echo $data->project; ?>;
+                    var html = '<option value="">-Select Project-</option>';
+                    $.each(data, function(i) {
+                        if (projectid == data[i].id) {
+                            html += '<option value="' + data[i].id + '" selected>' + data[i].name + '</option>';
+                        } else {
+                            html += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+                        }
+                    });
+                    $(".project").html(html);
+                    $('.project').trigger('change');
+                }
+            });
+        });
+
+        $(".project").change(function() {
+            let id = $(this).val();
+            let companyId = $('#company').val();
+            let url = '{{url("getfeatures")}}';
+            if (id == null) {
+                id = '0';
+            }
+            $.ajax({
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                url: url,
+                type: 'post',
+                data: {
+                    'id': id,
+                    'company_id': companyId
+                },
+                dataType: 'JSON',
+                success: function(data) {
+                    let featurestid = <?php echo $data->features; ?>;
+                    var html = '<option value="">-Select Features-</option>';
+                    $.each(data, function(i) {
+                        if (featurestid == data[i].id) {
+                            html += '<option value="' + data[i].id + '" selected>' + data[i].name + '</option>';
+                        } else {
+                            html += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+                        }
+                    });
+                    $(".features").html(html);
+                }
+            });
+        }).change();
     });
 </script>
 @stop

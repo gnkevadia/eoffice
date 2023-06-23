@@ -9,6 +9,7 @@ use App\Models\Users;
 use App\Library\Common;
 use App\Models\Company;
 use App\Models\Department;
+use App\Models\Features;
 use Illuminate\Support\Facades\Session;
 use SebastianBergmann\CodeCoverage\Report\Xml\Project;
 
@@ -84,6 +85,7 @@ class ProjectMasterController extends Controller
     public function edit(Request $request, $id = null)
     {
         $data = $this->objModel->getOne($id);
+
         if ($request->isMethod('post') && isset($id) && !empty($id)) {
             $messages = [
                 'name.required' => 'Please Enter Name',
@@ -152,6 +154,21 @@ class ProjectMasterController extends Controller
                 $companyId = Session::get('company_id');
             }
             $getManager = new ProjectMaster();
+            $managers = $getManager->getById($id, $companyId);
+            return json_encode($managers);
+        }
+    }
+    public function getfeatures(Request $request)
+    {
+        if ($request->ajax()) {
+            $id = $request['id'];
+            $companyId = $request['company_id'];
+            if (!empty($companyId)) {
+                $companyId = $request['company_id'];
+            } else {
+                $companyId = Session::get('company_id');
+            }
+            $getManager = new Features();
             $managers = $getManager->getById($id, $companyId);
             return json_encode($managers);
         }

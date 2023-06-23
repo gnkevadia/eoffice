@@ -94,6 +94,7 @@
                                 <option value="" selected>-Select Manager-</option>
                             </select>
                         </div>
+                        
                         @endif
                         @if (session()->get('sub_admin'))
                         <div class="form-group">
@@ -114,25 +115,42 @@
                                 <option value="" selected>-Select Manager-</option>
                             </select>
                         </div>
+                        
                         @endif
+                        @if (session()->get('sub_admin') || session()->get('superAdmin'))
                         <div class="form-group">
                             <label for="exampleSelect1">Project<span class="required">*</span></label>
-                            <select class="form-control" id="Project" name="Project">
+                            <select class="form-control project" id="Project" name="Project">
                                 <option value="" data-id="0">-Select Project-</option>
-                                <!-- @foreach ($arrproject as $value)
-                                <option value="{{$value->id}}">{{$value->name}}</option>
-                                @endforeach -->
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="exampleSelect1">Features<span class="required">*</span></label>
-                            <select class="form-control" id="features" name="features">
+                            <select class="form-control features" id="features" name="features">
                                 <option value="" data-id="0">-Select Features-</option>
-                                @foreach ($arrfeatures as $value)
+                                
+                            </select>
+                        </div>
+                        @endif
+
+                        @if (session()->get('manager'))
+                        <div class="form-group">
+                            <label for="exampleSelect1">Project<span class="required">*</span></label>
+                            <select class="form-control project" id="Project" name="Project">
+                                <option value="" data-id="0">-Select Project-</option>
+                                @foreach ($arrproject as $value)
                                 <option value="{{$value->id}}">{{$value->name}}</option>
                                 @endforeach
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label for="exampleSelect1">Features<span class="required">*</span></label>
+                            <select class="form-control features" id="features" name="features">
+                                <option value="" data-id="0">-Select Features-</option>
+
+                            </select>
+                        </div>
+                        @endif
                         <div class="form-group">
                             <label>Task<span class="required">*</span></label>
                             <input type="text" id="task" name="task" data-toggle="tooltip" title="Enter Task" class="form-control" placeholder="Enter task" value="{{ old('name') }}">
@@ -345,6 +363,34 @@
                         html += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
                     });
                     $(".project").html(html);
+                }
+            });
+        });
+
+        $(".project").change(function() {
+            let id = $(this).val();
+            let companyId = $('#company').val();
+            let url = '{{url("getfeatures")}}';
+            if (id == null) {
+                id = '0';
+            }
+            $.ajax({
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                url: url,
+                type: 'post',
+                data: {
+                    'id': id,
+                    'company_id': companyId
+                },
+                dataType: 'JSON',
+                success: function(data) {
+                    var html = '<option value="">-Select Features-</option>';
+                    $.each(data, function(i) {
+                        html += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+                    });
+                    $(".features").html(html);
                 }
             });
         });

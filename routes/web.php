@@ -54,6 +54,7 @@ Route::get('/clear-cache', function () {
 Route::match(['get', 'post'], 'getDepartments', [UserController::class, 'getDepartment']);
 Route::match(['get', 'post'], 'getManager', [UserController::class, 'getManager']);
 Route::match(['get', 'post'], 'getProject', [ProjectMasterController::class, 'getProject']);
+Route::match(['get', 'post'], 'getfeatures', [ProjectMasterController::class, 'getfeatures']);
 Route::group(['prefix' => 'admin', 'namespace' => '\App\Http\Controllers'], function () {
 
     Route::match(['get'], '/dashboard', [DashboardController::class, 'index']);

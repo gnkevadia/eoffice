@@ -369,8 +369,18 @@ class Common extends Eloquent
                 $task->updated_by = Session::get('id');
                 if (Session::get('superAdmin')) {
                     $task->company_id = $request['company_id'];
-                } else {
-                    $task->company_id = Session::get('company_id');
+                    $task->department_id = $request['department_id'];
+                    $task->manager = $request['manager'];
+                }
+                if(Session::get('sub_admin')){
+                    $task->company_id =  Session::get('company_id');
+                    $task->department_id = $request['department_id'];
+                    $task->manager = $request['manager'];
+                }
+                if(Session::get('manager')){
+                    $task->company_id =  Session::get('company_id');
+                    $task->department_id = Session::get('department_id');
+                    $task->manager = Session::get('id');
                 }
                 $task->save();
                 $insertId = $task->id;

@@ -47,4 +47,15 @@ class Features extends Model
         $allids = ltrim($ids, 'on,');
         return Features::whereIn('id', explode(',', $allids))->update($arrUpdate);
     }
+
+    public function getById($id, $companyId)
+    {
+        $query = Features::query();
+        if (!empty($id)) {
+            $data =  $query->where(['company_id' => $companyId, 'project' => $id, 'deleted' => 0])->get();
+        } else {
+            $data = [];
+        }
+        return $data;
+    }
 }
