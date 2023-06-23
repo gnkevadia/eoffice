@@ -116,6 +116,7 @@ class LoginController extends Controller
                     }
                     if ($roleDetails->id == $rolesId['USER']) {
                         Session::put('user', true);
+                        Session::put('department_id', $userDetails->department_id);
                     }
                     return json_encode(array("status" => 1, "msg" => "Login Successful.", "action" => "/admin/dashboard", "data" => $userDetails));
                 } else {

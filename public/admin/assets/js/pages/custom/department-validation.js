@@ -18,7 +18,13 @@ var KTFormControls = function () {
                 },
                 business_id: {
                     required: true
-                }
+                },
+                company_id: {
+                    required: true
+                },
+                manager: {
+                    required: true
+                },
             },
             messages: {
                 'name': {
@@ -29,6 +35,12 @@ var KTFormControls = function () {
                 },
                 'business_id': {
                     required: "Please enter Business Name",
+                },
+                'company_id': {
+                    required: "Please enter Company Name",
+                },
+                'manager': {
+                    required: "Please enter Manager Name",
                 },
             },
 

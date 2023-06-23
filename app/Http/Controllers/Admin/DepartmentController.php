@@ -81,7 +81,7 @@ class DepartmentController extends Controller
             $companyId = Session::get('company_id');
             $arrManager = $dbManager->getById(null, $companyId);
             if (Session::get('superAdmin')) {
-                return view(RENDER_URL . '.add', compact('data', 'companyData'));
+                return view(RENDER_URL . '.edit', compact('data', 'companyData','arrManager'));
             }
             return view(RENDER_URL . '.edit', compact('data', 'companyData', 'arrManager'));
             // return view(RENDER_URL . '.edit', compact('data', 'companyData'));

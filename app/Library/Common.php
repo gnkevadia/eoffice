@@ -382,6 +382,11 @@ class Common extends Eloquent
                     $task->department_id = Session::get('department_id');
                     $task->manager = Session::get('id');
                 }
+                if (Session::get('user')) {
+                    $task->company_id =  Session::get('company_id');
+                    $task->department_id = Session::get('department_id');
+                    $task->manager = Session::get('id');
+                }
                 $task->save();
                 $insertId = $task->id;
                 if (empty($request->file)) {

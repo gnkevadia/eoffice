@@ -182,7 +182,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label>Description<span class="required">*</span></label>
-                                    <textarea name="description" id="description" cols="30" rows="1" class="form-control" placeholder="Enter Description"></textarea>
+                                    <textarea name="description" id="description" cols="30" rows="1" class="form-control" placeholder="Enter Description">{{ old('description') }}</textarea>
                                 </div>
                             </div>
                         </div>
