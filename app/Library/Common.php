@@ -365,6 +365,7 @@ class Common extends Eloquent
                 $task->end_date = $request['end_date'];
                 $task->cycle = $request['cycle'];
                 $task->status = $request['status'];
+                $task->ticket = $request['ticket'];
                 $task->created_by = Session::get('id');
                 $task->updated_by = Session::get('id');
                 if (Session::get('superAdmin')) {

@@ -101,9 +101,10 @@ var KTDatatableDataLocalDemo = function () {
                             autoHide: false,
                             template: function (row) {
                                 var roleBasedAction = '';
-                                // if(isViewStatus == true){
-                                // 	roleBasedAction += '<a href="'+viewURL+'/'+row.id+'" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Edit details"><i class="flaticon-eye"></i></a>'
-                                // }
+                                if (isViewStatus == true) {
+                                    // console.log(row);
+                                    roleBasedAction += '<a href="task/view/' + row.id + '" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Edit details"><i class="flaticon-eye"></i></a>'
+                                }
                                 // if(isUpdateStatus == true){
                                 roleBasedAction += '<a href="task/edit/' + row.id + '" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Edit details"><i class="la la-edit"></i></a>'
                                 // }

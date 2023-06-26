@@ -32,7 +32,7 @@ class Task extends Model
                         }
                         $taskimage = Task_image::where('id', $image->id)->delete();
                     }
-                } 
+                }
             } else {
                 if (File::exists(public_path('images/task/' . $image->images))) {
                     File::delete(public_path('images/task/' . $image->images));
@@ -51,6 +51,7 @@ class Task extends Model
         $task->start_date = $request['start_date'];
         $task->end_date = $request['end_date'];
         $task->cycle = $request['cycle'];
+        $task->ticket = $request['ticket'];
         $task->status = $request['status'];
         $task->created_by = session()->get('id');
         $task->updated_by = session()->get('id');
@@ -73,13 +74,13 @@ class Task extends Model
     }
     public function getAll($orderby = null, $where = array(), $dynamicWhere = '')
     {
-        if(Session::get('superAdmin')){
+        if (Session::get('superAdmin')) {
             $where = ['task_master.deleted' => 0];
-        }else{
+        } else {
             $role_id = Session::get('settings');
-            $where = ['task_master.deleted' => 0,'task_master.company_id' => Session::get('company_id')];
+            $where = ['task_master.deleted' => 0, 'task_master.company_id' => Session::get('company_id')];
         }
-        $data =  Task::join('task_status', 'task_master.status', '=', 'task_status.id')->join('users', 'task_master.assignee', '=', 'users.id')->join('features_master', 'task_master.features', '=', 'features_master.id')->join('projectmaster', 'task_master.project', '=', 'projectmaster.id')->where($where)->select('task_master.*', 'features_master.name as features', 'projectmaster.name as project', 'users.name as assignee','task_status.name as status')->get();
+        $data =  Task::join('task_status', 'task_master.status', '=', 'task_status.id')->join('users', 'task_master.assignee', '=', 'users.id')->join('features_master', 'task_master.features', '=', 'features_master.id')->join('projectmaster', 'task_master.project', '=', 'projectmaster.id')->where($where)->select('task_master.*', 'features_master.name as features', 'projectmaster.name as project', 'users.name as assignee', 'users.id as assigneeId', 'task_status.name as status')->get();
         return $data;
     }
     public function deleteOne($id, $arrUpdate)
@@ -99,5 +100,17 @@ class Task extends Model
     public function task_images()
     {
         return $this->hasMany('App\Models\Task_image', 'task_id', 'id');
+    }
+    public function getUserTasks($where)
+    {
+        $id = ['task_master.id' => $where];
+        $query = Task::query();
+        $data = $query->with('task_images')->join('projectmaster', 'projectmaster.id', '=', 'task_master.project')->join('features_master', 'features_master.id', '=', 'task_master.features')->join('users', 'users.id', '=', 'task_master.manager')->join('priority', 'priority.id', '=', 'task_master.priority')->where($id)->select('task_master.*', 'projectmaster.name as projectName', 'features_master.name as featuresss', 'users.name as managerName', 'priority.priority as priorityName')->first();
+
+        return $data;
+    }
+    public function statusUpdate($id, $arrUpdate)
+    {
+        return Task::where('id', $id)->update($arrUpdate);
     }
 }

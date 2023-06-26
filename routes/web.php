@@ -79,6 +79,7 @@ Route::group(['prefix' => 'admin', 'namespace' => '\App\Http\Controllers'], func
 
     Route::match(['get', 'post'], '/user/check-user-availability', 'Admin\UserController@checkAvailability');
     Route::match(['get', 'post'], '/user/delete-file', 'Admin\UserController@deleteFile');
+    Route::match(['get', 'post'], 'user/attachment/add/{id}', [TaskController::class, 'addAttachment']);
 
     /** Module Management Routes (Admin) */
     Route::match(['get', 'post'], '/module', [ModuleController::class, 'index']); //my
@@ -123,6 +124,8 @@ Route::group(['prefix' => 'admin', 'namespace' => '\App\Http\Controllers'], func
     Route::match(['get', 'post'], '/task/edit/{id}', [TaskController::class, 'edit']); //my
     Route::match(['get', 'post'], '/task/delete', [TaskController::class, 'delete']); //my
     Route::match(['get', 'post'], '/task/toggle', [TaskController::class, 'toggleStatus']);
+    Route::match(['get', 'post'], '/task/view/{id}', [TaskController::class, 'view']);
+    Route::match(['get', 'post'], '/task/status/{id}', [TaskController::class, 'statusUpdate']);
 
     /** Department Routes (Admin) */
     Route::match(['get', 'post'], '/department', [DepartmentController::class, 'index']); //my

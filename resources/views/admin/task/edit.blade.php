@@ -278,17 +278,11 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="exampleSelect1">Cycle<span class="required">*</span></label>
-                                    <select class="form-control" id="cycle" name="cycle">
-                                        <option value="" data-id="0">-Select Cycle-</option>
-                                        <option {{($data->cycle == 1 ? 'selected' : '')}} value="1">1</option>
-                                        <option {{($data->cycle == 2 ? 'selected' : '')}} value="2">2</option>
-                                        <option {{($data->cycle == 3 ? 'selected' : '')}} value="3">3</option>
-                                        <option {{($data->cycle == 4 ? 'selected' : '')}} value="4">4</option>
-                                        <option {{($data->cycle == 5 ? 'selected' : '')}} value="5">5</option>
-                                    </select>
+                                    <label>Ticket No<span class="required">*</span></label>
+                                    <input type="text" id="ticket" name="ticket" data-toggle="tooltip" title="Enter Ticket" class="form-control" placeholder="Enter Ticket" value="{{ old('ticket') }}">
                                 </div>
                             </div>
+
                         </div>
                         <div class="row">
                             <div class="col-lg-6">
@@ -312,14 +306,31 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="exampleSelect1">Status<span class="required">*</span></label>
-                            <select class="form-control" id="status" name="status">
-                                <option value="" data-id="0">-Select Status-</option>
-                                @foreach ($taskstatus as $value)
-                                <option value="{{$value->id}}" {{($value->id == $data->status ? 'selected' : '')}}>{{$value->name}}</option>
-                                @endforeach
-                            </select>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="exampleSelect1">Cycle<span class="required">*</span></label>
+                                    <select class="form-control" id="cycle" name="cycle">
+                                        <option value="" data-id="0">-Select Cycle-</option>
+                                        <option {{($data->cycle == 1 ? 'selected' : '')}} value="1">1</option>
+                                        <option {{($data->cycle == 2 ? 'selected' : '')}} value="2">2</option>
+                                        <option {{($data->cycle == 3 ? 'selected' : '')}} value="3">3</option>
+                                        <option {{($data->cycle == 4 ? 'selected' : '')}} value="4">4</option>
+                                        <option {{($data->cycle == 5 ? 'selected' : '')}} value="5">5</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="exampleSelect1">Status<span class="required">*</span></label>
+                                    <select class="form-control" id="status" name="status">
+                                        <option value="" data-id="0">-Select Status-</option>
+                                        @foreach ($taskstatus as $value)
+                                        <option value="{{$value->id}}" {{($value->id == $data->status ? 'selected' : '')}}>{{$value->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="kt-portlet__foot">
                             <div class="kt-form__actions">

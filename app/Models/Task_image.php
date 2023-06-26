@@ -11,9 +11,8 @@ class Task_image extends Model
     protected $table = 'task_images';
 
 
-    public function task(){
+    public function task()
+    {
         return $this->hasMany('App\Models\Task', 'id', 'task_id');
     }
-
-
 }

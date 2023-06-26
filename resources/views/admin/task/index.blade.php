@@ -72,4 +72,11 @@
 @stop
 @section('metronic_js')
 <script src="{{ asset('admin/assets/js/pages/custom/task.js')}}" type="text/javascript"></script>
+<script>
+    let isViewStatus = <?php if (Session::get('user')) {
+                            echo '1';
+                        } else {
+                            echo '0';
+                        } ?>
+</script>
 @stop

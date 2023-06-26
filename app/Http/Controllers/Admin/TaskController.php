@@ -8,12 +8,14 @@ use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\Features;
 use App\Models\Priority;
+use App\Models\Task_image;
 use App\Models\ProjectMaster;
 use App\Models\Task_Status;
 use App\Models\Users;
 use Illuminate\Support\Facades\Session;
 use App\Library\Common;
 use App\Models\Department;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 use App\Models\Company;
 
@@ -146,5 +148,62 @@ class TaskController extends Controller
     public function toggleStatus(Request $request)
     {
         return Common::commanTogglePage($this->objModel, $request);
+    }
+    public function view(Request $request, $id)
+    {
+        $dbTask = new Task();
+        $data = $dbTask->getUserTasks($id);
+
+        $taskstatus =  Task_Status::where('deleted', 0)->get();
+        if ($request->isMethod('post') && isset($id) && !empty($id)) {
+            $dbTask = new Task();
+
+            $task_imges = $dbTask->getOne($id);
+
+            foreach ($task_imges->task_images as $image) {
+                if (array_key_exists("remainimg", $request->all())) {
+                    $images = $request['remainimg'];
+                    if (!is_null($images)) {
+                        if (!in_array($image->id, $images)) {
+                            if (File::exists(public_path('images/task/' . $image->images))) {
+                                File::delete(public_path('images/task/' . $image->images));
+                            }
+                            $taskimage = Task_image::where('id', $image->id)->delete();
+                        }
+                    }
+                } else {
+                    if (File::exists(public_path('images/task/' . $image->images))) {
+                        File::delete(public_path('images/task/' . $image->images));
+                    }
+                    $taskimage = Task_image::where('id', $image->id)->delete();
+                }
+            }
+            if (!empty($request['file']) && count($request['file'])) {
+                $files = $request['file'];
+                foreach ($files as $file) {
+                    $image = $file;
+                    $extension = $image->getClientOriginalExtension();
+                    $img_name  =   rand() . time() . '.' . $extension;
+                    $file->move(public_path('images/task/'), $img_name);
+                    $attachment = new Task_image();
+                    $attachment->task_id = $id;
+                    $attachment->images = $img_name;
+                    $attachment->save();
+                }
+                return redirect(URL . '/view/' . $id);
+            }
+            if (!empty($request['status'])) {
+            }
+        }
+        return view(RENDER_URL . '.view', compact('data', 'taskstatus'));
+    }
+    public function statusUpdate(Request $request, $id)
+    {
+        if ($request->isMethod('post') && isset($id) && !empty($id)) {
+            $dbTask = new Task();
+            $arrUpdate =  $request->except(array_merge(['_token']));
+            $data = $dbTask->statusUpdate($id, $arrUpdate);
+            return redirect(URL . '/view/' . $id);
+        }
     }
 }
