@@ -54,9 +54,6 @@ var KTDatatableDataLocalDemo = function () {
                         }, {
                             field: 'name',
                             title: 'Name',
-                            template: function (row) {
-                                console.log("jaaa",row);
-                            }
                         }, {
                             field: 'Actions',
                             title: 'Actions',

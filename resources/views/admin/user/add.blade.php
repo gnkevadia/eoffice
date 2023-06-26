@@ -45,56 +45,78 @@
                             </div>
                         </div>
                         @include('admin.includes.errormessage')
-                        <div class="form-group">
-                            <label>Name<span class="required">*</span></label>
-                            <input type="text" id="name" name="name" data-toggle="tooltip" title=" Name" class="form-control" placeholder="Enter  Name" value="{{ old('name') }}" />
-                        </div>
-                        <div class="form-group">
-                            <label>Email<span class="required">*</span></label>
-                            <input type="text" id="email" name="email" data-toggle="tooltip" title="Email" class="form-control" placeholder="Email" value="{{ old('email') }}">
-                        </div>
-                        <div class="form-group">
-                            <label>Password<span class="required">*</span></label>
-                            <input type="password" id="password" name="password" data-toggle="tooltip" title="Password" class="form-control" placeholder="Password" value="{{ old('password') }}">
-                        </div>
-
-
-                        <div class="form-group">
-                            <label>Address1<span class="required">*</span></label>
-                            <input type="text" id="address1" name="address1" data-toggle="tooltip" title="Address1" class="form-control" placeholder="Address1" value="{{ old('address1') }}">
-                        </div>
-                        <div class="form-group">
-                            <label>Address2<span class="required">*</span></label>
-                            <input type="text" id="address2" name="address2" data-toggle="tooltip" title="Address2" class="form-control" placeholder="Address2" value="{{ old('address2') }}">
-                        </div>
-                        <div class="form-group">
-                            <label>Postal Code<span class="required">*</span></label>
-                            <input type="text" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" id="postal_code" name="postal_code" data-toggle="tooltip" title="Postal Code" class="form-control" placeholder="Postal Code" value="{{ old('postal_code') }}">
-                        </div>
-                        <div class="form-group">
-                            <label>Country<span class="required"><code>*</code></span></label>
-                            <div>
-                                <select name="country_id" id="country" class='form-control'>
-                                    <option value="">-- Country --</option>
-                                    @if (isset($arrCountry) && !empty($arrCountry))
-                                    @foreach ($arrCountry as $key => $val)
-                                    <option value="{{$val->id}}">{{$val->nicename}}</option>
-                                    @endforeach
-                                    @endif
-                                </select>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Name<span class="required">*</span></label>
+                                    <input type="text" id="name" name="name" data-toggle="tooltip" title=" Name" class="form-control" placeholder="Enter  Name" value="{{ old('name') }}" />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Email<span class="required">*</span></label>
+                                    <input type="text" id="email" name="email" data-toggle="tooltip" title="Email" class="form-control" placeholder="Email" value="{{ old('email') }}">
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>State<span class="required"><code>*</code></span></label>
-                            <div>
-                                <select name="state_id" id="state_id" class="form-control">
-                                    <option value="">-Select State-</option>
-                                    @if (isset($arrState) && !empty($arrState))
-                                    @foreach ($arrState as $key => $val)
-                                    <option value="{{ $val->id }}" {{ old('state_id') == $val->id ? 'selected' : '' }}>{{ $val->states_name }}</option>
-                                    @endforeach
-                                    @endif
-                                </select>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Password<span class="required">*</span></label>
+                                    <input type="password" id="password" name="password" data-toggle="tooltip" title="Password" class="form-control" placeholder="Password" value="{{ old('password') }}">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Address1<span class="required">*</span></label>
+                                    <input type="text" id="address1" name="address1" data-toggle="tooltip" title="Address1" class="form-control" placeholder="Address1" value="{{ old('address1') }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Address2<span class="required">*</span></label>
+                                    <input type="text" id="address2" name="address2" data-toggle="tooltip" title="Address2" class="form-control" placeholder="Address2" value="{{ old('address2') }}">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Postal Code<span class="required">*</span></label>
+                                    <input type="text" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" id="postal_code" name="postal_code" data-toggle="tooltip" title="Postal Code" class="form-control" placeholder="Postal Code" value="{{ old('postal_code') }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Country<span class="required"><code>*</code></span></label>
+                                    <div>
+                                        <select name="country_id" id="country" class='form-control'>
+                                            <option value="">-- Country --</option>
+                                            @if (isset($arrCountry) && !empty($arrCountry))
+                                            @foreach ($arrCountry as $key => $val)
+                                            <option value="{{$val->id}}">{{$val->nicename}}</option>
+                                            @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>State<span class="required"><code>*</code></span></label>
+                                    <div>
+                                        <select name="state_id" id="state_id" class="form-control">
+                                            <option value="">-Select State-</option>
+                                            @if (isset($arrState) && !empty($arrState))
+                                            @foreach ($arrState as $key => $val)
+                                            <option value="{{ $val->id }}" {{ old('state_id') == $val->id ? 'selected' : '' }}>{{ $val->states_name }}</option>
+                                            @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -123,24 +145,30 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>Department<span class="required"><code>*</code></span></label>
-                            <div>
-                                <select name="department_id" id="department" class="form-control">
-                                    <option value="">-Select Department-</option>
-                                </select>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Department<span class="required"><code>*</code></span></label>
+                                    <div>
+                                        <select name="department_id" id="department" class="form-control">
+                                            <option value="">-Select Department-</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Business<span class="required"><code>*</code></span></label>
-                            <div>
-                                <select name="business_id" id="business" class="form-control">
-                                    <option value="">-Select Business-</option>
-                                    @foreach ($arrBusiness as $business)
-                                    <option value="{{ $business->id }}">{{ $business->name }}
-                                    </option>
-                                    @endforeach
-                                </select>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Business<span class="required"><code>*</code></span></label>
+                                    <div>
+                                        <select name="business_id" id="business" class="form-control">
+                                            <option value="">-Select Business-</option>
+                                            @foreach ($arrBusiness as $business)
+                                            <option value="{{ $business->id }}">{{ $business->name }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         @else
@@ -159,19 +187,28 @@
                         </div>
                         @endif
                         @endif
-
-                        <div class="form-group">
-                            <label>Role<span class="required"><code>*</code></span></label>
-                            <div>
-                                <select name="role_id" id="role_id" class="form-control">
-                                    <option value="">-Select Role-</option>
-                                    @if (isset($arrRole) && !empty($arrRole))
-                                    @foreach ($arrRole as $key => $val)
-                                    <option value="{{ $val->id }}" {{ old('role_id') == $val->id ? 'selected' : '' }}>{{ $val->name }}
-                                    </option>
-                                    @endforeach
-                                    @endif
-                                </select>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Role<span class="required"><code>*</code></span></label>
+                                    <div>
+                                        <select name="role_id" id="role_id" class="form-control">
+                                            <option value="">-Select Role-</option>
+                                            @if (isset($arrRole) && !empty($arrRole))
+                                            @foreach ($arrRole as $key => $val)
+                                            <option value="{{ $val->id }}" {{ old('role_id') == $val->id ? 'selected' : '' }}>{{ $val->name }}
+                                            </option>
+                                            @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Image Upload<span class="required">*</span></label>
+                                    <input type="file" id="file" name="file" data-toggle="tooltip" title="file" class="form-control" placeholder="profile photo" value="{{ old('profile_photo') }}">
+                                </div>
                             </div>
                         </div>
                         <!-- <div class="form-group form-group-last ">
@@ -206,10 +243,7 @@
                                         </div>
                                         </div>
                                     </div> -->
-                        <div class="form-group">
-                            <label>Image Upload<span class="required">*</span></label>
-                            <input type="file" id="file" name="file" data-toggle="tooltip" title="file" class="form-control" placeholder="profile photo" value="{{ old('profile_photo') }}">
-                        </div>
+
                         <div class="form-group">
                             <label for="exampleSelect1">Status<span class="required">*</span></label>
                             <select class="form-control" id="status" name="status">
