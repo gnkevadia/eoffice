@@ -55,6 +55,7 @@ Route::match(['get', 'post'], 'getDepartments', [UserController::class, 'getDepa
 Route::match(['get', 'post'], 'getManager', [UserController::class, 'getManager']);
 Route::match(['get', 'post'], 'getProject', [ProjectMasterController::class, 'getProject']);
 Route::match(['get', 'post'], 'getfeatures', [ProjectMasterController::class, 'getfeatures']);
+Route::match(['get', 'post'], 'addCommnet', [TaskController::class, 'addComment']);
 Route::match(['get', 'post'], 'Manager', [DepartmentController::class, 'Manager']);
 Route::group(['prefix' => 'admin', 'namespace' => '\App\Http\Controllers'], function () {
 

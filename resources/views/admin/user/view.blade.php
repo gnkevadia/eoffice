@@ -46,11 +46,11 @@
 						<div class="box-body">
 							<div class="form-group">
 								<label class="col-md-3">Name<span class="required"><code>*</code></span></label>
-								<input type="text" id="name" name="name" data-toggle="tooltip" title="Enter Name" class="form-control" placeholder="Enter Name" value="{{ $userDetails->name }}" readonly>
+								<input type="text" id="name" name="name" data-toggle="tooltip" title="Enter Name" class="form-control" placeholder="Enter Name" value="{{ 											$userDetails->name }}" readonly>
 							</div>
 							<div class="form-group">
 								<label>Email<span class="required">*</span></label>
-								<input type="text" id="email" name="email" data-toggle="tooltip" title="Email" class="form-control" placeholder="Email" value="{{ $userDetails->email}}">
+								<input type="text" id="email" name="email" data-toggle="tooltip" title="Email" class="form-control" placeholder="Email" value="{{ $userDetails-											>email}}">
 							</div>
 							<div class="form-group">
 								<label>Role <span class="text-danger">*</span></label>
@@ -59,7 +59,7 @@
 									<?php
 									if (isset($roles) && !empty($roles)) {
 										foreach ($roles as $key => $val) {
-											echo "<option  value =" . $val->id . " " . (in_array($val->id, explode(',', $userDetails->role_id)) ? " selected='selected' " : '') . "> $val->name </option>";
+											echo "<option  value =" . $val->id . " " . (in_array($val->id, explode(',', $userDetails->role_id)) ? " selected='selected' " : '') . "> 											$val->name </option>";
 										}
 									}
 									?>

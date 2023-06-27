@@ -21,6 +21,7 @@ class Task extends Model
 
     public function updateOne($id, $request)
     {
+
         $task_imges = $this->getOne($id);
         foreach ($task_imges->task_images as $image) {
             if (array_key_exists("remainimg", $request)) {
@@ -55,6 +56,26 @@ class Task extends Model
         $task->status = $request['status'];
         $task->created_by = session()->get('id');
         $task->updated_by = session()->get('id');
+        if (Session::get('superAdmin')) {
+            $task->company_id = $request['company_id'];
+            $task->department_id = $request['department_id'];
+            $task->manager = $request['manager'];
+        }
+        if (Session::get('sub_admin')) {
+            $task->company_id =  Session::get('company_id');
+            $task->department_id = $request['department_id'];
+            $task->manager = $request['manager'];
+        }
+        if (Session::get('manager')) {
+            $task->company_id =  Session::get('company_id');
+            $task->department_id = Session::get('department_id');
+            $task->manager = Session::get('id');
+        }
+        if (Session::get('user')) {
+            $task->company_id =  Session::get('company_id');
+            $task->department_id = Session::get('department_id');
+            $task->manager = Session::get('id');
+        }
         $task->save();
         $insertId = $task->id;
         if (array_key_exists("file", $request)) {
@@ -101,11 +122,15 @@ class Task extends Model
     {
         return $this->hasMany('App\Models\Task_image', 'task_id', 'id');
     }
+    public function task_comments()
+    {
+        return $this->hasMany('App\Models\User_Comments', 'ticket', 'ticket');
+    }
     public function getUserTasks($where)
     {
         $id = ['task_master.id' => $where];
         $query = Task::query();
-        $data = $query->with('task_images')->join('projectmaster', 'projectmaster.id', '=', 'task_master.project')->join('features_master', 'features_master.id', '=', 'task_master.features')->join('users', 'users.id', '=', 'task_master.manager')->join('priority', 'priority.id', '=', 'task_master.priority')->where($id)->select('task_master.*', 'projectmaster.name as projectName', 'features_master.name as featuresss', 'users.name as managerName', 'priority.priority as priorityName')->first();
+        $data = $query->with('task_images', 'task_comments.user_comment')->join('projectmaster', 'projectmaster.id', '=', 'task_master.project')->join('features_master', 'features_master.id', '=', 'task_master.features')->join('users', 'users.id', '=', 'task_master.manager')->join('priority', 'priority.id', '=', 'task_master.priority')->where($id)->select('task_master.*', 'projectmaster.name as projectName', 'features_master.name as featuresss', 'users.name as managerName', 'priority.priority as priorityName')->first();
 
         return $data;
     }

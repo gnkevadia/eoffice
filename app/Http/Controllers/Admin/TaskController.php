@@ -9,6 +9,7 @@ use App\Models\Task;
 use App\Models\Features;
 use App\Models\Priority;
 use App\Models\Task_image;
+use App\Models\User_Comments;
 use App\Models\ProjectMaster;
 use App\Models\Task_Status;
 use App\Models\Users;
@@ -18,6 +19,7 @@ use App\Models\Department;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 use App\Models\Company;
+use App\Models\UsersCommentReply;
 
 class TaskController extends Controller
 {
@@ -73,8 +75,7 @@ class TaskController extends Controller
             $arrExpect = [
                 'packageId', 'cmsId', 'open_in_new_tabs'
             ];
-            $request['start_date'] = date('Y-m-d H:i:s');
-            $request['end_date'] = date('Y-m-d H:i:s');
+
             return Common::commanAddPage($this->objModel, $request, $messages, $regxvalidator, $arrFile, null, $arrExpect);
         } else {
             $dbDepartment = new Department();
@@ -119,9 +120,9 @@ class TaskController extends Controller
             'start_date' => 'required',
             'end_date' => 'required',
         ];
-        $request['start_date'] = date('Y-m-d H:i:s');
-        $request['end_date'] = date('Y-m-d H:i:s');
+
         if ($request->isMethod('post') && isset($id) && !empty($id)) {
+
             $arrExpect = [
                 'packageId', 'cmsId', 'open_in_new_tabs'
             ];
@@ -205,5 +206,19 @@ class TaskController extends Controller
             $data = $dbTask->statusUpdate($id, $arrUpdate);
             return redirect(URL . '/view/' . $id);
         }
+    }
+    public  function addComment(Request $request)
+    {
+        if ($request['commentReply']) {
+            unset($request['commentReply']);
+            $request->merge(['user_id' => Session::get('id')]);
+            $dbUserReply  = new UsersCommentReply();
+            $data = $dbUserReply->addReplyComment($request);
+        } else {
+            $request->merge(['user_id' => Session::get('id')]);
+            $dbUserComment  = new User_Comments();
+            $data = $dbUserComment->addComment($request);
+        }
+        return $data;
     }
 }
