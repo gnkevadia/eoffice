@@ -31,6 +31,7 @@
               Activity
             </h3>
           </div>
+          @if(Session::get('superAdmin') || Session::get('sub_Admin') || Session::get('manager'))
           <div class="kt-portlet__head-toolbar">
             <a href="#" class="btn btn-label-light btn-sm btn-bold dropdown-toggle" data-toggle="dropdown">
               Export
@@ -84,6 +85,7 @@
               </ul>
             </div>
           </div>
+          @endif
         </div>
         <div class="kt-portlet__body kt-portlet__body--fit">
           <div class="kt-widget17">
@@ -95,7 +97,9 @@
             <div class="kt-widget17__stats">
               <div class="kt-widget17__items">
                 <div class="kt-widget17__item">
+                  @if(Session::get('superAdmin') || Session::get('sub_Admin') || Session::get('manager'))
                   <a href="{{url('admin/project')}}">
+                    @endif
                     <span class="kt-widget17__icon">
                       <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-svg-icon--success">
                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -226,15 +230,15 @@
         <div class="kt-portlet__body kt-portlet__body--fluid p-0">
           <div class="kt-widget20">
             <div class="kt-widget20__content kt-portlet__space-x p-0">
-              <div class="task_name" style="height: 205px;">
+              <div class="task_name" style="height: 220px; overflow: auto;">
                 <table class="table mb-0">
                   <thead>
                     <tr>
                       <th>Task Name</th>
                       <th>Priority</th>
-                      <!--  @if(session()->get('superAdmin'))
-                      <th>Manager</th>
-                      @endif -->
+                      @if(session()->get('superAdmin'))
+                      <th>Assignee</th>
+                      @endif
                     </tr>
                   </thead>
                   <tbody>
@@ -247,11 +251,11 @@
                       <td>
                         {{$value->priority}}
                       </td>
-                      <!-- @if(session()->get('superAdmin'))
+                      @if(session()->get('superAdmin'))
                       <td>
                         {{$value->name}}
                       </td>
-                      @endif -->
+                      @endif
                     </tr>
                     @endforeach
                     @else
@@ -264,11 +268,6 @@
 
                   </tbody>
                 </table>
-              </div>
-              <div class="row d-flex">
-                <div class="col-lg-12" style="display: flex; justify-content: end; align-items: center; text-align: center;">
-                  {!! $task->links() !!}
-                </div>
               </div>
             </div>
           </div>
@@ -344,6 +343,7 @@
     <div class="col-lg-6 col-xl-4 order-lg-1 order-xl-1">
 
       <!--begin:: Widgets/Inbound Bandwidth-->
+      @if(session()->get('user'))
       <div class="kt-portlet kt-portlet--fit kt-portlet--head-noborder kt-portlet--height-fluid-half">
         <div class="kt-portlet__head kt-portlet__space-x">
           <div class="kt-portlet__head-label">
@@ -375,6 +375,57 @@
           </div>
         </div>
       </div>
+      @else
+      <div class="kt-portlet kt-portlet--fit kt-portlet--head-noborder kt-portlet--height-fluid-half">
+        <div class="kt-portlet__head kt-portlet__space-x">
+          <div class="kt-portlet__head-label">
+            <h3 class="kt-portlet__head-title">
+              Your Project
+            </h3>
+          </div>
+        </div>
+        <div class="kt-portlet__body kt-portlet__body--fluid p-0">
+          <div class="kt-widget20">
+            <div class="kt-widget20__content kt-portlet__space-x p-0">
+              <div class="task_name" style="height: 220px; overflow: auto;">
+                <table class="table mb-0">
+                  <thead>
+                    <tr>
+                      <th>project Name</th>
+                      <th>Manager</th>
+                      <!--  @if(session()->get('superAdmin'))
+                      <th>Manager</th>
+                      @endif -->
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @if (!empty($today_project) && count($today_project) > 0)
+                    @foreach ($today_project as $value)
+                    <tr>
+                      <td>
+                        {{ucfirst($value->name)}}
+                      </td>
+                      <td>
+                        {{ucfirst($value->manager)}}
+                      </td>
+                    </tr>
+                    @endforeach
+                    @else
+                    <tr>
+                      <td colspan="2" class="text-center">
+                        no data found
+                      </td>
+                    </tr>
+                    @endif
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      @endif
 
       <!--end:: Widgets/Inbound Bandwidth-->
       <div class="kt-space-20"></div>

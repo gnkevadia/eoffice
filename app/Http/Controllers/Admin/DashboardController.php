@@ -43,15 +43,16 @@ class DashboardController extends Controller
             $where = ['task_master.deleted' => 0, 'task_master.company_id' => session()->get('company_id')];
             $where_project = ['projectmaster.deleted' => 0, 'projectmaster.company_id' => session()->get('company_id')];
         }
-        $task = Task::join('priority', 'task_master.priority', '=', 'priority.id')->join('users', 'task_master.manager', '=', 'users.id')->where($where)->paginate(4);
+        $today_project =  ProjectMaster::join('users', 'users.id', '=', 'projectmaster.manager')->where($where_project)->select('projectmaster.*', 'users.name as manager')->whereDay('projectmaster.created_at', Carbon::today())->latest()->get();
+        $task = Task::join('priority', 'task_master.priority', '=', 'priority.id')->join('users', 'task_master.assignee', '=', 'users.id')->where($where)->latest('task_master.created_at')->orderBy('task_master.priority', 'asc')->get();
         $task_all = Task::join('priority', 'task_master.priority', '=', 'priority.id')->where($where)->get();
         $projrct = ProjectMaster::where($where_project)->get();
         if (session()->get('superAdmin')) {
             $company = Company::where($where_company)->get();
 
-            return view('admin.user.dashboard', compact('task', 'task_all', 'projrct', 'company'));
+            return view('admin.user.dashboard', compact('task', 'task_all', 'projrct', 'company','today_project'));
         }
-        return view('admin.user.dashboard', compact('task', 'task_all', 'projrct'));
+        return view('admin.user.dashboard', compact('task', 'task_all', 'projrct','today_project'));
     }
     public function punchin()
     {

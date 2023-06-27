@@ -207,7 +207,10 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label>Image Upload<span class="required">*</span></label>
-                                    <input type="file" id="file" name="file" data-toggle="tooltip" title="file" class="form-control" placeholder="profile photo" value="{{ old('profile_photo') }}">
+                                    <div class="custom-file">
+                                        <input type="file" id="file" name="file" data-toggle="tooltip" title="file" class="custom-file-input" placeholder="profile photo" value="{{ old('profile_photo') }}">
+                                        <label class="custom-file-label" for="customFile">Choose file</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -10,6 +10,7 @@ use App\Library\Common;
 use App\Models\Company;
 use App\Models\Department;
 use App\Models\Features;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Session;
 use SebastianBergmann\CodeCoverage\Report\Xml\Project;
 
@@ -30,6 +31,7 @@ class ProjectMasterController extends Controller
     {
 
         if ($request->isMethod('post')) {
+
             if (Session::get('manager')) {
                 $request->merge(["manager" => Session::get('id')]);
                 $request->merge(["company_id" => Session::get('company_id')]);
@@ -55,8 +57,14 @@ class ProjectMasterController extends Controller
             $arrExpect = [
                 'packageId', 'cmsId', 'open_in_new_tabs'
             ];
-            $request['start_date'] = date('Y-m-d H:i:s');
-            $request['end_date'] = date('Y-m-d H:i:s');
+            $start_date = $request['start_date'];
+            $var  = Carbon::now('Asia/Kolkata');
+            $time = $var->toTimeString();
+            $start_date_all = date('Y-m-d H:i:s', strtotime("$start_date $time"));
+            $request['start_date'] = $start_date_all;
+            $end_date = $request['end_date'];
+            $end_date_all = date('Y-m-d H:i:s', strtotime("$end_date $time"));
+            $request['end_date'] = $end_date_all;
             return Common::commanAddPage($this->objModel, $request, $messages, $regxvalidator, null, null, $arrExpect);
         } else {
             $dbDepartment = new Department();
@@ -103,8 +111,14 @@ class ProjectMasterController extends Controller
             $arrExpect = [
                 'packageId', 'cmsId', 'open_in_new_tabs'
             ];
-            $request['start_date'] = date('Y-m-d H:i:s');
-            $request['end_date'] = date('Y-m-d H:i:s');
+            $start_date = $request['start_date'];
+            $var  = Carbon::now('Asia/Kolkata');
+            $time = $var->toTimeString();
+            $start_date_all = date('Y-m-d H:i:s', strtotime("$start_date $time"));
+            $request['start_date'] = $start_date_all;
+            $end_date = $request['end_date'];
+            $end_date_all = date('Y-m-d H:i:s', strtotime("$end_date $time"));
+            $request['end_date'] = $end_date_all;
             return Common::commanEditPage($this->objModel, $request, $messages, $regxvalidator, $id, null, null, $arrExpect);
         } else {
             $dbDepartment = new Department();

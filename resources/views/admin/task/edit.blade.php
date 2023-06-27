@@ -1,6 +1,7 @@
 @extends('admin.layouts.default')
 
 
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 @section('title', 'Edit '.VIEW_INFO['title'])
 
 @section('content_header')
@@ -236,7 +237,7 @@
                             <?php } else { ?>
                                 <div class="col-lg-2 col-md-4 my-3 ml-3 mb-4">
                                     <div class="childImage">
-                                        <img src="{{url('images/task/').'/'.$image->images}}" alt="" width="150">
+                                        <img src="{{url('images/task/').'/'.$image->images}}" alt="" width="150" height="88" onclick="onClick(this)">
                                         <input id="dltImg" type="text" name="remainimg[]" value="{{$image->id}}">
                                         <button type="button" class="mt-2 btn btn-danger btn-sm delete_img">x</button>
                                     </div>
@@ -279,7 +280,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label>Ticket No<span class="required">*</span></label>
-                                    <input type="text" id="ticket" name="ticket" data-toggle="tooltip" title="Enter Ticket" class="form-control" placeholder="Enter Ticket" value="{{ old('ticket') }}">
+                                    <input type="text" id="ticket" name="ticket" data-toggle="tooltip" title="Enter Ticket" class="form-control" placeholder="Enter Ticket" value="{{$data->ticket}}">
                                 </div>
                             </div>
 
@@ -346,6 +347,14 @@
 
             <!--end::Portlet-->
         </div>
+    </div>
+</div>
+<div id="modal01" class="w3-modal" onclick="this.style.display='none'">
+   
+    <div class="w3-modal-content w3-animate-zoom">
+        <img id="img01" style="width:100%">
+        <span class="w3-button w3-hover-red w3-xlarge w3-display-topright bg-light py-0" style="margin-right: 60px; height: 40px;">&times;</span>
+    <span class="w3-button w3-hover-green w3-xlarge w3-display-topright downloadImg bg-light border-right boder-primary"><i class="fa fa-download"></i></span>
     </div>
 </div>
 <!-- Main content -->
@@ -526,5 +535,11 @@
             });
         }).change();
     });
+
+    function onClick(element) {
+        document.getElementById("img01").src = element.src;
+        document.getElementById("modal01").style.display = "block";
+        $('.downloadImg').wrap('<a href="' + element.src + '" download />')
+    }
 </script>
 @stop
