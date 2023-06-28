@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 use App\Models\Company;
 use App\Models\UsersCommentReply;
+use App\Models\UsersReplyOfReply;
 
 class TaskController extends Controller
 {
@@ -154,7 +155,10 @@ class TaskController extends Controller
     {
         $dbTask = new Task();
         $data = $dbTask->getUserTasks($id);
-
+        // echo '<pre>';
+        // echo ($data);
+        // echo '</pre>';
+        // die();
         $taskstatus =  Task_Status::where('deleted', 0)->get();
         if ($request->isMethod('post') && isset($id) && !empty($id)) {
             $dbTask = new Task();
@@ -214,10 +218,18 @@ class TaskController extends Controller
             $request->merge(['user_id' => Session::get('id')]);
             $dbUserReply  = new UsersCommentReply();
             $data = $dbUserReply->addReplyComment($request);
-        } else {
+        }
+        if ($request['isComment']) {
+            unset($request['isComment']);
             $request->merge(['user_id' => Session::get('id')]);
             $dbUserComment  = new User_Comments();
             $data = $dbUserComment->addComment($request);
+        }
+        if ($request['replyOfReply']) {
+            unset($request['replyOfReply']);
+            $request->merge(['user_id' => Session::get('id')]);
+            $dbUserreply  = new UsersReplyOfReply();
+            $data = $dbUserreply->addReply($request);
         }
         return $data;
     }

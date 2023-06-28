@@ -6,29 +6,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Session;
 
-class User_Comments extends Model
+class UsersReplyOfReply extends Model
 {
     use HasFactory;
-    protected $table = 'user_comments';
+    protected $table = 'users_reply_of_reply';
 
-    public function getAll()
-    {
-    }
-    public function addComment($data)
+    public function addReply($data)
     {
         $data->merge(['updated_by' => Session::get('id')]);
         $data->merge(['created_by' => Session::get('id')]);
         // if (Session::get('user')) {
         // }
-        return User_Comments::insert($data->all());
+
+        return UsersReplyOfReply::insert($data->all());
     }
-    public function user_comment()
+    public function replyUser()
     {
         return $this->hasMany('App\Models\Users', 'id', 'user_id');
-    }
-
-    public function user_comment_reply()
-    {
-        return $this->hasMany('App\Models\UsersCommentReply', 'comment_id', 'id');
     }
 }

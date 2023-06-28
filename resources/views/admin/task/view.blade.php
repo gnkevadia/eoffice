@@ -99,9 +99,9 @@
         display: none;
     }
 
-    #general_Comment {
+    /* #general_Comment {
         display: none;
-    }
+    } */
 
     .replyDiv {
         display: none;
@@ -263,6 +263,7 @@
                                                 <span class="g-color-gray-dark-v4 g-font-size-12"><?php echo date('g:i A j F, Y', strtotime($comment->user_comment[0]['created_at'])); ?></span>
                                             </div>
                                             <p>{{$comment->comment}}</p>
+
                                             <ul class="list-inline d-sm-flex my-0">
                                                 <li class="list-inline-item ml-auto replyComment">
                                                     <!-- <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!"> -->
@@ -274,10 +275,71 @@
                                         </div>
                                     </div>
                                     <div class="replyDiv">
-                                        <textarea name="reply_comment" data-id='{{$data->id}}' data-toggle="tooltip" title="Enter Reply Comment" class="form-control reply_comment" placeholder="Enter Reply Comment">{{ old('reply_comment') }}</textarea>
+                                        <textarea name="reply_comment" data-id='{{$comment->id}}' data-toggle="tooltip" title="Enter Reply Comment" class="form-control reply_comment" placeholder="Enter Reply Comment">{{ old('reply_comment') }}</textarea>
                                         <button class='btn btn-sm btn-primary  float-right py-1 px-2 commentreply'>Reply</button>
                                     </div>
                                 </div>
+                                @if(!empty($data->reply_comments))
+                                @foreach($data->reply_comments as $replyComment)
+                                @if($replyComment->comment_id == $comment->id)
+                                <div class="col-md-12">
+                                    <!-- <b class='float-right'>Reply</b> -->
+                                    <div class="media g-mb-30 media-comment commentMain">
+                                        <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30">
+                                            <div class="g-mb-15">
+                                                <h5 class="h5 g-color-gray-dark-v1 mb-0">{{$replyComment->userOfReply[0]['name']}}</h5>
+                                                <span class="g-color-gray-dark-v4 g-font-size-12"><?php echo date('g:i A j F, Y', strtotime($replyComment->created_at)); ?></span>
+                                            </div>
+                                            <p>{{$replyComment->reply}}</p>
+                                            <ul class="list-inline d-sm-flex my-0">
+                                                <li class="list-inline-item ml-auto replyComment">
+                                                    <!-- <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!"> -->
+                                                    <i class="fa fa-reply g-pos-rel g-top-1 g-mr-3"></i>
+                                                    Reply
+                                                    <!-- </a> -->
+                                                </li>
+                                            </ul>
+                                            @if(!empty($data->reply_of_reply))
+                                            @foreach($data->reply_of_reply as $ReplyOfReply)
+                                            @if($ReplyOfReply->reply_id == $replyComment->id)
+                                            <div class="media g-mb-30 media-comment commentMain">
+                                                <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30">
+                                                    <div class="g-mb-15">
+                                                        <h5 class="h5 g-color-gray-dark-v1 mb-0">{{$ReplyOfReply->replyUser[0]['name']}}</h5>
+                                                        <span class="g-color-gray-dark-v4 g-font-size-12"><?php echo date('g:i A j F, Y', strtotime($ReplyOfReply->created_at)); ?></span>
+                                                    </div>
+                                                    <p> {{$ReplyOfReply->reply}}</p>
+                                                    <ul class="list-inline d-sm-flex my-0">
+                                                        <li class="list-inline-item ml-auto replyComment">
+                                                            <!-- <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!"> -->
+                                                            <i class="fa fa-reply g-pos-rel g-top-1 g-mr-3"></i>
+                                                            Reply
+                                                            <!-- </a> -->
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="{{url('admin/assets/media/users/50x50/')}}/{{$ReplyOfReply->replyUser[0]['profile_photo']}}" alt="Image Description">
+
+                                            </div>
+                                            <!-- <div class="replyDiv">
+                                                            <textarea name="replyOfReply" data-id='{{$replyComment->id}}' data-comment-id='{{$data->id}}' data-toggle="tooltip" title="Enter Reply Comment" class="form-control reply_comment" placeholder="Enter Reply Comment">{{ old('reply_comment') }}</textarea>
+                                                            <button class='btn btn-sm btn-primary  float-right py-1 px-2 replyOfReply'>Reply</button>
+                                                        </div> -->
+                                            @endif
+                                            @endforeach
+                                            @endif
+                                        </div>
+                                        <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="{{url('admin/assets/media/users/50x50/')}}/{{$replyComment->userOfReply[0]['profile_photo']}}" alt="Image Description">
+
+                                    </div>
+                                    <div class="replyDiv">
+                                        <textarea name="replyOfReply" data-id='{{$replyComment->id}}' data-comment-id='{{$data->id}}' data-toggle="tooltip" title="Enter Reply Comment" class="form-control reply_comment" placeholder="Enter Reply Comment">{{ old('reply_comment') }}</textarea>
+                                        <button class='btn btn-sm btn-primary  float-right py-1 px-2 replyOfReply'>Reply</button>
+                                    </div>
+                                </div>
+                                @endif
+                                @endforeach
+                                @endif
                                 @endforeach
                             </div>
                             <div>
@@ -410,7 +472,9 @@
             let ticket = '<?php echo $data->ticket; ?>';
             let imgUrl = '<?php echo Session::get('profile_photo') ?>';
             let userName = '<?php echo Session::get('name') ?>';
-            let date = '<?php echo date('g:i A j F, Y', strtotime($comment->user_comment[0]['created_at'])); ?>';
+            let isComment = true;
+
+
             $.ajax({
                 headers: {
                     'X-CSRF-Token': '{{ csrf_token() }}',
@@ -419,7 +483,8 @@
                 type: 'post',
                 data: {
                     'comment': userComment,
-                    'ticket': ticket
+                    'ticket': ticket,
+                    'isComment': isComment
                 },
                 dataType: 'JSON',
                 success: function(data) {
@@ -442,6 +507,8 @@
             let comment_id = $(this).siblings('textarea').data('id');
             console.log('commentreply', comment_id);
             let commentReply = true;
+            let imgUrl = '<?php echo Session::get('profile_photo') ?>';
+            let userName = '<?php echo Session::get('name') ?>';
             let ticket = '<?php echo $data->ticket; ?>';
             let url = '{{url("addCommnet")}}';
             $.ajax({
@@ -463,12 +530,50 @@
                     //     $('#general_Comment').val('');
                     // }
                     // var html = '<div class="py-2"> <div class="d-flex justify-content-between py-1 pt-2"><div><img src="' + imgUrl + '" width="18"><span class="text2">' + userName + '</span></div></div> </div>';
+                    var html = '<div class="col-md-12"><div class="media g-mb-30 media-comment"><img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="' + imgUrl + '" alt="Image Description"><div class="media-body u-shadow-v18 g-bg-secondary g-pa-30"><div class="g-mb-15"><h5 class="h5 g-color-gray-dark-v1 mb-0">' + userName + '</h5><span class="g-color-gray-dark-v4 g-font-size-12"></span></div><p>' + userComment + '</p><ul class="list-inline d-sm-flex my-0"><li class="list-inline-item ml-auto"><a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!"><i class="fa fa-reply g-pos-rel g-top-1 g-mr-3"></i>Reply</a></li></ul></div></div></div>';
+
+                    $(".addAjaxComment").append(html);
+                }
+            });
+        });
+        $(".replyOfReply").on('click', function() {
+            let reply = $(this).siblings('textarea').val();
+            let reply_id = $(this).siblings('textarea').data('id');
+            let comment_id = $(this).siblings('textarea').data('comment-id');
+            // console.log('commentreply', reply_id);
+            let replyOfReply = true;
+            let imgUrl = '<?php echo Session::get('profile_photo') ?>';
+            let userName = '<?php echo Session::get('name') ?>';
+            let ticket = '<?php echo $data->ticket; ?>';
+            let url = '{{url("addCommnet")}}';
+            $.ajax({
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+                url: url,
+                type: 'post',
+                data: {
+                    'reply_id': reply_id,
+                    'replyOfReply': replyOfReply,
+                    'reply': reply,
+                    'comment_id': comment_id,
+                    'ticket': ticket
+                },
+                dataType: 'JSON',
+                success: function(data) {
+                    console.log("datasss", data);
+                    // if (data == true) {
+                    //     $('#general_Comment').val('');
+                    // }
+                    // var html = '<div class="py-2"> <div class="d-flex justify-content-between py-1 pt-2"><div><img src="' + imgUrl + '" width="18"><span class="text2">' + userName + '</span></div></div> </div>';
                     var html = '<div class="col-md-12"><div class="media g-mb-30 media-comment"><img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="' + imgUrl + '" alt="Image Description"><div class="media-body u-shadow-v18 g-bg-secondary g-pa-30"><div class="g-mb-15"><h5 class="h5 g-color-gray-dark-v1 mb-0">' + userName + '</h5><span class="g-color-gray-dark-v4 g-font-size-12">' + date + '</span></div><p>' + userComment + '</p><ul class="list-inline d-sm-flex my-0"><li class="list-inline-item ml-auto"><a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!"><i class="fa fa-reply g-pos-rel g-top-1 g-mr-3"></i>Reply</a></li></ul></div></div></div>';
 
                     $(".addAjaxComment").append(html);
                 }
             });
         });
+
+
 
 
 

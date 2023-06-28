@@ -19,4 +19,12 @@ class UsersCommentReply extends Model
 
         return UsersCommentReply::insert($data->all());
     }
+    public function user_reply()
+    {
+        return $this->hasMany('App\Models\Task', 'ticket', 'ticket');
+    }
+    public function userOfReply()
+    {
+        return $this->hasMany('App\Models\Users', 'id', 'user_id');
+    }
 }
