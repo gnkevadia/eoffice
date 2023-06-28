@@ -126,27 +126,64 @@ class Task extends Model
     {
         return $this->hasMany('App\Models\User_Comments', 'ticket', 'ticket');
     }
-    public function reply_comments()
+    // public function reply_comments()
+    // {
+    //     return $this->hasMany('App\Models\UsersCommentReply', 'ticket', 'ticket');
+    // }
+    public function commentAndReplys()
     {
-        return $this->hasMany('App\Models\UsersCommentReply', 'ticket', 'ticket');
-    }
-    public function reply_of_reply()
-    {
-        return $this->hasMany('App\Models\UsersReplyOfReply', 'ticket', 'ticket');
+        return $this->hasMany('App\Models\User_Comments', 'user_id', 'assignee');
     }
     public function getUserTasks($where)
     {
         $id = ['task_master.id' => $where];
         $query = Task::query();
-        $data = $query->with('task_images', 'task_comments.user_comment', 'reply_comments.userOfReply', 'reply_of_reply.replyUser')->join('projectmaster', 'projectmaster.id', '=', 'task_master.project')->join('features_master', 'features_master.id', '=', 'task_master.features')->join('users', 'users.id', '=', 'task_master.manager')->join('priority', 'priority.id', '=', 'task_master.priority')->where($id)->select('task_master.*', 'projectmaster.name as projectName', 'features_master.name as featuresss', 'users.name as managerName', 'priority.priority as priorityName')->first();
+        // $data = $query->with('task_images', 'task_comments.user_comment', 'reply_comments.userOfReply', 'reply_of_reply.replyUser')->join('projectmaster', 'projectmaster.id', '=', 'task_master.project')->join('features_master', 'features_master.id', '=', 'task_master.features')->join('users', 'users.id', '=', 'task_master.manager')->join('priority', 'priority.id', '=', 'task_master.priority')->where($id)->select('task_master.*', 'projectmaster.name as projectName', 'features_master.name as featuresss', 'users.name as managerName', 'priority.priority as priorityName')->first();
+        $data = $query->with('task_images', 'commentAndReplys.user_comment')->join('projectmaster', 'projectmaster.id', '=', 'task_master.project')->join('features_master', 'features_master.id', '=', 'task_master.features')->join('users', 'users.id', '=', 'task_master.manager')->join('priority', 'priority.id', '=', 'task_master.priority')->where($id)->select('task_master.*', 'projectmaster.name as projectName', 'features_master.name as featuresss', 'users.name as managerName', 'priority.priority as priorityName')->first();
         // echo '<pre>';
         // echo ($data);
         // echo '</pre>';
         // die();
-        // foreach ($data->reply_comments as $dataone) {
+        // echo '<pre>';
+        // echo gettype($data);
+        // echo '</pre>';
+        // die();
+        // $filterArry = array_filter((array)$data->commentAndReplys, function ($items) {
+        // echo '<pre>';
+        // print_r($item[0]['parent_id']);
+        // echo '</pre>';
+        // die();
+        // foreach()
+        // return $item["parent_id"] === null;
+
+        // echo '<pre>';
+        // print_r($datasss);
+        // echo '</pre>';
+        // die();
+        // die('12345');
+        // foreach ($items as $item) {
+        //     if ($item->parent_id === null) {
+        //         array_push($datasss, $item);
+        //     }
+        // }
+        //     return $datasss;
+        // });
+        // echo '<pre>';
+        // print_r($filterArry);
+        // echo '</pre>';
+        // die('123');
+        // die('x');
+        // echo '<pre>';
+        // print_r($filterArry);
+        // echo '</pre>';
+        // die();
+        // die('x');
+        // print_r($data);
+        // $filerArry = $data->commentAndReplys;
+        // foreach ($data->commentAndReplys as $dataone) {
 
         //     echo '<pre>';
-        //     echo ($dataone->userOfReply);
+        //     echo ($dataone);
         //     echo '</pre>';
         // }
         // die();

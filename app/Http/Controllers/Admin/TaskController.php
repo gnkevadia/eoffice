@@ -155,8 +155,14 @@ class TaskController extends Controller
     {
         $dbTask = new Task();
         $data = $dbTask->getUserTasks($id);
+        $filterArray = [];
+        foreach ($data->commentAndReplys as $items) {
+            if ($items->parent_id === null) {
+                array_push($filterArray, $items);
+            }
+        }
         // echo '<pre>';
-        // echo ($data);
+        // echo ($data->commentAndReplys);
         // echo '</pre>';
         // die();
         $taskstatus =  Task_Status::where('deleted', 0)->get();
@@ -200,7 +206,10 @@ class TaskController extends Controller
             if (!empty($request['status'])) {
             }
         }
-        return view(RENDER_URL . '.view', compact('data', 'taskstatus'));
+        // if ($data->parent_order == null) {
+        //     $data->parent_order = 0;
+        // }
+        return view(RENDER_URL . '.view', compact('data', 'taskstatus', 'filterArray'));
     }
     public function statusUpdate(Request $request, $id)
     {
@@ -213,15 +222,36 @@ class TaskController extends Controller
     }
     public  function addComment(Request $request)
     {
+
         if ($request['commentReply']) {
             unset($request['commentReply']);
             $request->merge(['user_id' => Session::get('id')]);
-            $dbUserReply  = new UsersCommentReply();
-            $data = $dbUserReply->addReplyComment($request);
+            echo '<pre>';
+            print_r($request->all());
+            echo '</pre>';
+            die();
+            if ($request['reply_order'] == 0) {
+                $request['reply_order'] = "1";
+            } else {
+                $request['reply_order'] = $request['reply_order'] + 1;
+            }
+            echo '<pre>';
+            print_r($request->all());
+            echo '</pre>';
+            die();
+            $dbUserReply  = new User_Comments();
+            $data = $dbUserReply->addComment($request);
         }
         if ($request['isComment']) {
+
             unset($request['isComment']);
             $request->merge(['user_id' => Session::get('id')]);
+            if ($request['parent_order'] == 0) {
+                $request['parent_order'] = "1";
+            } else {
+                $request['parent_order'] = $request['parent_order'] + 1;
+            }
+
             $dbUserComment  = new User_Comments();
             $data = $dbUserComment->addComment($request);
         }

@@ -27,8 +27,12 @@ class User_Comments extends Model
         return $this->hasMany('App\Models\Users', 'id', 'user_id');
     }
 
+    // public function user_comment_reply()
+    // {
+    //     return $this->hasMany('App\Models\UsersCommentReply', 'comment_id', 'id');
+    // }
     public function user_comment_reply()
     {
-        return $this->hasMany('App\Models\UsersCommentReply', 'comment_id', 'id');
+        return $this->hasMany('App\Models\Task', 'assigne', 'user_id');
     }
 }
