@@ -36,23 +36,41 @@ class DashboardController extends Controller
     {
         if (session()->get('superAdmin')) {
             $where = ['task_master.deleted' => 0];
+            $where_done_task = ['task_master.deleted' => 0, 'task_master.status' => 14];
             $where_project = ['projectmaster.deleted' => 0];
             $where_company = ['company.deleted' => 0];
+            $where_status = ['users_punching.user_id' => session()->get('id')];
         } else {
             $role_id = session()->get('settings');
             $where = ['task_master.deleted' => 0, 'task_master.company_id' => session()->get('company_id')];
+            $where_done_task = ['task_master.deleted' => 0, 'task_master.company_id' => session()->get('company_id'), 'task_master.status' => 14];
             $where_project = ['projectmaster.deleted' => 0, 'projectmaster.company_id' => session()->get('company_id')];
+            $where_status = ['users_punching.user_id' => session()->get('id')];
+        }
+        $user_punching = Users_Punching::join('users', 'users.id', '=', 'users_punching.user_id')->where($where_status)->get();
+        foreach ($user_punching as $punch) {
+            if (!empty($punch->punch_in) && !empty($punch->punch_out)) {
+                $punchin = $punch->punch_in;
+                $punchin_tiem = Carbon::createFromFormat("Y-m-d H:i:s", $punchin);
+                $punchout = $punch->punch_out;
+                $punchout_tiem = Carbon::createFromFormat("Y-m-d H:i:s", $punchout);
+                $diff_in_hours = $punchin_tiem->diff($punchout_tiem)->format('%H:%I:%S');
+            }
         }
         $today_project =  ProjectMaster::join('users', 'users.id', '=', 'projectmaster.manager')->where($where_project)->select('projectmaster.*', 'users.name as manager')->whereDay('projectmaster.created_at', Carbon::today())->latest()->get();
-        $task = Task::join('priority', 'task_master.priority', '=', 'priority.id')->join('users', 'task_master.assignee', '=', 'users.id')->where($where)->latest('task_master.created_at')->orderBy('task_master.priority', 'asc')->get();
+        $task = Task::join('priority', 'task_master.priority', '=', 'priority.id')->join('users', 'task_master.assignee', '=', 'users.id')->where($where)->orderBy('task_master.priority', 'asc')->latest('task_master.created_at')->get();
+        $done_task = Task::join('priority', 'task_master.priority', '=', 'priority.id')->join('users', 'task_master.assignee', '=', 'users.id')->where($where_done_task)->orderBy('task_master.priority', 'asc')->latest('task_master.created_at')->get();
         $task_all = Task::join('priority', 'task_master.priority', '=', 'priority.id')->where($where)->get();
         $projrct = ProjectMaster::where($where_project)->get();
         if (session()->get('superAdmin')) {
             $company = Company::where($where_company)->get();
 
-            return view('admin.user.dashboard', compact('task', 'task_all', 'projrct', 'company','today_project'));
+            return view('admin.user.dashboard', compact('task', 'task_all', 'projrct', 'company', 'today_project', 'done_task','user_punching'));
         }
-        return view('admin.user.dashboard', compact('task', 'task_all', 'projrct','today_project'));
+        if(isset($diff_in_hours)){
+            return view('admin.user.dashboard', compact('task', 'task_all', 'projrct', 'today_project', 'done_task','user_punching','diff_in_hours'));
+        }
+        return view('admin.user.dashboard', compact('task', 'task_all', 'projrct', 'today_project', 'done_task','user_punching'));
     }
     public function punchin()
     {
