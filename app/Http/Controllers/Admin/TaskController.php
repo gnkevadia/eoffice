@@ -162,7 +162,7 @@ class TaskController extends Controller
             }
         }
         // echo '<pre>';
-        // echo ($data->commentAndReplys);
+        // echo ($data);
         // echo '</pre>';
         // die();
         $taskstatus =  Task_Status::where('deleted', 0)->get();
@@ -226,19 +226,19 @@ class TaskController extends Controller
         if ($request['commentReply']) {
             unset($request['commentReply']);
             $request->merge(['user_id' => Session::get('id')]);
-            echo '<pre>';
-            print_r($request->all());
-            echo '</pre>';
-            die();
+            // echo '<pre>';
+            // print_r($request->all());
+            // echo '</pre>';
+            // die();
             if ($request['reply_order'] == 0) {
                 $request['reply_order'] = "1";
             } else {
                 $request['reply_order'] = $request['reply_order'] + 1;
             }
-            echo '<pre>';
-            print_r($request->all());
-            echo '</pre>';
-            die();
+            // echo '<pre>';
+            // print_r($request->all());
+            // echo '</pre>';
+            // die();
             $dbUserReply  = new User_Comments();
             $data = $dbUserReply->addComment($request);
         }

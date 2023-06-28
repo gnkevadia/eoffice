@@ -253,35 +253,7 @@
                         <div class='mt-5 customBorder ml-3 mb-4'>
                             <h5>Comment</h5>
                             <div class='row addAjaxComment'>
-                                @foreach($filterArray as $filterItem)
-                                <div class="col-md-12">
-                                    <div class="media g-mb-30 media-comment commentMain">
-                                        <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="{{url('admin/assets/media/users/50x50/')}}/{{$filterItem->user_comment[0]['profile_photo']}}" alt="Image Description">
-                                        <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30">
-                                            <div class="g-mb-15">
-                                                <h5 class="h5 g-color-gray-dark-v1 mb-0">{{$filterItem->user_comment[0]['name']}}</h5>
-                                                <span class="g-color-gray-dark-v4 g-font-size-12"><?php echo date('g:i A j F, Y', strtotime($filterItem->user_comment[0]['created_at'])); ?></span>
-                                            </div>
-                                            <p>{{$filterItem->comment}}</p>
-
-                                            <ul class="list-inline d-sm-flex my-0">
-                                                <li class="list-inline-item ml-auto replyComment">
-                                                    <!-- <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!"> -->
-                                                    <i class="fa fa-reply g-pos-rel g-top-1 g-mr-3"></i>
-                                                    Reply
-                                                    <!-- </a> -->
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <!-- <h1>reply comm</h1> -->
-                                    <div class="replyDiv">
-                                        <textarea name="reply_comment" data-id='{{$filterItem->id}}' data-order='{{isset($filterItem->reply_order) ? $filterItem->reply_order : 0 }}' data-toggle="tooltip" title="Enter Reply Comment" class="form-control reply_comment" placeholder="Enter Reply Comment">{{ old('reply_comment') }}</textarea>
-                                        <button class='btn btn-sm btn-primary  float-right py-1 px-2 commentreply'>Reply</button>
-                                    </div>
-                                </div>
                                 @foreach($data->commentAndReplys as $comment)
-                                @if($comment->parent_id == $filterItem->id)
                                 <!---reply -->
                                 <div class="col-md-12">
                                     <div class="media g-mb-30 media-comment commentMain">
@@ -310,12 +282,9 @@
                                         <button class='btn btn-sm btn-primary  float-right py-1 px-2 commentreply'>Reply</button>
                                     </div>
                                 </div>
-                                @endif
-                                @endforeach
                                 @endforeach
                             </div>
                             <div class="mt-5">
-                                {{$filterItem}}
                                 <textarea id="general_Comment" name="general_Comment" data-order='{{isset($filterItem->parent_order) ? $filterItem->parent_order : 0 }}' data-toggle="tooltip" title="Enter General Comment" class="form-control" placeholder="Enter General Comment">{{ old('general_Comment') }}</textarea>
                                 <button class='btn btn-sm btn-primary UserComment float-right py-1 px-2'>Comment</button>
                             </div>

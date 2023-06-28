@@ -140,58 +140,40 @@ class Task extends Model
         $query = Task::query();
         // $data = $query->with('task_images', 'task_comments.user_comment', 'reply_comments.userOfReply', 'reply_of_reply.replyUser')->join('projectmaster', 'projectmaster.id', '=', 'task_master.project')->join('features_master', 'features_master.id', '=', 'task_master.features')->join('users', 'users.id', '=', 'task_master.manager')->join('priority', 'priority.id', '=', 'task_master.priority')->where($id)->select('task_master.*', 'projectmaster.name as projectName', 'features_master.name as featuresss', 'users.name as managerName', 'priority.priority as priorityName')->first();
         $data = $query->with('task_images', 'commentAndReplys.user_comment')->join('projectmaster', 'projectmaster.id', '=', 'task_master.project')->join('features_master', 'features_master.id', '=', 'task_master.features')->join('users', 'users.id', '=', 'task_master.manager')->join('priority', 'priority.id', '=', 'task_master.priority')->where($id)->select('task_master.*', 'projectmaster.name as projectName', 'features_master.name as featuresss', 'users.name as managerName', 'priority.priority as priorityName')->first();
-        // echo '<pre>';
-        // echo ($data);
-        // echo '</pre>';
-        // die();
-        // echo '<pre>';
-        // echo gettype($data);
-        // echo '</pre>';
-        // die();
-        // $filterArry = array_filter((array)$data->commentAndReplys, function ($items) {
-        // echo '<pre>';
-        // print_r($item[0]['parent_id']);
-        // echo '</pre>';
-        // die();
-        // foreach()
-        // return $item["parent_id"] === null;
+        // $arrformat = [];
 
-        // echo '<pre>';
-        // print_r($datasss);
-        // echo '</pre>';
-        // die();
-        // die('12345');
-        // foreach ($items as $item) {
-        //     if ($item->parent_id === null) {
-        //         array_push($datasss, $item);
-        //     }
+        // foreach ($data->commentAndReplys as $comment) {
+
+        //     $comment_id = $comment['comment_id'];
+        //     $member_id = $comment['member_id'];
+        //     $comment_text = $comment['comment_text'];
+        //     $comment_timestamp = timeAgo($comment['comment_timestamp']);  //get time ago
+
+        //     //render comment using above variables
         // }
-        //     return $datasss;
-        // });
-        // echo '<pre>';
-        // print_r($filterArry);
-        // echo '</pre>';
-        // die('123');
-        // die('x');
-        // echo '<pre>';
-        // print_r($filterArry);
-        // echo '</pre>';
-        // die();
-        // die('x');
-        // print_r($data);
-        // $filerArry = $data->commentAndReplys;
-        // foreach ($data->commentAndReplys as $dataone) {
-
-        //     echo '<pre>';
-        //     echo ($dataone);
-        //     echo '</pre>';
-        // }
-        // die();
-
         return $data;
     }
     public function statusUpdate($id, $arrUpdate)
     {
         return Task::where('id', $id)->update($arrUpdate);
     }
+    // public function display_comments($article_id, $parent_id = 0, $level = 0)
+    // {
+    //     $query = Task::query();
+
+    //     $data = $query->with('task_images', 'commentAndReplys.user_comment')->join('projectmaster', 'projectmaster.id', '=', 'task_master.project')->join('features_master', 'features_master.id', '=', 'task_master.features')->join('users', 'users.id', '=', 'task_master.manager')->join('priority', 'priority.id', '=', 'task_master.priority')->where($id)->select('task_master.*', 'projectmaster.name as projectName', 'features_master.name as featuresss', 'users.name as managerName', 'priority.priority as priorityName')->first();
+
+    //     foreach ($data->commentAndReplys as $comment) {
+    //         $comment_id = $comment['comment_id'];
+    //         $member_id = $comment['member_id'];
+    //         $comment_text = $comment['comment_text'];
+    //         $comment_timestamp = timeAgo($comment['comment_timestamp']);  //get time ago
+
+    //         //render comment using above variables
+    //         //Use $level to render the intendation level
+
+    //         //Recurse
+    //         display_comments($article_id, $comment_id, $level + 1);
+    //     }
+    // }
 }
