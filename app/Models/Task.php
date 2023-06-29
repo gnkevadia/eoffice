@@ -139,11 +139,13 @@ class Task extends Model
         $id = ['task_master.id' => $where];
         $query = Task::query();
         // $data = $query->with('task_images', 'task_comments.user_comment', 'reply_comments.userOfReply', 'reply_of_reply.replyUser')->join('projectmaster', 'projectmaster.id', '=', 'task_master.project')->join('features_master', 'features_master.id', '=', 'task_master.features')->join('users', 'users.id', '=', 'task_master.manager')->join('priority', 'priority.id', '=', 'task_master.priority')->where($id)->select('task_master.*', 'projectmaster.name as projectName', 'features_master.name as featuresss', 'users.name as managerName', 'priority.priority as priorityName')->first();
-        $data = $query->with('task_images', 'commentAndReplys.user_comment')->join('projectmaster', 'projectmaster.id', '=', 'task_master.project')->join('features_master', 'features_master.id', '=', 'task_master.features')->join('users', 'users.id', '=', 'task_master.manager')->join('priority', 'priority.id', '=', 'task_master.priority')->where($id)->select('task_master.*', 'projectmaster.name as projectName', 'features_master.name as featuresss', 'users.name as managerName', 'priority.priority as priorityName')->first();
+        $data = $query->with('task_images')->join('projectmaster', 'projectmaster.id', '=', 'task_master.project')->join('features_master', 'features_master.id', '=', 'task_master.features')->join('users', 'users.id', '=', 'task_master.manager')->join('priority', 'priority.id', '=', 'task_master.priority')->where($id)->select('task_master.*', 'projectmaster.name as projectName', 'features_master.name as featuresss', 'users.name as managerName', 'priority.priority as priorityName')->first();
         // $arrformat = [];
-
+        // echo '<pre>';
+        // echo ($data);
+        // echo '</pre>';
+        // die();
         // foreach ($data->commentAndReplys as $comment) {
-
         //     $comment_id = $comment['comment_id'];
         //     $member_id = $comment['member_id'];
         //     $comment_text = $comment['comment_text'];

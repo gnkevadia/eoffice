@@ -119,4 +119,8 @@ class Users extends Model
         }
         return $data;
     }
+    public function commentUser()
+    {
+        return $this->hasMany('App\Models\User_Comments', 'user_id', 'id');
+    }
 }

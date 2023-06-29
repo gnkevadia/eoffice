@@ -253,14 +253,15 @@
                         <div class='mt-5 customBorder ml-3 mb-4'>
                             <h5>Comment</h5>
                             <div class='row addAjaxComment'>
-                                @foreach($data->commentAndReplys as $comment)
-                                <!---reply -->
+                                @foreach($arrComments as $comment)
+                                @if (empty($comment->parent_id))
+
                                 <div class="col-md-12">
                                     <div class="media g-mb-30 media-comment commentMain">
+                                        <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="{{url('admin/assets/media/users/50x50/')}}/{{$comment->profile}}" alt="Image Description">
                                         <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30">
                                             <div class="g-mb-15">
-                                                <h5 class="h5 g-color-gray-dark-v1 mb-0">{{$comment->user_comment[0]['name']}}</h5>
-                                                <span class="g-color-gray-dark-v4 g-font-size-12"><?php echo date('g:i A j F, Y', strtotime($comment->user_comment[0]['created_at'])); ?></span>
+                                                <h5 class="h5 g-color-gray-dark-v1 mb-0"> {{$comment->userName}}</h5>
                                             </div>
                                             <p>{{$comment->comment}}</p>
 
@@ -273,19 +274,46 @@
                                                 </li>
                                             </ul>
                                         </div>
-                                        <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="{{url('admin/assets/media/users/50x50/')}}/{{$comment->user_comment[0]['profile_photo']}}" alt="Image Description">
+                                    </div>
+                                    <div class="replyDiv">
+                                        <textarea name="reply_comment" data-id='{{$comment->id}}' data-parent='{{$comment->id}}' data-toggle="tooltip" title="Enter Reply Comment" class="form-control reply_comment" placeholder="Enter Reply Comment">{{ old('reply_comment') }}</textarea>
+                                        <button class='btn btn-sm btn-primary  float-right py-1 px-2 commentreply'>Reply</button>
+                                    </div>
+                                </div>
+                                @if ( $comment->replies )
+                                @foreach($comment->replies as $rep1)
+                                <div class="col-md-12">
+                                    <div class="media g-mb-30 media-comment commentMain">
+                                        <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30">
+                                            <div class="g-mb-15">
+                                                <h5 class="h5 g-color-gray-dark-v1 mb-0"> {{$rep1->usersofComments[0]['name']}}</h5>
+                                            </div>
+                                            <p>{{$rep1->comment}}</p>
+
+                                            <ul class="list-inline d-sm-flex my-0">
+                                                <li class="list-inline-item ml-auto replyComment">
+                                                    <!-- <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!"> -->
+                                                    <i class="fa fa-reply g-pos-rel g-top-1 g-mr-3"></i>
+                                                    Reply
+                                                    <!-- </a> -->
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="{{url('admin/assets/media/users/50x50/')}}/{{$rep1->usersofComments[0]['profile_photo']}}" alt="Image Description">
 
                                     </div>
-                                    <!-- <h1>reply comm</h1> -->
                                     <div class="replyDiv">
-                                        <textarea name="reply_comment" data-id='{{$comment->id}}' data-order-id='{{$comment->parent_order}}' data-toggle="tooltip" title="Enter Reply Comment" class="form-control reply_comment" placeholder="Enter Reply Comment">{{ old('reply_comment') }}</textarea>
+                                        <textarea name="reply_comment" data-id='{{$comment->id}}' data-parent='{{$comment->id}}' data-toggle="tooltip" title="Enter Reply Comment" class="form-control reply_comment" placeholder="Enter Reply Comment">{{ old('reply_comment') }}</textarea>
                                         <button class='btn btn-sm btn-primary  float-right py-1 px-2 commentreply'>Reply</button>
                                     </div>
                                 </div>
                                 @endforeach
+                                @endif
+                                @endif
+                                @endforeach
                             </div>
                             <div class="mt-5">
-                                <textarea id="general_Comment" name="general_Comment" data-order='{{isset($filterItem->parent_order) ? $filterItem->parent_order : 0 }}' data-toggle="tooltip" title="Enter General Comment" class="form-control" placeholder="Enter General Comment">{{ old('general_Comment') }}</textarea>
+                                <textarea id="general_Comment" name="general_Comment" data-parent='0' data-toggle="tooltip" title="Enter General Comment" class="form-control" placeholder="Enter General Comment">{{ old('general_Comment') }}</textarea>
                                 <button class='btn btn-sm btn-primary UserComment float-right py-1 px-2'>Comment</button>
                             </div>
                         </div>
@@ -408,11 +436,11 @@
             counter++;
 
         });
-        $(".UserComment").on('click', function() {
+        $(".UserComment").on('click enter', function() {
             let userComment = $('#general_Comment').val();
             let url = '{{url("addCommnet")}}';
             let ticket = '<?php echo $data->ticket; ?>';
-            let parent_order = $(this).siblings('textarea').data('order');
+            // let parent_id = $(this).siblings('textarea').data('parent');
             let imgUrl = '<?php echo Session::get('profile_photo') ?>';
             let userName = '<?php echo Session::get('name') ?>';
             let isComment = true;
@@ -428,16 +456,18 @@
                     'comment': userComment,
                     'ticket': ticket,
                     'isComment': isComment,
-                    'parent_order': parent_order
+                    // 'parent_id': parent_id
                 },
                 dataType: 'JSON',
                 success: function(data) {
                     console.log("comment datas", data);
-                    // if (data == true) {
-                    //     $('#general_Comment').val('');
-                    // }
-                    // // var html = '<div class="py-2"> <div class="d-flex justify-content-between py-1 pt-2"><div><img src="' + imgUrl + '" width="18"><span class="text2">' + userName + '</span></div></div> </div>';
-                    // var html = '<div class="col-md-12"><div class="media g-mb-30 media-comment"><img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="' + imgUrl + '" alt="Image Description"><div class="media-body u-shadow-v18 g-bg-secondary g-pa-30"><div class="g-mb-15"><h5 class="h5 g-color-gray-dark-v1 mb-0">' + userName + '</h5><span class="g-color-gray-dark-v4 g-font-size-12">' + date + '</span></div><p>' + userComment + '</p><ul class="list-inline d-sm-flex my-0"><li class="list-inline-item ml-auto"><a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!"><i class="fa fa-reply g-pos-rel g-top-1 g-mr-3"></i>Reply</a></li></ul></div></div></div>';
+                    if (data == true) {
+                        $('#general_Comment').val('');
+                        location.reload();
+                    }
+
+                    // var html = '<div class="py-2"> <div class="d-flex justify-content-between py-1 pt-2"><div><img src="' + imgUrl + '" width="18"><span class="text2">' + userName + '</span></div></div> </div>';
+                    // var html = '<div class="col-md-12"><div class="media g-mb-30 media-comment"><img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="' + imgUrl + '" alt="Image Description"><div class="media-body u-shadow-v18 g-bg-secondary g-pa-30"><div class="g-mb-15"><h5 class="h5 g-color-gray-dark-v1 mb-0">' + userName + '</h5><span class="g-color-gray-dark-v4 g-font-size-12"></span></div><p>' + userComment + '</p><ul class="list-inline d-sm-flex my-0"><li class="list-inline-item ml-auto replyComment"><i class="fa fa-reply g-pos-rel g-top-1 g-mr-3"></i>Reply</li></ul></div></div></div>';
 
                     // $(".addAjaxComment").append(html);
                 }
@@ -449,10 +479,12 @@
 
         $(".commentreply").on('click', function() {
             let comment = $(this).siblings('textarea').val();
+            $this = $(this);
+            $(this).parent().hide();
             // let comment_id = $(this).siblings('textarea').data('id');
-            let parent_id = $(this).siblings('textarea').data('id');
-            let reply_order = $(this).siblings('textarea').data('order');
-            let commentReply = true;
+            let parent_id = $(this).siblings('textarea').data('parent');
+            // let reply_order = $(this).siblings('textarea').data('order');
+            let isComment = true;
             let imgUrl = '<?php echo Session::get('profile_photo') ?>';
             let userName = '<?php echo Session::get('name') ?>';
             let ticket = '<?php echo $data->ticket; ?>';
@@ -466,21 +498,24 @@
                 data: {
                     // 'comment_id': comment_id,
                     'parent_id': parent_id,
-                    'commentReply': commentReply,
+                    'isComment': isComment,
                     'comment': comment,
                     'ticket': ticket,
-                    'reply_order': reply_order
+                    // 'reply_order': reply_order
                 },
                 dataType: 'JSON',
                 success: function(data) {
                     console.log("reply data", data);
-                    // if (data == true) {
-                    //     $('#general_Comment').val('');
-                    // }
+                    if (data == true) {
+                        $('#reply_comment').val('');
+                        location.reload();
+                    }
                     // var html = '<div class="py-2"> <div class="d-flex justify-content-between py-1 pt-2"><div><img src="' + imgUrl + '" width="18"><span class="text2">' + userName + '</span></div></div> </div>';
-                    // var html = '<div class="col-md-12"><div class="media g-mb-30 media-comment"><img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="' + imgUrl + '" alt="Image Description"><div class="media-body u-shadow-v18 g-bg-secondary g-pa-30"><div class="g-mb-15"><h5 class="h5 g-color-gray-dark-v1 mb-0">' + userName + '</h5><span class="g-color-gray-dark-v4 g-font-size-12"></span></div><p>' + userComment + '</p><ul class="list-inline d-sm-flex my-0"><li class="list-inline-item ml-auto"><a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!"><i class="fa fa-reply g-pos-rel g-top-1 g-mr-3"></i>Reply</a></li></ul></div></div></div>';
+                    // var html = '<div class="col-md-12"><div class="media g-mb-30 media-comment"><div class="media-body u-shadow-v18 g-bg-secondary g-pa-30"><div class="g-mb-15"><h5 class="h5 g-color-gray-dark-v1 mb-0">' + userName + '</h5><span class="g-color-gray-dark-v4 g-font-size-12"></span></div><p>' + comment + '</p><ul class="list-inline d-sm-flex my-0"><li class="list-inline-item ml-auto replyComment"><i class="fa fa-reply g-pos-rel g-top-1 g-mr-3"></i>Reply</li></ul></div><img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="' + imgUrl + '" alt="Image Description"></div></div>';
 
-                    // $(".addAjaxComment").append(html);
+                    // console.log($this);
+                    // $this.parent().parent().append(html);
+                    // $this.parent().addClass('html');
                 }
             });
         });

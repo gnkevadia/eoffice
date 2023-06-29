@@ -161,9 +161,26 @@ class TaskController extends Controller
                 array_push($filterArray, $items);
             }
         }
+        $dbComment = new User_Comments();
+        $arrComments = $dbComment->getData($id);
         // echo '<pre>';
-        // echo ($data);
+        // echo ($arrComments);
         // echo '</pre>';
+        // die();
+        // foreach ($arrComments as $comment) {
+        //     if (empty($comment->parent_id)) {
+        //         echo '<pre>com';
+        //         echo ($comment);
+        //         echo '</pre>';
+        //         if ($comment->replies) {
+        //             foreach ($comment->replies as $replys) {
+        //                 echo '<pre>reply';
+        //                 echo ($replys);
+        //                 echo '</pre>';
+        //             }
+        //         }
+        //     }
+        // }
         // die();
         $taskstatus =  Task_Status::where('deleted', 0)->get();
         if ($request->isMethod('post') && isset($id) && !empty($id)) {
@@ -209,7 +226,7 @@ class TaskController extends Controller
         // if ($data->parent_order == null) {
         //     $data->parent_order = 0;
         // }
-        return view(RENDER_URL . '.view', compact('data', 'taskstatus', 'filterArray'));
+        return view(RENDER_URL . '.view', compact('data', 'taskstatus', 'arrComments'));
     }
     public function statusUpdate(Request $request, $id)
     {
@@ -246,12 +263,18 @@ class TaskController extends Controller
 
             unset($request['isComment']);
             $request->merge(['user_id' => Session::get('id')]);
-            if ($request['parent_order'] == 0) {
-                $request['parent_order'] = "1";
-            } else {
-                $request['parent_order'] = $request['parent_order'] + 1;
-            }
+            // if ($request['parent_order'] == 0) {
+            //     $request['parent_order'] = "1";
+            // } else {
+            //     $request['parent_order'] = $request['parent_order'] + 1;
+            // }
+            // if(){
 
+            // }
+            // echo '<pre>';
+            // print_r($request->all());
+            // echo '</pre>';
+            // die();
             $dbUserComment  = new User_Comments();
             $data = $dbUserComment->addComment($request);
         }
