@@ -89,7 +89,7 @@
         </div>
         <div class="kt-portlet__body kt-portlet__body--fit">
           <div class="kt-widget17">
-            <div class="kt-widget17__visual kt-widget17__visual--chart kt-portlet-fit--top kt-portlet-fit--sides" style="background-color: #fd397a">
+            <div class="kt-widget17__visual kt-widget17__visual--chart kt-portlet-fit--top kt-portlet-fit--sides" style="background-color: #5578eb">
               <div class="kt-widget17__chart" style="height:320px;">
                 <canvas id="kt_chart_activities"></canvas>
               </div>
@@ -175,6 +175,7 @@
                   </a>
                 </div>
                 @else
+                @if(session()->get('user'))
                 <div class="kt-widget17__item">
                   <span class="kt-widget17__icon">
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-svg-icon--warning">
@@ -185,12 +186,13 @@
                       </g>
                     </svg> </span>
                   <span class="kt-widget17__subtitle">
-                    Reported
+                    Weekly Avarege
                   </span>
                   <span class="kt-widget17__desc">
-                    72 Support Cases
+                    {{date("H", strtotime($averge_time))}} Hours
                   </span>
                 </div>
+                @endif
                 @endif
                 <div class="kt-widget17__item">
                   <span class="kt-widget17__icon">
@@ -220,9 +222,9 @@
 
       <!--begin:: Widgets/Inbound Bandwidth-->
       <div class="kt-portlet kt-portlet--fit kt-portlet--head-noborder kt-portlet--height-fluid-half">
-        <div class="kt-portlet__head kt-portlet__space-x">
+        <div class="kt-portlet__head kt-portlet__space-x p-3 mb-2 bg-info text-white">
           <div class="kt-portlet__head-label">
-            <h3 class="kt-portlet__head-title">
+            <h3 class="kt-portlet__head-title text-white">
               Your Task
             </h3>
           </div>
@@ -274,13 +276,11 @@
         </div>
       </div>
 
-      <!--begin:: Widgets/Outbound Bandwidth-->
-      @if(session()->get('user'))
       <div class="kt-portlet kt-portlet--fit kt-portlet--head-noborder kt-portlet--height-fluid-half">
-        <div class="kt-portlet__head kt-portlet__space-x">
+        <div class="kt-portlet__head kt-portlet__space-x p-3 mb-2 bg-info text-white">
           <div class="kt-portlet__head-label">
-            <h3 class="kt-portlet__head-title">
-              Punching Time
+            <h3 class="kt-portlet__head-title text-white">
+              Done Task
             </h3>
           </div>
         </div>
@@ -291,33 +291,26 @@
                 <table class="table mb-0">
                   <thead>
                     <tr>
-                      <th>User Name</th>
-                      <th>Date</th>
-                      <th>Hours</th>
+                      <th>Task Name</th>
+                      <th>End Date</th>
                     </tr>
                   </thead>
                   <tbody>
-                    @if (!empty($user_punching) && count($user_punching) > 0)
-                    @foreach ($user_punching as $punch)
-                    @if(!empty($diff_in_hours))
+                    @if (!empty($done_task) && count($done_task) > 0)
+                    @foreach ($done_task as $value)
                     <tr>
                       <td>
-                        {{ucfirst($punch->name)}}
-                      </td>
-                      <td>
-                        {{date("d/m/Y", strtotime($punch->punch_in))}}
+                        {{ucfirst($value->task)}}
                       </td>
                       <td>
 
-                        {{($diff_in_hours)}}
+                        {{date("d/m/Y", strtotime($value->end_date))}}
                       </td>
                     </tr>
-                    @endif
-
                     @endforeach
                     @else
                     <tr>
-                      <td colspan="3" class="text-center">
+                      <td colspan="2" class="text-center">
                         no data found
                       </td>
                     </tr>
@@ -330,7 +323,10 @@
           </div>
         </div>
       </div>
-      @endif
+
+
+      <!--begin:: Widgets/Outbound Bandwidth-->
+
 
       <!--end:: Widgets/Outbound Bandwidth-->
     </div>
@@ -339,9 +335,9 @@
       <!--begin:: Widgets/Inbound Bandwidth-->
       @if(session()->get('user'))
       <div class="kt-portlet kt-portlet--fit kt-portlet--head-noborder kt-portlet--height-fluid-half">
-        <div class="kt-portlet__head kt-portlet__space-x">
+        <div class="kt-portlet__head kt-portlet__space-x p-3 mb-2 bg-info text-white">
           <div class="kt-portlet__head-label">
-            <h3 class="kt-portlet__head-title">
+            <h3 class="kt-portlet__head-title text-white">
               Punching
             </h3>
           </div>
@@ -360,7 +356,7 @@
 
               @else
               <div class="punchIn mb-2 kt-portlet__head-title"></div>
-              <button class="btn btn-danger btn-md  btn-bold punchIn_btn">
+              <button class="btn btn-info btn-md  btn-bold punchIn_btn">
                 Punch In
               </button>
               @endif
@@ -371,9 +367,9 @@
       </div>
       @else
       <div class="kt-portlet kt-portlet--fit kt-portlet--head-noborder kt-portlet--height-fluid-half">
-        <div class="kt-portlet__head kt-portlet__space-x">
+        <div class="kt-portlet__head kt-portlet__space-x p-3 mb-2 bg-info text-white">
           <div class="kt-portlet__head-label">
-            <h3 class="kt-portlet__head-title">
+            <h3 class="kt-portlet__head-title text-white">
               Your Project
             </h3>
           </div>
@@ -422,55 +418,112 @@
       @endif
 
       <!--end:: Widgets/Inbound Bandwidth-->
-      <div class="kt-space-20"></div>
 
-      <div class="kt-portlet kt-portlet--fit kt-portlet--head-noborder kt-portlet--height-fluid-half">
-        <div class="kt-portlet__head kt-portlet__space-x">
-          <div class="kt-portlet__head-label">
-            <h3 class="kt-portlet__head-title">
-              Done Task
-            </h3>
+        @if(session()->get('user'))
+        <div class="kt-portlet kt-portlet--fit kt-portlet--head-noborder kt-portlet--height-fluid-half">
+          <div class="kt-portlet__head kt-portlet__space-x p-3 mb-2 bg-info text-white">
+            <div class="kt-portlet__head-label">
+              <h3 class="kt-portlet__head-title text-white">
+                Punching Time
+              </h3>
+            </div>
           </div>
-        </div>
-        <div class="kt-portlet__body kt-portlet__body--fluid p-0">
-          <div class="kt-widget20">
-            <div class="kt-widget20__content kt-portlet__space-x p-0">
-              <div class="task_name" style="height: 220px; overflow: auto;">
-                <table class="table mb-0">
-                  <thead>
-                    <tr>
-                      <th>Task Name</th>
-                      <th>End Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @if (!empty($done_task) && count($done_task) > 0)
-                    @foreach ($done_task as $value)
-                    <tr>
-                      <td>
-                        {{ucfirst($value->task)}}
-                      </td>
-                      <td>
+          <div class="kt-portlet__body kt-portlet__body--fluid p-0">
+            <div class="kt-widget20">
+              <div class="kt-widget20__content kt-portlet__space-x p-0">
+                <div class="task_name" style="height: 220px; overflow: auto;">
+                  <table class="table mb-0">
+                    <thead>
+                      <tr>
+                        <th>Days</th>
+                        <th>Hours</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @if (!empty($user_punching) && count($user_punching) > 0)
+                      @foreach ($user_punching as $punch)
+                      @if(!empty($diff_in_hours))
+                      <tr>
+                        <td>
+                          {{date("l", strtotime($punch->punch_in))}}
+                        </td>
+                        <td>
+                          {{($punch->diff)}}
+                        </td>
+                      </tr>
+                      @endif
 
-                        {{date("d/m/Y", strtotime($value->end_date))}}
-                      </td>
-                    </tr>
-                    @endforeach
-                    @else
-                    <tr>
-                      <td colspan="2" class="text-center">
-                        no data found
-                      </td>
-                    </tr>
-                    @endif
+                      @endforeach
+                      @else
+                      <tr>
+                        <td colspan="2" class="text-center">
+                          no data found
+                        </td>
+                      </tr>
+                      @endif
 
-                  </tbody>
-                </table>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+        @endif
+        @if(session()->get('manager'))
+        <div class="kt-portlet kt-portlet--fit kt-portlet--head-noborder kt-portlet--height-fluid-half">
+          <div class="kt-portlet__head kt-portlet__space-x p-3 mb-2 bg-info text-white">
+            <div class="kt-portlet__head-label">
+              <h3 class="kt-portlet__head-title text-white">
+                Your Task
+              </h3>
+            </div>
+          </div>
+          <div class="kt-portlet__body kt-portlet__body--fluid p-0">
+            <div class="kt-widget20">
+              <div class="kt-widget20__content kt-portlet__space-x p-0">
+                <div class="task_name" style="height: 220px; overflow: auto;">
+                  <table class="table mb-0">
+                    <thead>
+                      <tr>
+                        <th>User Name</th>
+                        <th>Avarege Hours</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @if (!empty($user_punching) && count($user_punching) > 0)
+                      @foreach ($user_punching as $value)
+                      <tr>
+                        <td>
+                          {{ucfirst($value->name)}}
+                        </td>
+                        <td>
+                          {{$value->priority}}
+                        </td>
+                      </tr>
+                      @endforeach
+                      @else
+                      <tr>
+                        <td colspan="2" class="text-center">
+                          no data found
+                        </td>
+                      </tr>
+                      @endif
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        @endif
+        @if(session()->get('superAdmin'))
+        <div class="kt-portlet kt-portlet--fit kt-portlet--head-noborder kt-portlet--height-fluid-half">
+          <div id="chart2" class="panel-body">
+          </div>
+        </div>
+        @endif
     </div>
 
   </div>
@@ -489,9 +542,12 @@
 @stop
 @section('metronic_js')
 <script src="{{ asset('admin/assets/js/pages/dashboard.js') }}" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light-bootstrap/all.min.css" />
+<script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
 <!-- <script src="{{ asset('admin/assets/js/pages/custom/dashboard-ajex.js') }}" type="text/javascript"></script> -->
 <script>
   $(document).ready(function() {
+    var data2 = [10,20,10,20,10,20,10,20,10,20,10,20];
     let punchOut = "<?php echo session()->has('punchOut_time') ?>";
     if (punchOut != false) {
       $('.punchOut_btn').removeClass('btn-success');
@@ -525,7 +581,23 @@
       $(this).addClass('btn-secondary');
       $(this).remove();
 
-    })
+    });
+
+    $("#chart2").shieldChart({
+      exportOptions: {
+        image: false,
+        print: false
+      },
+      axisY: {
+        title: {
+          text: "Break-Down for selected quarter"
+        }
+      },
+      dataSeries: [{
+        seriesType: "polarbar",
+        data: data2
+      }]
+    });
 
   });
 </script>
