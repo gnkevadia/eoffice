@@ -88,11 +88,19 @@ class LoginController extends Controller
                     }
 
                     if (!empty($Users_Punching['punch_out'])) {
-                        Session::put('punchout', true);
-                        Session::put('punchIn', false);
-                        $punch_out = date('g:i A j F, Y', strtotime($Users_Punching['punch_out']));
-                        Session::put('punchOut_time', $punch_out);
+                        if (date("Y-m-d", strtotime($Users_Punching->punch_out)) == date('Y-m-d')) {
+                            Session::put('punchout', true);
+                            Session::put('punchIn', false);
+                            $punch_out = date('g:i A j F, Y', strtotime($Users_Punching['punch_out']));
+                            Session::put('punchOut_time', $punch_out);
+                        } else {
+                            Session::put('punchIn', false);
+                            Session::put('punchout', false);
+                            session()->forget('punchIn_time');
+                            session()->forget('punchOut_time');
+                        }
                     }
+
                     $roleDetails = Role::where(['id' => $userDetails->role_id])->first();
                     Session::put('rights', explode(",", $roleDetails->rights));
                     $rightDetails = Rights::whereIn('id', explode(",", $roleDetails->rights))->get();

@@ -13,7 +13,7 @@ use App\Models\ProjectMaster;
 use App\Library\Common;
 use App\Models\Company;
 use Illuminate\Support\Carbon;
-use Session;
+use Illuminate\Support\Facades\Session;
 
 
 
@@ -39,7 +39,6 @@ class DashboardController extends Controller
             $where_done_task = ['task_master.deleted' => 0, 'task_master.status' => 14];
             $where_project = ['projectmaster.deleted' => 0];
             $where_company = ['company.deleted' => 0];
-            $where_status = ['users_punching.user_id' => session()->get('id')];
         } else {
             $role_id = session()->get('settings');
             $where = ['task_master.deleted' => 0, 'task_master.company_id' => session()->get('company_id')];
@@ -65,12 +64,12 @@ class DashboardController extends Controller
         if (session()->get('superAdmin')) {
             $company = Company::where($where_company)->get();
 
-            return view('admin.user.dashboard', compact('task', 'task_all', 'projrct', 'company', 'today_project', 'done_task','user_punching'));
+            return view('admin.user.dashboard', compact('task', 'task_all', 'projrct', 'company', 'today_project', 'done_task', 'user_punching'));
         }
-        if(isset($diff_in_hours)){
-            return view('admin.user.dashboard', compact('task', 'task_all', 'projrct', 'today_project', 'done_task','user_punching','diff_in_hours'));
+        if (isset($diff_in_hours)) {
+            return view('admin.user.dashboard', compact('task', 'task_all', 'projrct', 'today_project', 'done_task', 'user_punching', 'diff_in_hours'));
         }
-        return view('admin.user.dashboard', compact('task', 'task_all', 'projrct', 'today_project', 'done_task','user_punching'));
+        return view('admin.user.dashboard', compact('task', 'task_all', 'projrct', 'today_project', 'done_task', 'user_punching'));
     }
     public function punchin()
     {
@@ -78,10 +77,7 @@ class DashboardController extends Controller
         $punch_in  = Carbon::now('Asia/Kolkata')->format('Y-m-d H:i:s');
         $getUser->user_id =  session()->get('id');
         $getUser->punch_in =  $punch_in;
-        // $punchin = array('punch_in' => $pinch_in, 'user_id' => session()->get('id'));
         $punch_in = date('g:i A j F, Y', strtotime($punch_in));
-        // $id = session()->get('id');
-        // $time = $getUser->updateOne($id, $punchin);
         $getUser->save();
         session()->put('punchin', true);
         session()->put('punchIn_time', $punch_in);
@@ -99,7 +95,6 @@ class DashboardController extends Controller
         session()->put('punchin', false);
         session()->put('punchOut_time', $punch_out);
         session()->put('punchout', true);
-        // $getUser->save();
         return  $punch_out;
     }
 }

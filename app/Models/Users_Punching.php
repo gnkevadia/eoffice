@@ -14,6 +14,6 @@ class Users_Punching extends Model
     {
         // echo '<pre>'; print_r($id); echo '</pre>'; die();
         // echo '<pre>'; print_r(Users_Punching::where('user_id', $id)->get()); echo '</pre>'; die();
-        return Users_Punching::where('user_id', $id)->update($arrUpdate);
+        return Users_Punching::where(['user_id' => $id, 'punch_out' => null])->orderBy('updated_at', 'DESC')->update($arrUpdate);
     }
 }

@@ -299,6 +299,7 @@
                   <tbody>
                     @if (!empty($user_punching) && count($user_punching) > 0)
                     @foreach ($user_punching as $punch)
+                    @if(!empty($diff_in_hours))
                     <tr>
                       <td>
                         {{ucfirst($punch->name)}}
@@ -307,15 +308,16 @@
                         {{date("d/m/Y", strtotime($punch->punch_in))}}
                       </td>
                       <td>
-                        @if(!empty($diff_in_hours))
+
                         {{($diff_in_hours)}}
-                        @endif
                       </td>
                     </tr>
+                    @endif
+
                     @endforeach
                     @else
                     <tr>
-                      <td colspan="2" class="text-center">
+                      <td colspan="3" class="text-center">
                         no data found
                       </td>
                     </tr>
@@ -355,7 +357,6 @@
               <button class='btn btn-success btn-md  btn-bold punchOut_btn'>
                 Punch Out
               </button>
-              <div class="punchOut"></div>
 
               @else
               <div class="punchIn mb-2 kt-portlet__head-title"></div>
@@ -363,6 +364,7 @@
                 Punch In
               </button>
               @endif
+              <div class="punchOut"></div>
             </div>
           </div>
         </div>
@@ -508,17 +510,21 @@
         }
       });
     })
+
     $(document).on('click', '.punchOut_btn', function() {
-      $(this).remove();
       $.ajax({
         url: 'dashboard/punchout',
         type: 'get',
         success: function(data) {
-          $('.punchOut').html('<p class="my-2 mx-4"> Your Punch out Time is ' + data + '</p> <div class="kt-widget20__content p-0"> <button class="btn btn-secondary btn-md  btn-bold punchOut_btn" disabled>  Punch Out </button> </div>')
+          console.log($('.punchOut'));
+          $('.punchOut').append('<p class="my-2 mx-4"> Your Punch out Time is ' + data + '</p> <div class="kt-widget20__content p-0"> <button class="btn btn-secondary btn-md  btn-bold punchOut_btn" disabled>  Punch Out </button> </div>')
+          location.reload();
         }
       });
       $(this).removeClass('btn-success');
       $(this).addClass('btn-secondary');
+      $(this).remove();
+
     })
 
   });
