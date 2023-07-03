@@ -27,7 +27,6 @@
         position: absolute;
         top: -7px;
         right: 0;
-        font-weight: 900;
     }
 
     #addfields {
@@ -52,6 +51,20 @@
 
     .childImage {
         position: relative;
+    }
+    .addMultipleImages{
+        width: 41px;
+        font-size: 13px;
+        background-color: #d1e7dd;
+        color: #0f5132 !important;
+        border: 2px dashed #0f5132;
+        max-width: 100px;
+        display: flex;
+        justify-content: center;
+        padding: 7px;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
     }
 </style>
 <h3 class="kt-subheader__title">{{ VIEW_INFO['title'] }} Managment</h3>
@@ -218,7 +231,7 @@
                             <label for="exampleSelect1">Attachment<span class="required">*</span></label>
                             <div class="row" id="addfield">
                                 <div class="col-lg-2">
-                                    <button type="button" class="btn btn-success mr-3 mt-2 addMultipleImages" id="addfields">+</button>
+                                    <button type="button" class="btn mr-3 mt-2 addMultipleImages" id="addfields">+</button>
                                 </div>
                             </div>
                         </div>

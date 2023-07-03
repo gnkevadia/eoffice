@@ -55,10 +55,11 @@ class DashboardController extends Controller
             if (!empty($punch->punch_in) && !empty($punch->punch_out)) {
                 $punchin = $punch->punch_in;
                 $punchin_tiem = Carbon::createFromFormat("Y-m-d H:i:s", $punchin);
-                $punchout = $punch->punch_out;
-                $punchout_tiem = Carbon::createFromFormat("Y-m-d H:i:s", $punchout);
+                $punchout[$key] = $punch->punch_out;
+                $punchouttime = $punch->punch_out;
+                $punchout_tiem = Carbon::createFromFormat("Y-m-d H:i:s", $punchouttime);
                 $diff_in_hours = $punchin_tiem->diff($punchout_tiem)->format('%H:%I:%S');
-                $count_data = count($user_punching);
+                $count_data = count($punchout);
                 $total_time = $total_time+strtotime($diff_in_hours);
                 $user_punching[$key]['diff']= $diff_in_hours;
             }

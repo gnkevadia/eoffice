@@ -419,111 +419,111 @@
 
       <!--end:: Widgets/Inbound Bandwidth-->
 
-        @if(session()->get('user'))
-        <div class="kt-portlet kt-portlet--fit kt-portlet--head-noborder kt-portlet--height-fluid-half">
-          <div class="kt-portlet__head kt-portlet__space-x p-3 mb-2 bg-info text-white">
-            <div class="kt-portlet__head-label">
-              <h3 class="kt-portlet__head-title text-white">
-                Punching Time
-              </h3>
-            </div>
+      @if(session()->get('user'))
+      <div class="kt-portlet kt-portlet--fit kt-portlet--head-noborder kt-portlet--height-fluid-half">
+        <div class="kt-portlet__head kt-portlet__space-x p-3 mb-2 bg-info text-white">
+          <div class="kt-portlet__head-label">
+            <h3 class="kt-portlet__head-title text-white">
+              Punching Time
+            </h3>
           </div>
-          <div class="kt-portlet__body kt-portlet__body--fluid p-0">
-            <div class="kt-widget20">
-              <div class="kt-widget20__content kt-portlet__space-x p-0">
-                <div class="task_name" style="height: 220px; overflow: auto;">
-                  <table class="table mb-0">
-                    <thead>
-                      <tr>
-                        <th>Days</th>
-                        <th>Hours</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      @if (!empty($user_punching) && count($user_punching) > 0)
-                      @foreach ($user_punching as $punch)
-                      @if(!empty($diff_in_hours))
-                      <tr>
-                        <td>
-                          {{date("l", strtotime($punch->punch_in))}}
-                        </td>
-                        <td>
-                          {{($punch->diff)}}
-                        </td>
-                      </tr>
-                      @endif
+        </div>
+        <div class="kt-portlet__body kt-portlet__body--fluid p-0">
+          <div class="kt-widget20">
+            <div class="kt-widget20__content kt-portlet__space-x p-0">
+              <div class="task_name" style="height: 220px; overflow: auto;">
+                <table class="table mb-0">
+                  <thead>
+                    <tr>
+                      <th>Days</th>
+                      <th>Hours</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @if (!empty($user_punching) && count($user_punching) > 0)
+                    @foreach ($user_punching as $punch)
+                    @if(!empty($punch->diff))
+                    <tr>
+                      <td>
+                        {{date("l", strtotime($punch->punch_in))}}
+                      </td>
+                      <td>
+                        {{date("H:i", strtotime($punch->diff))}}
+                      </td>
+                    </tr>
+                    @endif
 
-                      @endforeach
-                      @else
-                      <tr>
-                        <td colspan="2" class="text-center">
-                          no data found
-                        </td>
-                      </tr>
-                      @endif
+                    @endforeach
+                    @else
+                    <tr>
+                      <td colspan="2" class="text-center">
+                        no data found
+                      </td>
+                    </tr>
+                    @endif
 
-                    </tbody>
-                  </table>
-                </div>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
         </div>
-        @endif
-        @if(session()->get('manager'))
-        <div class="kt-portlet kt-portlet--fit kt-portlet--head-noborder kt-portlet--height-fluid-half">
-          <div class="kt-portlet__head kt-portlet__space-x p-3 mb-2 bg-info text-white">
-            <div class="kt-portlet__head-label">
-              <h3 class="kt-portlet__head-title text-white">
-                Your Task
-              </h3>
-            </div>
+      </div>
+      @endif
+      @if(session()->get('manager'))
+      <div class="kt-portlet kt-portlet--fit kt-portlet--head-noborder kt-portlet--height-fluid-half">
+        <div class="kt-portlet__head kt-portlet__space-x p-3 mb-2 bg-info text-white">
+          <div class="kt-portlet__head-label">
+            <h3 class="kt-portlet__head-title text-white">
+              Your Task
+            </h3>
           </div>
-          <div class="kt-portlet__body kt-portlet__body--fluid p-0">
-            <div class="kt-widget20">
-              <div class="kt-widget20__content kt-portlet__space-x p-0">
-                <div class="task_name" style="height: 220px; overflow: auto;">
-                  <table class="table mb-0">
-                    <thead>
-                      <tr>
-                        <th>User Name</th>
-                        <th>Avarege Hours</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      @if (!empty($user_punching) && count($user_punching) > 0)
-                      @foreach ($user_punching as $value)
-                      <tr>
-                        <td>
-                          {{ucfirst($value->name)}}
-                        </td>
-                        <td>
-                          {{$value->priority}}
-                        </td>
-                      </tr>
-                      @endforeach
-                      @else
-                      <tr>
-                        <td colspan="2" class="text-center">
-                          no data found
-                        </td>
-                      </tr>
-                      @endif
+        </div>
+        <div class="kt-portlet__body kt-portlet__body--fluid p-0">
+          <div class="kt-widget20">
+            <div class="kt-widget20__content kt-portlet__space-x p-0">
+              <div class="task_name" style="height: 220px; overflow: auto;">
+                <table class="table mb-0">
+                  <thead>
+                    <tr>
+                      <th>User Name</th>
+                      <th>Avarege Hours</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @if (!empty($user_punching) && count($user_punching) > 0)
+                    @foreach ($user_punching as $value)
+                    <tr>
+                      <td>
+                        {{ucfirst($value->name)}}
+                      </td>
+                      <td>
+                        {{$value->priority}}
+                      </td>
+                    </tr>
+                    @endforeach
+                    @else
+                    <tr>
+                      <td colspan="2" class="text-center">
+                        no data found
+                      </td>
+                    </tr>
+                    @endif
 
-                    </tbody>
-                  </table>
-                </div>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
         </div>
-        @endif
-        @if(session()->get('superAdmin'))
-        <div class="kt-portlet kt-portlet--fit kt-portlet--head-noborder kt-portlet--height-fluid-half">
-          <div id="chart2" class="panel-body">
-          </div>
+      </div>
+      @endif
+      @if(session()->get('superAdmin'))
+      <div class="kt-portlet kt-portlet--fit kt-portlet--head-noborder kt-portlet--height-fluid-half">
+        <div id="chart2" class="panel-body">
         </div>
-        @endif
+      </div>
+      @endif
     </div>
 
   </div>
@@ -547,7 +547,7 @@
 <!-- <script src="{{ asset('admin/assets/js/pages/custom/dashboard-ajex.js') }}" type="text/javascript"></script> -->
 <script>
   $(document).ready(function() {
-    var data2 = [10,20,10,20,10,20,10,20,10,20,10,20];
+    var data2 = [10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20];
     let punchOut = "<?php echo session()->has('punchOut_time') ?>";
     if (punchOut != false) {
       $('.punchOut_btn').removeClass('btn-success');

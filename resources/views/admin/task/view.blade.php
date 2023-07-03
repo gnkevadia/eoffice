@@ -161,6 +161,20 @@
     .media-comment {
         margin-top: 20px
     }
+    .addMultipleImages{
+        width: 41px;
+        font-size: 13px;
+        background-color: #d1e7dd;
+        color: #0f5132 !important;
+        border: 2px dashed #0f5132;
+        max-width: 100px;
+        display: flex;
+        justify-content: center;
+        padding: 7px;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+    }
 </style>
 @stop
 
@@ -200,7 +214,7 @@
                                 <div class="col-lg-3  inputadd multipleImage ml-2 mt-2 d-flex ">
                                     <input id="attachment" type="file" class="form-control testing attachment" name="file[]" /> <button type="button" class="btn btn-danger ml-2" id="delete_img" style="text-align:center">x</button>
                                 </div>
-                                <button type="button" class="btn btn-success mr-3 mt-2 addMultipleImages" id="addfields">+</button>
+                                <button type="button" class="btn mr-3 mt-2 addMultipleImages" id="addfields">+</button>
                             </div>
                             <div class="row customBorder customMargin">
                                 <div class="col-lg-12">

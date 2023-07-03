@@ -52,10 +52,10 @@ class User_Comments extends Model
     {
         // $comments = User_Comments::with('replies.usersofComments')->join('users', 'users.id', '=', 'user_comments.user_id')->orderBy('user_comments.id', 'ASC')->select('user_comments.*', 'users.name as userName', 'users.profile_photo as profile')->get();
         $comments = User_Comments::where(['ticket' => 'SD-2023', 'user_id' => '2252'])->get();
-        echo '<pre>';
-        echo ($comments);
-        echo '</pre>';
-        die();
+        // echo '<pre>';
+        // echo ($comments);
+        // echo '</pre>';
+        // die();
         /* $comments = $this->display_comments('2252');
         echo '<pre>';
         print_r($comments);
